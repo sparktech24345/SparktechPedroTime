@@ -84,8 +84,7 @@ public class MainTeleOP extends LinearOpMode {
 
         Config.configureOtos(telemetry, myOtos);
         //Thread
-        //TempRunnable multiRunnable=new TempRunnable();
-        //Thread multiThread = new Thread(multiRunnable);
+
 
 
 
@@ -257,11 +256,10 @@ public class MainTeleOP extends LinearOpMode {
                 if (outtakeFSM.currentStateOutake != outtakeBasket) {
                     outtakeFSM.setState(outtakeBasket);
                     outtakeFSM.executeCurrentState();
-                } else if (outtakeFSM.currentStateOutake == outtakeBasket && outakeSampleServoPosition == servoextended) {
+                } else if (outtakeFSM.currentStateOutake == outtakeBasket) {
                     outtakeFSM.setState(outtakeSamplePickUp);
                     outtakeFSM.executeCurrentState();
-                } else if (outtakeFSM.currentStateOutake == outtakeBasket) {
-                    outakeSampleServoPosition = servoextended;
+                    isHeldBascket = false;
                 } else telemetryOhNo = true;
                 isPressedX1 = false;
             }
@@ -321,14 +319,13 @@ public class MainTeleOP extends LinearOpMode {
                 if(outtakeFSM.currentStateOutake != outakeHM) {
                     outtakeFSM.setState(outakeHM);
                     outtakeFSM.executeCurrentState();
-                }
-                else if(outtakeFSM.currentStateOutake == outakeHM){
-                    outakeSampleServoPosition= servoextended;
                     startingTimer2=System.currentTimeMillis();
                     wasOutputHM = true;
                 }
                 isPressedY1 = false;
             }
+            if(System.currentTimeMillis() > startingTimer2 + 200 && wasOutputHM)
+                outakeSampleServoPosition= servoextended;
             if(System.currentTimeMillis() > startingTimer2 + 800 && wasOutputHM){
                 outtakeFSM.setState(outtakeSamplePickUp);
                 outtakeFSM.executeCurrentState();

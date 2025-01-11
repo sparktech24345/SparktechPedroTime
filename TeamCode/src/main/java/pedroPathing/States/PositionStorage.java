@@ -76,9 +76,11 @@ public class PositionStorage {
     public static double afterSpecimenOpenTime = 80;
     public static boolean shouldTransfer = false;
     public static double rememberPosOfServoOut = 0;
+    public static boolean isHeldBascket = false;
 
 
     public static void resetStuff(){
+        isHeldBascket = false;
         shouldTransfer = false;
         afterSpecimenOpenTime = 80;
         stateStringOutake = "not set";
