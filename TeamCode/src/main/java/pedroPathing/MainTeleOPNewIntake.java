@@ -8,7 +8,6 @@ import android.graphics.Color;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -31,8 +30,8 @@ import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "Robot Teleop", group = "Linear OpMode")
-public class MainTeleOP extends LinearOpMode {
+@TeleOp(name = "Robot Teleop NEW INTAKE", group = "Linear OpMode")
+public class MainTeleOPNewIntake extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
 
@@ -46,7 +45,6 @@ public class MainTeleOP extends LinearOpMode {
 
         PositionStorage.resetStuff();
 
-
         // Declare our motors
         // Make sure your ID's match your configuration
         DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
@@ -56,13 +54,12 @@ public class MainTeleOP extends LinearOpMode {
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
         DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
+        DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
 
         myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFunSensor");
         //declare servos
-        CRServo servo1 = hardwareMap.get(CRServo.class, "rightservo");
-        CRServo servo2 = hardwareMap.get(CRServo.class, "leftservo");
         Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
         Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
         Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
@@ -77,6 +74,7 @@ public class MainTeleOP extends LinearOpMode {
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeSpinMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -213,7 +211,7 @@ public class MainTeleOP extends LinearOpMode {
                 isPressedA1 = false;
             }
 
-
+            //TEOOOOO TESTEAZA bs
             //TRANSFER
 
             //TRANSFER INIT
@@ -443,7 +441,7 @@ public class MainTeleOP extends LinearOpMode {
                 frontRightPowerCat /= slowyDownyManal;
                 backLeftPowerCat /= slowyDownyManal;
             }
-
+            intakeMotorPickUpPower /= 2;
 
 
 
@@ -455,8 +453,7 @@ public class MainTeleOP extends LinearOpMode {
             intakeMotor.setPower(intakeMotorPower);
             outakeRightMotor.setPower(outakeMotorPower);
             outakeLeftMotor.setPower(outakeMotorPower);//*/
-            servo1.setPower(-intakeMotorPickUpPower);
-            servo2.setPower(intakeMotorPickUpPower);
+            intakeSpinMotor.setPower(intakeMotorPickUpPower);
 
 
             //Set servo Positions

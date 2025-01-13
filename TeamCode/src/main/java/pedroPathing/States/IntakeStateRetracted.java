@@ -13,9 +13,9 @@ public class IntakeStateRetracted implements State {
         gravityAdder = 0;
         stateStringIntake = "IntakeStateRetracted";
         isIntakeStateRectracted = true;
-        intakeRotateServoPosition = 30;
-        intakeTargetPos = intakeTransferAngles;
-        intakeServoPower = 0;
+        intakeRotateServoPosition = intakeTransferAngles;
+        intakeTargetPos = intakeActualZero; //Waat is going on here why is angle for motor please check
+        intakeMotorPickUpPower = 0;
         if(wasActivePastActiveIntake){
             wasActivePastActiveIntake = false;
             Toggle.toggledUp = false;

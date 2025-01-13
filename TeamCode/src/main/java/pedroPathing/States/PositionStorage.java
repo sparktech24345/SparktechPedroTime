@@ -10,11 +10,11 @@ public class PositionStorage {
     public static boolean timerNotSet = false;
     public static double intakeTimeTransferAdder = 15;
     public static double outakeSampleRetracted = 5;
-    public static double intakeTransferMarjeOfErrorBeforeTransfer=42;
+    public static double intakeTransferMarjeOfErrorBeforeTransfer=28; //42
     public static long bambuTransferTimer;
     public static boolean wasBambuExtended = false;
-    public static double intakeActualZero = 75;
-    public static double intakeTransferAngles = 48;
+    public static double intakeActualZero = 60; //old 75
+    public static double intakeTransferAngles = 30;
     public static double intakeRotateServoPosition = intakeTransferAngles;
     public static double outakeArmServoPosition = 60;
     public static double outakeSampleServoPosition = 0;
@@ -23,7 +23,7 @@ public class PositionStorage {
     public static double outakeTargetPosAdder =0;
     public static double outakeRotateServoPosition = 105;
     public static double outakeRotateServoPositionDefault = 60; // 40 increments
-    public static double intakeServoPower = 0;
+    public static double intakeMotorPickUpPower = 0;
     public static boolean isIntakeStateExtended = false;
     public static boolean isIntakeStateRectracted = false;
     public static boolean isOuttakeStateStandbyWithSample = false;
@@ -93,10 +93,10 @@ public class PositionStorage {
         timerNotSet = false;
         intakeTimeTransferAdder = 15;
         outakeSampleRetracted = 5;
-        intakeTransferMarjeOfErrorBeforeTransfer = 48;
+        intakeTransferMarjeOfErrorBeforeTransfer = 28 ;//old 48
         wasBambuExtended = false;
-        intakeActualZero = 75;
-        intakeTransferAngles = 45;
+        intakeActualZero = 60; //old 75
+        intakeTransferAngles = 30;
         intakeRotateServoPosition = intakeTransferAngles;
         outakeArmServoPosition = 60;
         outakeSampleServoPosition = 0;
@@ -105,7 +105,7 @@ public class PositionStorage {
         outakeTargetPosAdder = 0;
         outakeRotateServoPosition = 105;
         outakeRotateServoPositionDefault = 60; // 40 increments
-        intakeServoPower = 0;
+        intakeMotorPickUpPower = 0;
         isIntakeStateExtended = false;
         isIntakeStateRectracted = false;
         isOuttakeStateStandbyWithSample = false;

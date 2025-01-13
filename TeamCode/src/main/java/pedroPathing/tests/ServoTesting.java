@@ -24,8 +24,6 @@ public class ServoTesting extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        CRServo servo1 = hardwareMap.get(CRServo.class, "leftservo");
-        CRServo servo2 = hardwareMap.get(CRServo.class, "rightservo");
         Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
         Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
         Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
@@ -80,8 +78,7 @@ public class ServoTesting extends LinearOpMode {
             outakeArmServo.setPosition(outakeArmServoPosition / 360);
             outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
             //outakeRotateServo.setPosition(outakeRotateServoPosition/360);
-            servo1.setPower(intakeServoPower);
-            servo2.setPower(-intakeServoPower);
+
 
         }
 
