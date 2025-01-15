@@ -441,7 +441,6 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                 frontRightPowerCat /= slowyDownyManal;
                 backLeftPowerCat /= slowyDownyManal;
             }
-            intakeMotorPickUpPower /= 2;
 
 
 

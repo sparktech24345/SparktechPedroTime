@@ -87,7 +87,7 @@ public class PositionStorage {
         stateStringIntake = "not set";
         goToPickUp = false;
         wasOutputHM = false;
-        IntakeServoColectPos = 300;
+        IntakeServoColectPos = 320; //from 300
         willTransfer = true;
         intakeTargetPosAdder=0;
         timerNotSet = false;

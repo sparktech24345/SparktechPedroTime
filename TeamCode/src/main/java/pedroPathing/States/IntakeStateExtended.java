@@ -16,6 +16,6 @@ public class IntakeStateExtended implements State {
         intakeRotateServoPosition = IntakeServoColectPos;
         if(gravityAdder==0)
             gravityAdder = 7;
-        intakeMotorPickUpPower = 1;
+        intakeMotorPickUpPower = 0.7;
     }
 }
