@@ -215,7 +215,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             //TRANSFER
 
             //TRANSFER INIT
-            if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer + intakeActualZero && intakeFSM.currentStateIntake == intakeRetracted) || gamepad1.dpad_right)
+            if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer + intakeTargetPos && intakeFSM.currentStateIntake == intakeRetracted) || gamepad1.right_trigger>=0.4)
                     && outtakeFSM.currentStateOutake != outtakeBasket
                     && outtakeFSM.currentStateOutake != outtakeSpecimen
                     && outtakeFSM.currentStateOutake != outtakeSpecimenHang
@@ -226,19 +226,11 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                 }
 
                 //ACTUAL TRANSFER
-                if (bambuTransferTimer + 100 < System.currentTimeMillis()) {
-                    intakeMotorPickUpPower = -0.2;
-                    if (colors.red < 0.007 && colors.blue < 0.007) {
-                        if (isIntakeStateExtended) {
-                            isIntakeStateExtended = false;
-                            startingTimer = System.currentTimeMillis();
-                        }
-                        if (System.currentTimeMillis() > startingTimer + intakeTimeTransferAdder) {
-                            outtakeFSM.setState(outtakeStandbyDown);
-                            outtakeFSM.executeCurrentState();
-                        }
-                        if (intakeMotorPickUpPower != 1 && System.currentTimeMillis() > startingTimer + intakeTimeTransferAdder)
-                            intakeMotorPickUpPower = 0;
+                if (bambuTransferTimer + 0 < System.currentTimeMillis() && (colors.red >= 0.007 || colors.blue >=0.007) ) {
+                    outakeArmServoPosition = 40;
+                    if(outakeArmServo.getPosition()*360 <=45) {
+                        outtakeFSM.setState(outtakeStandbyDown);
+                        outtakeFSM.executeCurrentState();
                     }
                 }
             }
@@ -285,21 +277,22 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             }
 
 
+
             //Intake positions
             if (gamepad2.dpad_left) {
-                intakeTargetPos = 766;
+                intakeTargetPos = 530;
                 gravityAdder = 1;
             } // 4/4
             if (gamepad2.dpad_down) {
-                intakeTargetPos = 574;
+                intakeTargetPos = 397;
                 gravityAdder = 1;
             } // 3/4
             if (gamepad2.dpad_right){
-                intakeTargetPos = 383; // 2/4
+                intakeTargetPos = 265; // 2/4
                 gravityAdder = 1;
             }
             if(gamepad2.dpad_up) {
-                intakeTargetPos = 191;  // 1/4
+                intakeTargetPos = 132;  // 1/4
                 gravityAdder = 1;
             }
             if(gamepad2.left_bumper)
@@ -380,7 +373,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
 
             //PID STUFF
             double intakeMotorPower = 0;
-            intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeActualZero+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
             double outakeMotorPower;
             outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outakeMotorPower *= PIDincrement;

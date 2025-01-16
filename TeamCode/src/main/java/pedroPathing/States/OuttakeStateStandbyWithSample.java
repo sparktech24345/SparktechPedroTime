@@ -10,7 +10,7 @@ public class OuttakeStateStandbyWithSample implements State {
         stateStringOutake = "OuttakeStateStandbyWithSample";
         isOuttakeStateStandbyWithSample = true;
         outakeSampleServoPosition = outakeSampleRetracted;
-        outakeArmServoPosition = 60;
+        outakeArmServoPosition = outakeTransferPos;
         outakeTargetPos =0;
     }
 }

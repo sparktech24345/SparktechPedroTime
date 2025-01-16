@@ -9,7 +9,7 @@ public class OuttakeStateStandbyDownWithSample implements State {
         stateStringOutake = "Outtake State Standby Down With Sample";
         isOuttakeStateStandbyWithSample = true;
         spinyOutputToggle = true;
-        outakeArmServoPosition = 60;
+        outakeArmServoPosition = outakeTransferPos;
         outakeTargetPos =0;
         outakeSampleServoPosition = outakeSampleRetracted;
     }

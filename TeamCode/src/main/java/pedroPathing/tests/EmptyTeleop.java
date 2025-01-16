@@ -28,6 +28,7 @@ import pedroPathing.ControlMotor;
 import pedroPathing.TempRunnable;
 
 @TeleOp(name = "Empty Teleop", group = "Linear OpMode")
+@Disabled
 public class EmptyTeleop extends LinearOpMode {
     volatile boolean keepRunning = true;
 

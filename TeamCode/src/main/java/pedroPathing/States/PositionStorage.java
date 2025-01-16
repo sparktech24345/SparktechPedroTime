@@ -10,11 +10,11 @@ public class PositionStorage {
     public static boolean timerNotSet = false;
     public static double intakeTimeTransferAdder = 15;
     public static double outakeSampleRetracted = 5;
-    public static double intakeTransferMarjeOfErrorBeforeTransfer=28; //42
+    public static double intakeTransferMarjeOfErrorBeforeTransfer=10; //42
     public static long bambuTransferTimer;
     public static boolean wasBambuExtended = false;
     public static double intakeActualZero = 60; //old 75
-    public static double intakeTransferAngles = 30;
+    public static double intakeTransferAngles = 35;
     public static double intakeRotateServoPosition = intakeTransferAngles;
     public static double outakeArmServoPosition = 60;
     public static double outakeSampleServoPosition = 0;
@@ -77,9 +77,10 @@ public class PositionStorage {
     public static boolean shouldTransfer = false;
     public static double rememberPosOfServoOut = 0;
     public static boolean isHeldBascket = false;
-
+    public static double outakeTransferPos= 70;
 
     public static void resetStuff(){
+        outakeTransferPos= 70;
         isHeldBascket = false;
         shouldTransfer = false;
         afterSpecimenOpenTime = 80;
@@ -93,10 +94,10 @@ public class PositionStorage {
         timerNotSet = false;
         intakeTimeTransferAdder = 15;
         outakeSampleRetracted = 5;
-        intakeTransferMarjeOfErrorBeforeTransfer = 28 ;//old 48
+        intakeTransferMarjeOfErrorBeforeTransfer = 10 ;//old 48
         wasBambuExtended = false;
         intakeActualZero = 60; //old 75
-        intakeTransferAngles = 30;
+        intakeTransferAngles = 35;
         intakeRotateServoPosition = intakeTransferAngles;
         outakeArmServoPosition = 60;
         outakeSampleServoPosition = 0;

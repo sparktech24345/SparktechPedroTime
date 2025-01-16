@@ -8,7 +8,7 @@ public class OuttakeStateSamplePickUp implements State {
         // Set servo and motor positions for this state
         stateStringOutake = "OuttakeStateSamplePickUp";
         isOuttakeStateSamplePickUp = true;
-        outakeArmServoPosition = 60;
+        outakeArmServoPosition = outakeTransferPos;
         outakeTargetPos =0;
         outakeSampleServoPosition = servoextended;
     }

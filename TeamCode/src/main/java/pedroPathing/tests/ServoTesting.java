@@ -1,6 +1,5 @@
 package pedroPathing.tests;
 
-
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,22 +7,24 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import pedroPathing.States.PositionStorage;
 import pedroPathing.ControlMotor;
+
 import pedroPathing.Toggle;
+import static pedroPathing.States.PositionStorage.*;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
 public class ServoTesting extends LinearOpMode {
-
-    double intakeRotateServoPosition = 0;
-    double outakeArmServoPosition = 0;
-    double outakeSampleServoPosition = 10;
+    double intakeRotateServoPosition = 30;
+    double outakeArmServoPosition = 60;
+    double outakeSampleServoPosition = servoextended;
     //double outakeRotateServoPosition =161; // new 0
     double intakeServoPower = 0;
+
     SparkFunOTOS myOtos;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
         Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
         Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
         Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
@@ -33,7 +34,6 @@ public class ServoTesting extends LinearOpMode {
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
         //Servo tester = hardwareMap.get(Servo.class, "tester");
         ControlMotor intakeControlMotor = new ControlMotor();
-
         waitForStart();
 
         if (isStopRequested()) return;

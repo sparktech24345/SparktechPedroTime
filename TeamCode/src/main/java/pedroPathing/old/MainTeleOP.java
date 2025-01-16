@@ -1,4 +1,4 @@
-package pedroPathing;
+package pedroPathing.old;
 
 
 import static pedroPathing.States.PositionStorage.*;
@@ -6,6 +6,7 @@ import static pedroPathing.States.PositionStorage.*;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -15,6 +16,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateRetracted;
@@ -27,11 +29,13 @@ import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSample;
 import pedroPathing.States.PositionStorage;
+import pedroPathing.Toggle;
 import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Robot Teleop", group = "Linear OpMode")
+@Disabled
 public class MainTeleOP extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
@@ -217,7 +221,7 @@ public class MainTeleOP extends LinearOpMode {
             //TRANSFER
 
             //TRANSFER INIT
-            if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer + intakeActualZero && intakeFSM.currentStateIntake == intakeRetracted) || gamepad1.dpad_right)
+            if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer && intakeFSM.currentStateIntake == intakeRetracted) || gamepad1.right_trigger>=0.4)
                     && outtakeFSM.currentStateOutake != outtakeBasket
                     && outtakeFSM.currentStateOutake != outtakeSpecimen
                     && outtakeFSM.currentStateOutake != outtakeSpecimenHang
@@ -289,19 +293,19 @@ public class MainTeleOP extends LinearOpMode {
 
             //Intake positions
             if (gamepad2.dpad_left) {
-                intakeTargetPos = 766;
+                intakeTargetPos = 530;
                 gravityAdder = 1;
             } // 4/4
             if (gamepad2.dpad_down) {
-                intakeTargetPos = 574;
+                intakeTargetPos = 397;
                 gravityAdder = 1;
             } // 3/4
             if (gamepad2.dpad_right){
-                intakeTargetPos = 383; // 2/4
+                intakeTargetPos = 265; // 2/4
                 gravityAdder = 1;
             }
             if(gamepad2.dpad_up) {
-                intakeTargetPos = 191;  // 1/4
+                intakeTargetPos = 132;  // 1/4
                 gravityAdder = 1;
             }
             if(gamepad2.left_bumper)
