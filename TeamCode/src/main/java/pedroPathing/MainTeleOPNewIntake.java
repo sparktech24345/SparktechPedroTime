@@ -228,7 +228,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                 //ACTUAL TRANSFER
                 if (bambuTransferTimer + 0 < System.currentTimeMillis() && (colors.red >= 0.007 || colors.blue >=0.007) ) {
                     outakeArmServoPosition = 40;
-                    if(outakeArmServo.getPosition()*360 <=45) {
+                    if(outakeArmServo.getPosition()*360 <=42) {
                         outtakeFSM.setState(outtakeStandbyDown);
                         outtakeFSM.executeCurrentState();
                     }
