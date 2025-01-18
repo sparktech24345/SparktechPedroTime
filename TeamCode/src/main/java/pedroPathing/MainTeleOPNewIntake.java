@@ -423,6 +423,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                     intakeFSM.setState(intakeExtended);
                     intakeFSM.executeCurrentState();
                     intakeMotorPickUpPower = -0.7;
+                    wasBadSample = true;
                 }
                 else if(intakeFSM.currentStateIntake == intakeExtended){
                     intakeFSM.setState(intakeRetracted);
