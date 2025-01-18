@@ -60,7 +60,6 @@ public class AutonomieDriveTime extends LinearOpMode {
 
     int a= 0;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -98,6 +97,45 @@ public class AutonomieDriveTime extends LinearOpMode {
         imu = hardwareMap.get(IMU.class, "imu");
         imu.initialize(new IMU.Parameters(orientationOnRobot));
         imu.resetYaw();
+
+
+        final DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
+        final DcMotor backLeftMotor = hardwareMap.dcMotor.get("backleft");
+        final DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontright");
+        final DcMotor backRightMotor = hardwareMap.dcMotor.get("backright");
+        final DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+        final DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
+        final DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
+        final DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
+        outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        intakeControlMotor = new ControlMotor();
+        outakeControlMotor = new ControlMotor();
+        //servos
+        //outakeSampleServoPosition = outakeSampleRetracted;
+        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
+        //Servo tester = hardwareMap.get(Servo.class, "tester");
+        outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+
+        outakeSampleServo.setPosition(outakeSampleRetracted / 360);
+
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
+
         waitForStart();
 
 
@@ -116,48 +154,17 @@ public class AutonomieDriveTime extends LinearOpMode {
         if (isStopRequested()) return;
 
         //MultiThread
+        Servo finalOutakeArmServo = outakeArmServo;
         executorService.execute(new Runnable() {
             @Override
             public void run() {
                 double intakeMotorPower = 0;
                 double outakeMotorPower = 0;
-                DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
-                DcMotor backLeftMotor = hardwareMap.dcMotor.get("backleft");
-                DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontright");
-                DcMotor backRightMotor = hardwareMap.dcMotor.get("backright");
-                DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
-                DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
-                DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
-                DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
-                intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
-                outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-                backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-                backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-                intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-                intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                intakeControlMotor = new ControlMotor();
-                outakeControlMotor = new ControlMotor();
-                //servos
-                outakeSampleServoPosition = outakeSampleRetracted;
-                Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
-                Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
-                Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
-                //Servo tester = hardwareMap.get(Servo.class, "tester");
-                outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
-
-                colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
 
                 while(opModeIsActive()){
+
+
                     intakeMotorPower = intakeControlMotor.PIDControl(0, intakeMotor.getCurrentPosition());
                     outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
                     outakeMotorPower *= PIDincrement;
@@ -175,7 +182,7 @@ public class AutonomieDriveTime extends LinearOpMode {
 
                     //Set servo Positions
                     intakeRotateServo.setPosition((intakeRotateServoPosition+gravityAdder) / 360);
-                    outakeArmServo.setPosition(outakeArmServoPosition / 360);
+                    finalOutakeArmServo.setPosition(outakeArmServoPosition / 360);
                     outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
                     telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
                     telemetry.addData("backLeftPowerCat",backLeftPowerCat);

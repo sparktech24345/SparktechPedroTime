@@ -44,7 +44,7 @@ import java.util.concurrent.Executors;
 import pedroPathing.ControlMotor;
 
 @Autonomous(group = "drive")
-public class AutonomieDriveTimeSpecimenOnly extends LinearOpMode {
+public class AutonomieComplete extends LinearOpMode {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
     final static boolean SLOW = true;
     final float MEEP_MOD = 0.002727f;
@@ -307,8 +307,8 @@ public class AutonomieDriveTimeSpecimenOnly extends LinearOpMode {
         timer = System.currentTimeMillis();
         while(timer+ 1600 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  -0.1;
-            backLeftPowerCat=  0.2;
-            frontRightPowerCat= 0.2;
+            backLeftPowerCat=  0.6;
+            frontRightPowerCat= 0.6;
             backRightPowerCat= -0.1;
         }
         timer = System.currentTimeMillis();
