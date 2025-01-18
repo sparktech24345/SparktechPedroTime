@@ -216,6 +216,16 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             //TEOOOOO TESTEAZA bs
             //TRANSFER
 
+            //Disable transfer
+            if(gamepad2.a)
+                isPressedA2 = true;
+            if(isPressedA2 && !gamepad2.a){
+                TransferDisabled = !TransferDisabled;
+                isPressedA2 = false;
+            }
+
+
+
             //TRANSFER INIT
             if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer + intakeTargetPos)
                     || gamepad1.right_trigger>=0.4)
@@ -225,6 +235,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                     && outtakeFSM.currentStateOutake != outtakeSpecimenHang
                     && outtakeFSM.currentStateOutake != outakeHMandWallPU
                     && (colors.red >= 0.005 || colors.blue >=0.005)
+                    && !TransferDisabled
                     //&& intakeRotateServo.getPosition()*360<=65
             ) {
 
@@ -404,6 +415,23 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                 isPressedY2 = false;
             }
 
+            //Sample Output for HM organized
+            if(gamepad2.b)
+                isPressedB2 = true;
+            if(isPressedB2 && !gamepad2.b){
+                if(intakeFSM.currentStateIntake != intakeExtended) {
+                    intakeFSM.setState(intakeExtended);
+                    intakeFSM.executeCurrentState();
+                    intakeMotorPickUpPower = -0.7;
+                }
+                else if(intakeFSM.currentStateIntake == intakeExtended){
+                    intakeFSM.setState(intakeRetracted);
+                    intakeFSM.executeCurrentState();
+                    intakeMotorPickUpPower = 0;
+                } else telemetryOhNo = true;
+
+                isPressedB2 = false;
+            }
 
 
             //Intake target position

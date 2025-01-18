@@ -209,7 +209,7 @@ public class AutonomieDriveTime extends LinearOpMode {
 
         timer = System.currentTimeMillis();
         //beggining forward
-        while(timer+750 > System.currentTimeMillis()  && opModeIsActive()){
+        while(timer+700 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat=0.6;
             backLeftPowerCat= 0.6;
             frontRightPowerCat=0.6;
@@ -238,7 +238,7 @@ public class AutonomieDriveTime extends LinearOpMode {
 
 
         timer = System.currentTimeMillis();
-        //go forward(back)
+        //go back after specimen (NOT forward)
         while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat = - 0.6;
             backLeftPowerCat= - 0.6;
@@ -246,30 +246,92 @@ public class AutonomieDriveTime extends LinearOpMode {
             backRightPowerCat= -0.6;
         }
         OuttakeStateSamplePickUp();
+
         timer = System.currentTimeMillis();
 
-        //adjust
-        while(timer+ 600 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat =  0.8;
-            backLeftPowerCat=  -0.8;
-            frontRightPowerCat= -0.8;
-            backRightPowerCat= 0.8;
+        //adjust before first pushy (strafe)
+        while(timer+ 700 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  0.7;
+            backLeftPowerCat=  -0.7;
+            frontRightPowerCat= -0.7;
+            backRightPowerCat= 0.7;
         }
 
         timer = System.currentTimeMillis();
-
-        //forward init
-        while(timer+800 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat=0.8;
-            backLeftPowerCat= 0.8;
-            frontRightPowerCat=0.8;
-            backRightPowerCat=0.8;
-        }
+        //wait
+        wait(200);
 
         timer = System.currentTimeMillis();
 
-        //adjust 1
+        //forward before first pushy
+        while(timer+700 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat=0.6;
+            backLeftPowerCat= 0.6;
+            frontRightPowerCat=0.6;
+            backRightPowerCat=0.6;
+        }
+
+        timer = System.currentTimeMillis();
+        //wait
+       wait(200);
+
+        timer = System.currentTimeMillis();
+
+        //adjust sample 1
         while(timer+ 500 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  0.6;
+            backLeftPowerCat= - 0.6;
+            frontRightPowerCat= -0.6;
+            backRightPowerCat= 0.6;
+        }
+
+
+
+        timer = System.currentTimeMillis();
+
+        //wait
+        wait(200);
+        timer = System.currentTimeMillis();
+
+        //pushy sample 1
+        while(timer+ 1000 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat = - 0.7;
+            backLeftPowerCat= - 0.7;
+            frontRightPowerCat= -0.7;
+            backRightPowerCat= -0.7;
+        }
+
+
+        timer = System.currentTimeMillis();
+
+        //wait
+        wait(200);
+        //SAMPLE 1 DONE
+        //WallPickUp(); tf??????
+
+        timer = System.currentTimeMillis();
+
+        //wait
+
+
+        timer = System.currentTimeMillis();
+        //forward init
+        while(timer+1100 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat=0.7;
+            backLeftPowerCat= 0.7;
+            frontRightPowerCat=0.7;
+            backRightPowerCat=0.7;
+        }
+        timer = System.currentTimeMillis();
+
+        //wait
+        wait(400);
+
+
+        timer = System.currentTimeMillis();
+
+        //adjust 2
+        while(timer+ 400 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  0.6;
             backLeftPowerCat= - 0.6;
             frontRightPowerCat= -0.6;
@@ -278,84 +340,76 @@ public class AutonomieDriveTime extends LinearOpMode {
 
         timer = System.currentTimeMillis();
 
-        //go back1
+        //wait
+        wait(300);
+
+        timer = System.currentTimeMillis();
+
+        //pushy sample 2
         while(timer+ 1000 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = - 0.8;
-            backLeftPowerCat= - 0.8;
-            frontRightPowerCat= -0.8;
-            backRightPowerCat= -0.8;
-        }
-
-        //ROUND 1 DONE
-        WallPickUp();
-
-        timer = System.currentTimeMillis();
-        //forward init
-        while(timer+1100 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat=0.9;
-            backLeftPowerCat= 0.9;
-            frontRightPowerCat=0.9;
-            backRightPowerCat=0.9;
-        }
-
-        timer = System.currentTimeMillis();
-
-        //adjust 2
-        while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat =  0.8;
-            backLeftPowerCat= - 0.8;
-            frontRightPowerCat= -0.8;
-            backRightPowerCat= 0.8;
-        }
-
-        timer = System.currentTimeMillis();
-
-        //go back2
-        while(timer+ 1100 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = - 0.8;
-            backLeftPowerCat= - 0.8;
-            frontRightPowerCat= -0.8;
-            backRightPowerCat= -0.8;
+            frontLeftPowerCat = - 0.7;
+            backLeftPowerCat= - 0.7;
+            frontRightPowerCat= -0.7;
+            backRightPowerCat= -0.7;
         }
 
         //ROUND 2 DONE
 
+        timer = System.currentTimeMillis();
+
+        //wait
+        wait(200);
 
         timer = System.currentTimeMillis();
         //forward init
-        while(timer+1100 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat=0.9;
-            backLeftPowerCat= 0.9;
-            frontRightPowerCat=0.9;
-            backRightPowerCat=0.9;
+        while(timer+900 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat=0.7;
+            backLeftPowerCat= 0.7;
+            frontRightPowerCat=0.7;
+            backRightPowerCat=0.7;
+
         }
+        timer = System.currentTimeMillis();
+
+        //wait
+        wait(200);
+
 
         timer = System.currentTimeMillis();
 
-        //adjust 2
-        while(timer+ 700 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat =  0.8;
-            backLeftPowerCat= - 0.8;
-            frontRightPowerCat= -0.8;
-            backRightPowerCat= 0.8;
+        //adjust 3
+        while(timer+ 650 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  0.7;
+            backLeftPowerCat= - 0.7;
+            frontRightPowerCat= -0.7;
+            backRightPowerCat= 0.7;
         }
+        timer = System.currentTimeMillis();
+
+        //wait
+        wait(200);
 
         timer = System.currentTimeMillis();
 
-        //go back2
-        while(timer+ 900 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = - 0.8;
-            backLeftPowerCat= - 1;
-            frontRightPowerCat= - 1;
-            backRightPowerCat= -0.8;
+        //pushy sample 3
+        while(timer+ 1000 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat = - 0.7;
+            backLeftPowerCat= - 0.7;
+            frontRightPowerCat= - 0.7;
+            backRightPowerCat= -0.7;
         }
         timer = System.currentTimeMillis();
-        while(timer+ 1800 > System.currentTimeMillis()  && opModeIsActive()){
+
+        //wait
+        wait(200);
+
+       /* timer = System.currentTimeMillis();
+        while(timer+ 1000 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat = - 0.2;
             backLeftPowerCat= - 0.2;
             frontRightPowerCat= - 0.2;
             backRightPowerCat= -0.2;
-        }
+        } */
         //ROUND 3 DONE
 
 
@@ -392,8 +446,7 @@ public class AutonomieDriveTime extends LinearOpMode {
         outakeTargetPos = -1900;
 
         timer = System.currentTimeMillis();
-        while(timer + 200> System.currentTimeMillis()  && opModeIsActive())
-            a = 1;
+        wait(200);
         outakeSampleServoPosition = servoextended;
 
 
@@ -459,5 +512,14 @@ public class AutonomieDriveTime extends LinearOpMode {
         intakeMotorPickUpPower = 0;
         outakeSampleServoPosition=servoextended;
         outakeArmServoPosition = 30;
+    }
+    public void wait(int timeMiliseconds){
+        long wTimer = System.currentTimeMillis();
+        while(wTimer+ timeMiliseconds > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat = 0;
+            backLeftPowerCat= 0;
+            frontRightPowerCat= 0;
+            backRightPowerCat= 0;
+        }
     }
 }

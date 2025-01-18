@@ -87,8 +87,10 @@ public class PositionStorage {
     public static boolean intakeExtraSpinDoOnce = false;
     public static boolean intakeExtraSpinOUTPUTDoOnce = false;
     public static double OutTime = 50;
+    public static boolean TransferDisabled = false;
 
     public static void resetStuff(){
+        TransferDisabled = false;
         intakeExtraSpinDoOnce = false;
         outakeArmTransferPos = 40;
         doOnceyTransfer = false;
