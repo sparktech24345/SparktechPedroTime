@@ -13,8 +13,8 @@ public class PositionStorage {
     public static double intakeTransferMarjeOfErrorBeforeTransfer=10; //42
     public static long bambuTransferTimer;
     public static boolean wasBambuExtended = false;
-    public static double intakeActualZero = 60; //old 75
-    public static double intakeTransferAngles = 35;
+    public static double intakeActualZero = 70; //old 75
+    public static double intakeTransferAngles = 40; //old 35
     public static double intakeRotateServoPosition = intakeTransferAngles;
     public static double outakeArmServoPosition = 60;
     public static double outakeSampleServoPosition = 0;
@@ -78,8 +78,21 @@ public class PositionStorage {
     public static double rememberPosOfServoOut = 0;
     public static boolean isHeldBascket = false;
     public static double outakeTransferPos= 70;
+    public static long noWiglyTransferTimer;
+    public static boolean noWiglyPls = false;
+    public static boolean doOnceyTransfer = false;
+    public static double outakeArmTransferPos = 40;
+    public static long intakeExtraSpinTimer;
+    public static long intakeExtraSpinOUTPUTTimer;
+    public static boolean intakeExtraSpinDoOnce = false;
+    public static boolean intakeExtraSpinOUTPUTDoOnce = false;
+    public static double OutTime = 50;
 
     public static void resetStuff(){
+        intakeExtraSpinDoOnce = false;
+        outakeArmTransferPos = 40;
+        doOnceyTransfer = false;
+        noWiglyPls = false;
         outakeTransferPos= 70;
         isHeldBascket = false;
         shouldTransfer = false;
@@ -96,8 +109,8 @@ public class PositionStorage {
         outakeSampleRetracted = 5;
         intakeTransferMarjeOfErrorBeforeTransfer = 10 ;//old 48
         wasBambuExtended = false;
-        intakeActualZero = 60; //old 75
-        intakeTransferAngles = 35;
+        intakeActualZero = 70; //old 75
+        intakeTransferAngles = 40; //old 35
         intakeRotateServoPosition = intakeTransferAngles;
         outakeArmServoPosition = 60;
         outakeSampleServoPosition = 0;

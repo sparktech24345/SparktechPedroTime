@@ -2,17 +2,16 @@ package pedroPathing.States;
 
 import static pedroPathing.States.PositionStorage.*;
 // Define Outtake States
-public class OutakeHM implements State {
+public class OutakeHMandWallPU implements State {
     @Override
     public void execute() {
         //System.out.println("Executing OuttakeStateSpecimen...");
         // Set servo and motor positions for this state
-        stateStringOutake = "OutakeHM";
+        stateStringOutake = "OutakeHMandWallPU";
         isOuttakeStateSpecimen = true;
         wasOuttakeStateSpecimen= true;
         wasisOuttakeStateSpecimen = true;
-        if(outakeSampleServoPosition != servoextended)
-            outakeSampleServoPosition=outakeSampleRetracted;
-        outakeArmServoPosition = 345;
+        outakeSampleServoPosition=servoextended;
+        outakeArmServoPosition = 30;
     }
 }

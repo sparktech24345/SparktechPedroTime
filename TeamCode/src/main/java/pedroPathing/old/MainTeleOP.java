@@ -20,7 +20,7 @@ import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateRetracted;
-import pedroPathing.States.OutakeHM;
+import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
 import pedroPathing.States.OuttakeSpecimenHang;
 import pedroPathing.States.OuttakeStateBasket;
@@ -99,7 +99,7 @@ public class MainTeleOP extends LinearOpMode {
         OuttakeStateSamplePickUp outtakeSamplePickUp = new OuttakeStateSamplePickUp();
         OuttakeStateStandbyDownWithSample outtakeStandbyDown = new OuttakeStateStandbyDownWithSample();
         OuttakeStateStandbyWithSample outtakeStandby = new OuttakeStateStandbyWithSample();
-        OutakeHM outakeHM = new OutakeHM();
+        OutakeHMandWallPU outakeHMandWallPU = new OutakeHMandWallPU();
 
         // Initialize Intake states
         IntakeStateRetracted intakeRetracted = new IntakeStateRetracted();
@@ -225,7 +225,7 @@ public class MainTeleOP extends LinearOpMode {
                     && outtakeFSM.currentStateOutake != outtakeBasket
                     && outtakeFSM.currentStateOutake != outtakeSpecimen
                     && outtakeFSM.currentStateOutake != outtakeSpecimenHang
-                    && outtakeFSM.currentStateOutake != outakeHM) {
+                    && outtakeFSM.currentStateOutake != outakeHMandWallPU) {
                 if(wasBambuExtended) {
                     bambuTransferTimer = System.currentTimeMillis();
                     wasBambuExtended = false;
@@ -318,8 +318,8 @@ public class MainTeleOP extends LinearOpMode {
                 isPressedY1 = true;
             }
             if(!gamepad1.y && isPressedY1){
-                if(outtakeFSM.currentStateOutake != outakeHM) {
-                    outtakeFSM.setState(outakeHM);
+                if(outtakeFSM.currentStateOutake != outakeHMandWallPU) {
+                    outtakeFSM.setState(outakeHMandWallPU);
                     outtakeFSM.executeCurrentState();
                     startingTimer2=System.currentTimeMillis();
                     wasOutputHM = true;

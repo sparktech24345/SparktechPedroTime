@@ -17,7 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateRetracted;
-import pedroPathing.States.OutakeHM;
+import pedroPathing.States.IntakeStateWallPURetraction;
+import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
 import pedroPathing.States.OuttakeSpecimenHang;
 import pedroPathing.States.OuttakeStateBasket;
@@ -25,6 +26,7 @@ import pedroPathing.States.OuttakeStateSamplePickUp;
 import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSample;
+import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.States.PositionStorage;
 import pedroPathing.tests.Config;
 
@@ -92,12 +94,14 @@ public class MainTeleOPNewIntake extends LinearOpMode {
         OuttakeStateBasket outtakeBasket = new OuttakeStateBasket();
         OuttakeStateSamplePickUp outtakeSamplePickUp = new OuttakeStateSamplePickUp();
         OuttakeStateStandbyDownWithSample outtakeStandbyDown = new OuttakeStateStandbyDownWithSample();
+        OuttakeStateTranfer outtakeStateTranfer = new OuttakeStateTranfer();
         OuttakeStateStandbyWithSample outtakeStandby = new OuttakeStateStandbyWithSample();
-        OutakeHM outakeHM = new OutakeHM();
+        OutakeHMandWallPU outakeHMandWallPU = new OutakeHMandWallPU();
 
         // Initialize Intake states
         IntakeStateRetracted intakeRetracted = new IntakeStateRetracted();
         IntakeStateExtended intakeExtended = new IntakeStateExtended();
+        IntakeStateWallPURetraction intakeStateWallPURetraction = new IntakeStateWallPURetraction();
 
         // Create the Outtake FSM with the initial state
         OuttakeFSM outtakeFSM = new OuttakeFSM(outtakeStandbyDown);
@@ -107,7 +111,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
         IntakeFSM intakeFSM = new IntakeFSM(intakeRetracted);
         intakeFSM.executeCurrentState();
 
-        
+
         intakeRotateServo.setPosition(intakeRotateServoPosition / 360);
         outakeArmServo.setPosition(outakeArmServoPosition / 360);
         outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
@@ -174,7 +178,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
 
 
             //If bad sample then kick out
-            if (colors.red >= 0.007 || colors.blue >= 0.007) {
+            if (colors.red >= 0.005 || colors.blue >= 0.005) {
                 if (color.equals(team)) {
                     wasBadSample = true;
                 } else {
@@ -184,8 +188,6 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                     }
                     intakeFSM.setState(intakeRetracted);
                     intakeFSM.executeCurrentState();
-                    if(!gamepad2.y)
-                        outakeSampleServoPosition = servoextended;
                     shouldTransfer = true;
                 }
             }
@@ -198,11 +200,11 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             if (gamepad1.a)
                 isPressedA1 = true;
             if (!gamepad1.a && isPressedA1) {
-                if (intakeFSM.currentStateIntake == intakeExtended) {
+                if (intakeFSM.currentStateIntake != intakeRetracted) {
                     //code state 1
                     intakeFSM.setState(intakeRetracted);
                     intakeFSM.executeCurrentState();
-                } else if (intakeFSM.currentStateIntake == intakeRetracted) {
+                } else if (intakeFSM.currentStateIntake != intakeExtended) {
                     //code state 2 ( probabil restras)
                     intakeFSM.setState(intakeExtended);
                     intakeFSM.executeCurrentState();
@@ -215,27 +217,54 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             //TRANSFER
 
             //TRANSFER INIT
-            if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer + intakeTargetPos && intakeFSM.currentStateIntake == intakeRetracted) || gamepad1.right_trigger>=0.4)
+            if (((intakeMotor.getCurrentPosition() < intakeTargetPosAdder + intakeTransferMarjeOfErrorBeforeTransfer + intakeTargetPos)
+                    || gamepad1.right_trigger>=0.4)
+                    && intakeFSM.currentStateIntake == intakeRetracted
                     && outtakeFSM.currentStateOutake != outtakeBasket
                     && outtakeFSM.currentStateOutake != outtakeSpecimen
                     && outtakeFSM.currentStateOutake != outtakeSpecimenHang
-                    && outtakeFSM.currentStateOutake != outakeHM) {
+                    && outtakeFSM.currentStateOutake != outakeHMandWallPU
+                    && (colors.red >= 0.005 || colors.blue >=0.005)
+                    //&& intakeRotateServo.getPosition()*360<=65
+            ) {
+
+                //start timer
                 if(wasBambuExtended) {
                     bambuTransferTimer = System.currentTimeMillis();
                     wasBambuExtended = false;
+                    doOnceyTransfer = true;
                 }
 
                 //ACTUAL TRANSFER
-                if (bambuTransferTimer + 0 < System.currentTimeMillis() && (colors.red >= 0.007 || colors.blue >=0.007) ) {
-                    outakeArmServoPosition = 40;
-                    if(outakeArmServo.getPosition()*360 <=42) {
-                        outtakeFSM.setState(outtakeStandbyDown);
+                //claw down
+                if (bambuTransferTimer + 300 < System.currentTimeMillis()) {
+                    if(doOnceyTransfer) {
+                        outtakeFSM.setState(outtakeStateTranfer);
                         outtakeFSM.executeCurrentState();
+                        doOnceyTransfer = false;
+                        intakeExtraSpinOUTPUTTimer = System.currentTimeMillis();
+                        intakeExtraSpinOUTPUTDoOnce = true;
+                        //intakeMotorPickUpPower = -0.5;
+                    }
+                    if(outakeArmServo.getPosition()*360 <=45 && noWiglyTransferTimer + 315 < System.currentTimeMillis()) {
+                        noWiglyTransferTimer = System.currentTimeMillis();
+                        noWiglyPls = true;
                     }
                 }
+                //close thingyy
+                if(noWiglyPls && noWiglyTransferTimer + 200 < System.currentTimeMillis()){
+                    outakeSampleServoPosition = outakeSampleRetracted;
+                }
+                //transfer done
+                if(noWiglyPls && noWiglyTransferTimer + 300 < System.currentTimeMillis()){
+                    outtakeFSM.setState(outtakeStandbyDown);
+                    outtakeFSM.executeCurrentState();
+                    outakeSampleServoPosition = outakeSampleRetracted;
+                    noWiglyPls = false;
+                }
+
             }
-
-
+            telemetry.addData("noWiglyPls", noWiglyPls);
 
             //Outtake Basket
             if (gamepad1.x)
@@ -251,7 +280,9 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                 } else telemetryOhNo = true;
                 isPressedX1 = false;
             }
-
+            if(gamepad1.x && outtakeFSM.currentStateOutake == outtakeBasket){
+                outakeSampleServoPosition = servoextended;
+            }
 
             //Outtake Specimen
             if (gamepad1.b)
@@ -305,22 +336,25 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                 isPressedY1 = true;
             }
             if(!gamepad1.y && isPressedY1){
-                if(outtakeFSM.currentStateOutake != outakeHM) {
-                    outtakeFSM.setState(outakeHM);
+                if(outtakeFSM.currentStateOutake != outakeHMandWallPU) {
+                    outtakeFSM.setState(outakeHMandWallPU);
                     outtakeFSM.executeCurrentState();
+                    intakeFSM.setState(intakeStateWallPURetraction);
+                    intakeFSM.executeCurrentState();
+                }
+                else if(outtakeFSM.currentStateOutake == outakeHMandWallPU){
                     startingTimer2=System.currentTimeMillis();
                     wasOutputHM = true;
+                    outakeSampleServoPosition = outakeSampleRetracted;
                 }
+                else telemetryOhNo = true;
                 isPressedY1 = false;
             }
-            if(System.currentTimeMillis() > startingTimer2 + 200 && wasOutputHM)
-                outakeSampleServoPosition= servoextended;
-            if(System.currentTimeMillis() > startingTimer2 + 800 && wasOutputHM){
-                outtakeFSM.setState(outtakeSamplePickUp);
+            if(wasOutputHM && System.currentTimeMillis() > startingTimer2 + 200 ){
+                outtakeFSM.setState(outtakeStandbyDown);
                 outtakeFSM.executeCurrentState();
                 wasOutputHM = false;
             }
-
 
             ///END OF STATES CODE
 
@@ -348,6 +382,15 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;
 
+            if(intakeExtraSpinTimer + 30 < System.currentTimeMillis() && intakeExtraSpinDoOnce){
+                if(intakeMotorPickUpPower>0)
+                    intakeMotorPickUpPower = 0;
+                intakeExtraSpinDoOnce = false;
+            }
+            /*if(intakeExtraSpinOUTPUTTimer + OutTime < System.currentTimeMillis() && intakeExtraSpinDoOnce){
+                intakeMotorPickUpPower = 0;
+                intakeExtraSpinOUTPUTDoOnce = false;
+            }//*/
 
             //GAMEPAD2 RELEASE TRIGGER
             if(gamepad2.y)

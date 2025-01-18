@@ -47,10 +47,10 @@ public class ServoTesting extends LinearOpMode {
                 outakeSampleServoPosition--;
             if(gamepad1.b)
                 outakeSampleServoPosition++;
-            /*if(gamepad1.x)
-                outakeRotateServoPosition+=0.2;
+            if(gamepad1.x)
+                intakeRotateServoPosition+=0.2;
             if(gamepad1.y)
-                outakeRotateServoPosition-=0.2;//*/
+                intakeRotateServoPosition-=0.2;//*/
 // 64 deschis 0 inchis la sample
 // 0 la rotate 60 pozitie baschet
 
@@ -64,8 +64,7 @@ public class ServoTesting extends LinearOpMode {
             telemetry.addData("outakeArmServoPOS", outakeArmServo.getPosition());
             telemetry.addData("outakeSamplePOS", outakeSampleServo.getPosition());
             telemetry.addData("outakeSamplePOS GO TO ", outakeSampleServoPosition);
-            //telemetry.addData("outakeRotateServo", outakeRotateServo.getPosition());
-            //telemetry.addData("outakeROTATEPOS GO TO ", outakeRotateServoPosition);
+            telemetry.addData("intakeRotateServoPosition", intakeRotateServoPosition);
             telemetry.addData("intakeRotateServoPos(TBS)", intakeRotateServo.getPosition());
             telemetry.addData("outake motor pos ", outakeLeftMotor.getCurrentPosition());
             telemetry.addData("intake motor pos ", intakeMotor.getCurrentPosition());
