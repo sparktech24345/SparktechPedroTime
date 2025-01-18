@@ -331,7 +331,7 @@ public class AutonomieDriveTime extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //adjust 2
-        while(timer+ 400 > System.currentTimeMillis()  && opModeIsActive()){
+        while(timer+ 350 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  0.6;
             backLeftPowerCat= - 0.6;
             frontRightPowerCat= -0.6;
@@ -449,6 +449,19 @@ public class AutonomieDriveTime extends LinearOpMode {
         wait(200);
         outakeSampleServoPosition = servoextended;
 
+        while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  0.4;
+            backLeftPowerCat=  0.4;
+            frontRightPowerCat= 0.4;
+            backRightPowerCat= 0.4;
+        }
+        wait(400);
+        while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  -0.4;
+            backLeftPowerCat=  -0.4;
+            frontRightPowerCat= -0.4;
+            backRightPowerCat= -0.4;
+        }
 
 
         frontLeftPowerCat=(0);

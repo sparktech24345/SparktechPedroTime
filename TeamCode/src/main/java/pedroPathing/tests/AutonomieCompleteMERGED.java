@@ -456,6 +456,11 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         WallPickUp();
 
         timer = System.currentTimeMillis();
+        while(timer + 500> System.currentTimeMillis()  && opModeIsActive())
+            a = 1;
+        outakeSampleServoPosition = outakeSampleRetracted;
+
+        timer = System.currentTimeMillis();
         while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  -0.6;
             backLeftPowerCat=  0.6;
@@ -468,7 +473,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
         while(timer + 500> System.currentTimeMillis()  && opModeIsActive()){}
         timer = System.currentTimeMillis();
-        outakeSampleServoPosition = outakeSampleRetracted;
+
 
         timer = System.currentTimeMillis();
         while(timer + 300> System.currentTimeMillis()  && opModeIsActive())
