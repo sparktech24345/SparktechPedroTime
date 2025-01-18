@@ -307,8 +307,8 @@ public class AutonomieComplete extends LinearOpMode {
         timer = System.currentTimeMillis();
         while(timer+ 1600 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  -0.1;
-            backLeftPowerCat=  0.6;
-            frontRightPowerCat= 0.6;
+            backLeftPowerCat=  0.2;
+            frontRightPowerCat= 0.2;
             backRightPowerCat= -0.1;
         }
         timer = System.currentTimeMillis();

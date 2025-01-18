@@ -265,10 +265,10 @@ public class AutonomieDriveTimeSpecimenOnly extends LinearOpMode {
 
         timer = System.currentTimeMillis();
         while(timer+ 700 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat =  0.7;
-            backLeftPowerCat=  -0.7;
-            frontRightPowerCat= -0.7;
-            backRightPowerCat= 0.7;
+            frontLeftPowerCat =  0.2;
+            backLeftPowerCat=  -0.2;
+            frontRightPowerCat= -0.2;
+            backRightPowerCat= 0.2;
         }
         //time for second
 
@@ -390,17 +390,17 @@ public class AutonomieDriveTimeSpecimenOnly extends LinearOpMode {
 
         timer = System.currentTimeMillis();
         while(timer+ 1600 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat =  -0.1/3f;
-            backLeftPowerCat=  0.2;
-            frontRightPowerCat= 0.2;
-            backRightPowerCat= -0.1/3f;
+            frontLeftPowerCat =  -0.1f;
+            backLeftPowerCat=  0.6;
+            frontRightPowerCat= 0.6;
+            backRightPowerCat= -0.1f;
         }
         timer = System.currentTimeMillis();
         while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat =  0.3;
-            backLeftPowerCat=  0.3;
-            frontRightPowerCat= 0.3;
-            backRightPowerCat= 0.3;
+            frontLeftPowerCat =  0.1;
+            backLeftPowerCat=  0.1;
+            frontRightPowerCat= 0.1;
+            backRightPowerCat= 0.1;
         }
         frontLeftPowerCat=(0);
         backLeftPowerCat=(0);
@@ -414,10 +414,6 @@ public class AutonomieDriveTimeSpecimenOnly extends LinearOpMode {
         while(timer + 300> System.currentTimeMillis()  && opModeIsActive())
             a = 1;
         outakeSampleServoPosition = servoextended;
-
-
-
-
 
 
 
