@@ -2,6 +2,10 @@ package pedroPathing.constants;
 
 import com.pedropathing.localization.*;
 import com.pedropathing.localization.constants.*;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class LConstants {
     static {
@@ -17,6 +21,15 @@ public class LConstants {
         ThreeWheelConstants.leftEncoderDirection = Encoder.REVERSE;
         ThreeWheelConstants.rightEncoderDirection = Encoder.REVERSE;
         ThreeWheelConstants.strafeEncoderDirection = Encoder.FORWARD;
+
+        OTOSConstants.useCorrectedOTOSClass = true;
+        OTOSConstants.hardwareMapName = "SparkFunSensor";
+        OTOSConstants.linearUnit = DistanceUnit.METER;
+        OTOSConstants.angleUnit = AngleUnit.RADIANS;
+        OTOSConstants.offset = new SparkFunOTOS.Pose2D(0, 0, Math.PI / 2);
+        OTOSConstants.linearScalar = 1.0;
+        OTOSConstants.angularScalar = 1.0;
+
     }
 }
 
