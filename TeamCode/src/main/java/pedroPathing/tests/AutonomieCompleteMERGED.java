@@ -248,12 +248,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
 
         timer = System.currentTimeMillis();
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
 
         timer = System.currentTimeMillis();
 
@@ -267,12 +262,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
 
         timer = System.currentTimeMillis();
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
 
         timer = System.currentTimeMillis();
 
@@ -289,13 +279,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
-
+        wait(200);
         timer = System.currentTimeMillis();
 
         //pushy sample 1
@@ -310,12 +294,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
         //SAMPLE 1 DONE
         //WallPickUp(); tf??????
 
@@ -326,7 +305,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
 
         timer = System.currentTimeMillis();
         //forward init
-        while(timer+1000 > System.currentTimeMillis()  && opModeIsActive()){
+        while(timer+1100 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat=0.7;
             backLeftPowerCat= 0.7;
             frontRightPowerCat=0.7;
@@ -335,18 +314,13 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 400 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(400);
 
 
         timer = System.currentTimeMillis();
 
         //adjust 2
-        while(timer+ 400 > System.currentTimeMillis()  && opModeIsActive()){
+        while(timer+ 350 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  0.6;
             backLeftPowerCat= - 0.6;
             frontRightPowerCat= -0.6;
@@ -356,12 +330,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(300);
 
         timer = System.currentTimeMillis();
 
@@ -378,16 +347,11 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
 
         timer = System.currentTimeMillis();
         //forward init
-        while(timer+1050 > System.currentTimeMillis()  && opModeIsActive()){
+        while(timer+900 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat=0.7;
             backLeftPowerCat= 0.7;
             frontRightPowerCat=0.7;
@@ -397,12 +361,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
 
 
         timer = System.currentTimeMillis();
@@ -417,12 +376,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
 
         timer = System.currentTimeMillis();
 
@@ -436,12 +390,7 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
         timer = System.currentTimeMillis();
 
         //wait
-        while(timer+ 200 > System.currentTimeMillis()  && opModeIsActive()){
-            frontLeftPowerCat = 0;
-            backLeftPowerCat= 0;
-            frontRightPowerCat= 0;
-            backRightPowerCat= 0;
-        }
+        wait(200);
 
        /* timer = System.currentTimeMillis();
         while(timer+ 1000 > System.currentTimeMillis()  && opModeIsActive()){
@@ -451,27 +400,42 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
             backRightPowerCat= -0.2;
         } */
         //ROUND 3 DONE
+        timer = System.currentTimeMillis();
+        while(timer +3000> System.currentTimeMillis()  && opModeIsActive())
+            telemetry.addData("done",true);
 
         //RUN AUTO SPECIMEN TIPE
         WallPickUp();
 
-        timer = System.currentTimeMillis();
-        while(timer + 500> System.currentTimeMillis()  && opModeIsActive())
-            a = 1;
-        outakeSampleServoPosition = outakeSampleRetracted;
-
+        //go left switch auto tipe
         timer = System.currentTimeMillis();
         while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  -0.6;
             backLeftPowerCat=  0.6;
-            frontRightPowerCat= 0.6;
+            frontRightPowerCat= 0.6  ;
             backRightPowerCat= -0.6;
         }
+
+        //go back switch auto tipe
+        timer = System.currentTimeMillis();
+        while(timer+ 300 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  -0.4;
+            backLeftPowerCat=  -0.4;
+            frontRightPowerCat= -0.4;
+            backRightPowerCat= -0.4;
+        }
+        //close claw
+        outakeSampleServoPosition = outakeSampleRetracted;
+        timer = System.currentTimeMillis();
+
+        while(timer + 500> System.currentTimeMillis()  && opModeIsActive())
+            a = 1;
+
         //Hanging Time
 
         //-go slowly left- HOW TF IS THIS GOING LEFT
         timer = System.currentTimeMillis();
-        while(timer + 500> System.currentTimeMillis()  && opModeIsActive()){}
+        wait(500);
         timer = System.currentTimeMillis();
 
 
@@ -490,13 +454,17 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
             backRightPowerCat= -0.6;
         }
         wait(200);
-       /* timer = System.currentTimeMillis();
+
+
+       /* timer = System.currentTimeMillis(); ///WAS MODIFIED SHOULD BE COMENTED
         while(timer+ 1600 > System.currentTimeMillis()  && opModeIsActive()){
             frontLeftPowerCat =  -0.1;
             backLeftPowerCat=  0.6;
             frontRightPowerCat= 0.6;
             backRightPowerCat= -0.1;
-             } */
+             }
+
+        */
 
         timer = System.currentTimeMillis();
         while(timer+ 701 > System.currentTimeMillis()  && opModeIsActive()){
@@ -535,6 +503,13 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
             backRightPowerCat= 0.6;
         }
         wait(200);
+       /* timer = System.currentTimeMillis(); ///WAS MODIFIED SHOULD BE COMENTED
+        while(timer+ 1600 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  -0.1;
+            backLeftPowerCat=  0.6;
+            frontRightPowerCat= 0.6;
+            backRightPowerCat= -0.1;
+        }*/
 
         timer = System.currentTimeMillis();
         while(timer+ 701 > System.currentTimeMillis()  && opModeIsActive()){
@@ -570,6 +545,13 @@ public class AutonomieCompleteMERGED extends LinearOpMode {
             backRightPowerCat= -0.6;
         }
         wait(200);
+        /*timer = System.currentTimeMillis(); ///WAS MODIFIED SHOULD BE COMENTED
+        while(timer+ 1600 > System.currentTimeMillis()  && opModeIsActive()){
+            frontLeftPowerCat =  -0.1;
+            backLeftPowerCat=  0.6;
+            frontRightPowerCat= 0.6;
+            backRightPowerCat= -0.1;
+    }*/
 
         timer = System.currentTimeMillis();
         while(timer+ 701 > System.currentTimeMillis()  && opModeIsActive()){
