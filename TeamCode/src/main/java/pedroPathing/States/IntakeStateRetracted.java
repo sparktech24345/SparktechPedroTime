@@ -16,8 +16,10 @@ public class IntakeStateRetracted implements State {
         intakeRotateServoPosition = intakeTransferAngles;
         intakeTargetPos = intakeActualZero; //Waat is going on here why is angle for motor please check
         //intakeMotorPickUpPower = 0;
-        intakeExtraSpinTimer = System.currentTimeMillis();
-        intakeExtraSpinDoOnce = true;
+        if(!TransferDisabled) {
+            intakeExtraSpinTimer = System.currentTimeMillis();
+            intakeExtraSpinDoOnce = true;
+        } else intakeMotorPickUpPower = 0;
         if(wasActivePastActiveIntake){
             wasActivePastActiveIntake = false;
             Toggle.toggledUp = false;

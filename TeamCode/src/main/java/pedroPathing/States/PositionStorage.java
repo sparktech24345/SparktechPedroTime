@@ -10,7 +10,7 @@ public class PositionStorage {
     public static boolean timerNotSet = false;
     public static double intakeTimeTransferAdder = 15;
     public static double outakeSampleRetracted = 5;
-    public static double intakeTransferMarjeOfErrorBeforeTransfer=10; //42
+    public static double intakeTransferMarjeOfErrorBeforeTransfer=10; //42 //10 more recent
     public static long bambuTransferTimer;
     public static boolean wasBambuExtended = false;
     public static double intakeActualZero = 70; //old 75
@@ -88,8 +88,15 @@ public class PositionStorage {
     public static boolean intakeExtraSpinOUTPUTDoOnce = false;
     public static double OutTime = 50;
     public static boolean TransferDisabled = false;
+    public static long SpitOutSampleHMTimer;
+    public static boolean SpitOutSampleHM = false;
+    public static boolean SpitOutSampleHM2 = false;
+    public static boolean PickyUppyOnce = false;
 
     public static void resetStuff(){
+        SpitOutSampleHM = false;
+        SpitOutSampleHM2 = false;
+        PickyUppyOnce = false;
         TransferDisabled = false;
         intakeExtraSpinDoOnce = false;
         outakeArmTransferPos = 40;
@@ -109,7 +116,7 @@ public class PositionStorage {
         timerNotSet = false;
         intakeTimeTransferAdder = 15;
         outakeSampleRetracted = 5;
-        intakeTransferMarjeOfErrorBeforeTransfer = 10 ;//old 48
+        intakeTransferMarjeOfErrorBeforeTransfer = 10 ;//old 48 //10 more recent
         wasBambuExtended = false;
         intakeActualZero = 70; //old 75
         intakeTransferAngles = 40; //old 35

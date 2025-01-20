@@ -13,6 +13,7 @@ public class IntakeStateExtended implements State {
         wasActiveintake = true;
         wasActivePastActiveIntake = true;
         wasBambuExtended = true;
+        PickyUppyOnce = true;
         intakeRotateServoPosition = IntakeServoColectPos;
         if(gravityAdder==0)
             gravityAdder = 7;
