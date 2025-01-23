@@ -49,8 +49,8 @@ import pedroPathing.constants.LConstants;
  * @version 1.0, 3/13/2024
  */
 @Config
-@Autonomous(name = "Lateral Zero Power Acceleration Tuner", group = "Automatic Tuners")
-@Disabled
+@Autonomous(name = "Lateral Zero Power Acceleration Tuner DANGER", group = "Automatic Tuners")
+
 public class LateralZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 
