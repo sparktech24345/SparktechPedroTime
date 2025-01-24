@@ -1,10 +1,6 @@
 package pedroPathing.tests;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static pedroPathing.States.PositionStorage.backLeftPowerCat;
 import static pedroPathing.States.PositionStorage.backRightPowerCat;
 import static pedroPathing.States.PositionStorage.frontLeftPowerCat;
@@ -12,24 +8,21 @@ import static pedroPathing.States.PositionStorage.frontRightPowerCat;
 import static pedroPathing.States.PositionStorage.intakeActualZero;
 import static pedroPathing.States.PositionStorage.intakeTargetPos;
 import static pedroPathing.States.PositionStorage.intakeTargetPosAdder;
-import static pedroPathing.States.PositionStorage.outakeTargetPos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import pedroPathing.ControlMotor;
 
-@TeleOp(name = "Only Drive Teleop", group = "Linear OpMode")
-@Disabled
-public class DriveOnlyTest extends LinearOpMode {
+@TeleOp(name = "NO BREAKES DRIFT TIME", group = "Linear OpMode")
+
+public class DriveOnlyTestNOBREAKS extends LinearOpMode {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     ControlMotor intakeControlMotor = new ControlMotor();
@@ -66,16 +59,12 @@ public class DriveOnlyTest extends LinearOpMode {
                 DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
                 intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
 
-                backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
                 intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
                 while(opModeIsActive()){
                     double intakeMotorPower = 0;
-                    intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeActualZero+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+                    intakeMotorPower = intakeControlMotor.PIDControl(0, intakeMotor.getCurrentPosition());
 
                     frontLeftMotor.setPower(frontLeftPowerCat);
                     backLeftMotor.setPower(backLeftPowerCat);
@@ -99,6 +88,8 @@ public class DriveOnlyTest extends LinearOpMode {
             double horizontal = gamepad1.left_stick_x;
             double pivot = gamepad1.right_stick_x;
             boolean slowdown = gamepad1.left_bumper;
+
+            pivot = - pivot;
 
             //calculating nedded power by method 1
             frontRightPowerCat = (pivot - vertical - horizontal);

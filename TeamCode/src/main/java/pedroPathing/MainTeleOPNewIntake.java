@@ -396,9 +396,14 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;
 
-            if(intakeExtraSpinTimer + 30 < System.currentTimeMillis() && intakeExtraSpinDoOnce){
+            if((colors.red <= 0.005 || colors.blue <= 0.005) && intakeExtraSpinDoOnce){
                 if(intakeMotorPickUpPower>0)
                     intakeMotorPickUpPower = 0;
+                intakeExtraSpinDoOnce = false;
+            }
+            /*if(intakeExtraSpinTimer + 30 < System.currentTimeMillis() && intakeExtraSpinDoOnce){
+                if(intakeMotorPickUpPower>0)
+                    intakeMotorPickUpPower = 0; //OLD WAY
                 intakeExtraSpinDoOnce = false;
             }
             /*if(intakeExtraSpinOUTPUTTimer + OutTime < System.currentTimeMillis() && intakeExtraSpinDoOnce){
@@ -523,6 +528,8 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             frontRightMotor.setPower(frontRightPowerCat);
             backRightMotor.setPower(backRightPowerCat);
             intakeMotor.setPower(intakeMotorPower);
+            //outakeRightMotor.setPower(0);
+            //outakeLeftMotor.setPower(0);//*/
             outakeRightMotor.setPower(outakeMotorPower);
             outakeLeftMotor.setPower(outakeMotorPower);//*/
             intakeSpinMotor.setPower(intakeMotorPickUpPower);
