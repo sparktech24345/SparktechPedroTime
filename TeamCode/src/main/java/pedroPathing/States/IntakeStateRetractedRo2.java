@@ -2,9 +2,10 @@ package pedroPathing.States;
 
 import static pedroPathing.States.PositionStorage.*;
 
+
 import pedroPathing.Toggle;
 
-public class IntakeStateRetracted implements State {
+public class IntakeStateRetractedRo2 implements State {
     @Override
     public void execute() {
         //System.out.println("Executing IntakeStateRetracted...");
@@ -13,14 +14,9 @@ public class IntakeStateRetracted implements State {
         gravityAdder = 0;
         stateStringIntake = "IntakeStateRetracted";
         isIntakeStateRectracted = true;
-        intakeRotateServoPosition = intakeTransferAngles;
-        intakeTargetPos = intakeActualZero; //Waat is going on here why is angle for motor please check
-        //intakeMotorPickUpPower = 0;
-        if(!TransferDisabled) {
-            intakeExtraSpinTimer = System.currentTimeMillis();
-            intakeExtraSpinDoOnce = true;
-            intakeMotorPickUpPower = 0.7;
-        } else intakeMotorPickUpPower = 0;
+        intakeRotateServoPosition = 0;
+        intakeTargetPos = intakeRo2Transfer; //Waat is going on here why is angle for motor please check
+        intakeMotorPickUpPower = 0;
         if(wasActivePastActiveIntake){
             wasActivePastActiveIntake = false;
             Toggle.toggledUp = false;

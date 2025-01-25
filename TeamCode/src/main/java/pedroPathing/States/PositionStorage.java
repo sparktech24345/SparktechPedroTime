@@ -13,7 +13,7 @@ public class PositionStorage {
     public static double intakeTransferMarjeOfErrorBeforeTransfer=10; //42 //10 more recent
     public static long bambuTransferTimer;
     public static boolean wasBambuExtended = false;
-    public static double intakeActualZero = 70; //old 75
+    public static double intakeActualZero = 60; //old 75
     public static double intakeTransferAngles = 40; //old 35
     public static double intakeRotateServoPosition = intakeTransferAngles;
     public static double outakeArmServoPosition = 60;
@@ -92,8 +92,18 @@ public class PositionStorage {
     public static boolean SpitOutSampleHM = false;
     public static boolean SpitOutSampleHM2 = false;
     public static boolean PickyUppyOnce = false;
+    public static double intakeRo2Transfer = 200;
+    public static double intakeRotateAfterRo2Trasfer = 160;
+    public static boolean extendABitAfterRo2Transfer = false;
+    public static double extendABitAfterRo2TransferPos = intakeRotateAfterRo2Trasfer + 50;
+    public static boolean intakeShouldRetractAfterTransfer = false;
 
     public static void resetStuff(){
+        intakeShouldRetractAfterTransfer = false;
+        extendABitAfterRo2TransferPos = intakeRotateAfterRo2Trasfer + 50;
+        extendABitAfterRo2Transfer= false;
+        intakeRotateAfterRo2Trasfer = 160;
+        intakeRo2Transfer = 200;
         SpitOutSampleHM = false;
         SpitOutSampleHM2 = false;
         PickyUppyOnce = false;
@@ -118,7 +128,7 @@ public class PositionStorage {
         outakeSampleRetracted = 5;
         intakeTransferMarjeOfErrorBeforeTransfer = 10 ;//old 48 //10 more recent
         wasBambuExtended = false;
-        intakeActualZero = 70; //old 75
+        intakeActualZero = 60; //old 75
         intakeTransferAngles = 40; //old 35
         intakeRotateServoPosition = intakeTransferAngles;
         outakeArmServoPosition = 60;

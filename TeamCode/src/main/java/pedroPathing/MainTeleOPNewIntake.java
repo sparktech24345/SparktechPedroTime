@@ -18,6 +18,7 @@ import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateRetracted;
+import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
 import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
@@ -131,7 +132,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             ///gamepad1
             double vertical = gamepad1.left_stick_y;
             double horizontal = gamepad1.left_stick_x;
-            double pivot = gamepad1.right_stick_y;
+            double pivot = gamepad1.right_stick_x;
             boolean slowdown = gamepad1.left_bumper;
 
             ///gamepad2
@@ -239,6 +240,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                     && outtakeFSM.currentStateOutake != outakeHMandWallPU
                     && (colors.red >= 0.005 || colors.blue >=0.005)
                     && !TransferDisabled
+                    || gamepad2.x
                     //&& intakeRotateServo.getPosition()*360<=65
             ) {
 
@@ -398,7 +400,8 @@ public class MainTeleOPNewIntake extends LinearOpMode {
 
             if((colors.red <= 0.005 && colors.blue <= 0.005)
                     && intakeExtraSpinDoOnce
-                    && outtakeFSM.currentStateOutake == outtakeStandbyDown){
+                    && outtakeFSM.currentStateOutake == outtakeStandbyDown
+                    && false){
                 if(intakeMotorPickUpPower>0)
                     intakeMotorPickUpPower = 0;
                 intakeExtraSpinDoOnce = false;

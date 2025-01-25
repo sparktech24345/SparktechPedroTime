@@ -20,7 +20,7 @@ public class OuttakeStateTranfer implements State {
         stateStringOutake = "OuttakeStateTranfer";
         isOuttakeStateStandbyWithSample = true;
         spinyOutputToggle = true;
-        outakeArmServoPosition = outakeArmTransferPos;
+        outakeArmServoPosition = 20;
         outakeTargetPos =0;
         outakeSampleServoPosition = servoextended;
     }
