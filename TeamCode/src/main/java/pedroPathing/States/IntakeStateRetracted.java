@@ -19,6 +19,7 @@ public class IntakeStateRetracted implements State {
         if(!TransferDisabled) {
             intakeExtraSpinTimer = System.currentTimeMillis();
             intakeExtraSpinDoOnce = true;
+            intakeMotorPickUpPower = 0.4;
         } else intakeMotorPickUpPower = 0;
         if(wasActivePastActiveIntake){
             wasActivePastActiveIntake = false;

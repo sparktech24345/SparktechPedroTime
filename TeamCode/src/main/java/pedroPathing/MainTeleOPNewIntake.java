@@ -131,7 +131,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             ///gamepad1
             double vertical = gamepad1.left_stick_y;
             double horizontal = gamepad1.left_stick_x;
-            double pivot = gamepad1.right_stick_x;
+            double pivot = gamepad1.right_stick_y;
             boolean slowdown = gamepad1.left_bumper;
 
             ///gamepad2
@@ -396,7 +396,9 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;
 
-            if((colors.red <= 0.005 || colors.blue <= 0.005) && intakeExtraSpinDoOnce){
+            if((colors.red <= 0.005 && colors.blue <= 0.005)
+                    && intakeExtraSpinDoOnce
+                    && outtakeFSM.currentStateOutake == outtakeStandbyDown){
                 if(intakeMotorPickUpPower>0)
                     intakeMotorPickUpPower = 0;
                 intakeExtraSpinDoOnce = false;
