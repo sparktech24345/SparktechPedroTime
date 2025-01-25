@@ -40,8 +40,11 @@ public class AutonomiePedroTest extends OpMode {
 
     /** Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
     private final Pose endPose = new Pose(20, 72, Math.toRadians(0));
+    private final Pose parkingPose=new Pose(5,5,Math.toRadians(0));
+
 
     private Path forward;
+    private Path parking;
 
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
@@ -67,6 +70,9 @@ public class AutonomiePedroTest extends OpMode {
         forward = new Path(new BezierLine(new Point(startPose), new Point(endPose)));
         forward.setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading());
 
+        parking = new Path(new BezierLine(new Point(endPose), new Point(parkingPose)));
+        parking.setLinearHeadingInterpolation(endPose.getHeading(), parkingPose.getHeading());
+
 
     }
 
@@ -78,6 +84,11 @@ public class AutonomiePedroTest extends OpMode {
         switch (pathState) {
             case 0:
                 follower.followPath(forward);
+                setPathState(1);
+                break;
+
+            case 1:
+                follower.followPath(parking);
                 setPathState(-1);
                 break;
         }
