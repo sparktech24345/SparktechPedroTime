@@ -105,8 +105,10 @@ public class PositionStorage {
     public static boolean transferTimerInit = false;
     public static double TransferTimer;
     public static boolean HeadUpIntake = false;
+    public static boolean stopMulthiread = true;
 
     public static void resetStuff(){
+        stopMulthiread = true;
         HeadUpIntake = false;
         transferTimerInit = false;
         someExtraThingDoOnce = false;

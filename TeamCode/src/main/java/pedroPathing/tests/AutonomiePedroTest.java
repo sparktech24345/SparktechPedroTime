@@ -1,18 +1,6 @@
 package pedroPathing.tests;
 
-import static pedroPathing.States.PositionStorage.PIDincrement;
-import static pedroPathing.States.PositionStorage.backLeftPowerCat;
-import static pedroPathing.States.PositionStorage.backRightPowerCat;
-import static pedroPathing.States.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.States.PositionStorage.frontRightPowerCat;
-import static pedroPathing.States.PositionStorage.gravityAdder;
-import static pedroPathing.States.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.States.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.States.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.States.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.States.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.States.PositionStorage.outakeTargetPos;
-import static pedroPathing.States.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.States.PositionStorage.*;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -46,7 +34,7 @@ public class AutonomiePedroTest extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(1, 68, Math.toRadians(0)); //start
+    private final Pose startPose = new Pose(1, 58, Math.toRadians(0)); //start
     private final Pose startSpecimenPose = new Pose(35, 68, Math.toRadians(0)); //line 1
     private final Pose intermediaryPos1=new Pose(35,34,Math.toRadians(0)); //line 2
     private final Pose sample1LeftPose =new Pose(62,34,Math.toRadians(0)); //line 3
@@ -56,8 +44,8 @@ public class AutonomiePedroTest extends OpMode {
     private final Pose sample2MovePose=new Pose(62,12,Math.toRadians(0)); //line 7
     private final Pose sample2ObservationZonePose =new Pose(15,12,Math.toRadians(0)); //line 8
     private final Pose sample3LeftPose =new Pose(62,12,Math.toRadians(0)); //line 9
-    private final Pose sample3MovePose=new Pose(62,4,Math.toRadians(0)); //line 10
-    private final Pose sample3ObservationZonePose =new Pose(15,4,Math.toRadians(0)); //line 11
+    private final Pose sample3MovePose=new Pose(62,8,Math.toRadians(0)); //line 10
+    private final Pose sample3ObservationZonePose =new Pose(15,8,Math.toRadians(0)); //line 11
     private final Pose getSpecimenPose=new Pose(2,15,Math.toRadians(0));// line 12
     private final Pose ScoreSpecimenPose=new Pose(34,34,Math.toRadians(0)); //all the same, line 13
     private final Pose specimen1Score = ScoreSpecimenPose;
@@ -206,62 +194,85 @@ public class AutonomiePedroTest extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-
-                follower.followPath(forward);
-                setPathState(1);
+                if(!follower.isBusy()) {
+                    follower.followPath(forward,true);
+                    setPathState(1);
+                }
                 break;
 
             case 1:
-                follower.followPath(moveSample1,true);
+                if (!follower.isBusy()) {
+                follower.followPath(moveSample1, true);
                 setPathState(2);
+                }
                 break;
 
             case 2:
-                follower.followPath(moveSample2,true);
-                setPathState(3);
+                if (!follower.isBusy()) {
+                    follower.followPath(moveSample2, true);
+                    setPathState(3);
+                }
                 break;
 
             case 3:
-                follower.followPath(moveSample3,true);
-                setPathState(4);
+                if (!follower.isBusy()) {
+                    follower.followPath(moveSample3, true);
+                    setPathState(4);
+                }
                 break;
 
             case 4:
-                follower.followPath(pickUpSpecimen1,true);
-                setPathState(5);
-
+                if (!follower.isBusy()) {
+                    follower.followPath(pickUpSpecimen1, true);
+                    setPathState(5);
+                }
+                break;
 
             case 5:
-                follower.followPath(scoreSpecimen1);
-                setPathState(6);
+                if (!follower.isBusy()) {
+                    follower.followPath(scoreSpecimen1);
+                    setPathState(6);
+                }
                 break;
             case 6:
-                follower.followPath(pickUpSpecimen2);
-                setPathState(7);
+                if (!follower.isBusy()) {
+                    follower.followPath(pickUpSpecimen2);
+                    setPathState(7);
+                }
                 break;
             case 7:
-                follower.followPath(scoreSpecimen2);
-                setPathState(8);
+                if (!follower.isBusy()) {
+                    follower.followPath(scoreSpecimen2);
+                    setPathState(8);
+                }
                 break;
 
             case 8:
-                follower.followPath(pickUpSpecimen3);
-                setPathState(9);
+                if (!follower.isBusy()) {
+                    follower.followPath(pickUpSpecimen3);
+                    setPathState(9);
+                }
                 break;
 
             case 9:
-                follower.followPath(scoreSpecimen3);
-                setPathState(10);
+                if (!follower.isBusy()) {
+                    follower.followPath(scoreSpecimen3);
+                    setPathState(10);
+                }
                 break;
 
             case 10:
-                follower.followPath(pocketSpecimen);
-                setPathState(11);
+                if (!follower.isBusy()) {
+                    follower.followPath(pocketSpecimen);
+                    setPathState(11);
+                }
                 break;
 
             case 11:
-                follower.followPath(parking);
-                setPathState(-1);
+                if (!follower.isBusy()) {
+                    follower.followPath(parking);
+                    setPathState(-1);
+                }
                 break;
         }
     }
@@ -305,6 +316,8 @@ public class AutonomiePedroTest extends OpMode {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
+                stopMulthiread = false;
+
                 double intakeMotorPower = 0;
                 double outakeMotorPower = 0;
                 DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
@@ -330,7 +343,7 @@ public class AutonomiePedroTest extends OpMode {
 
                 NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
-                while(true){
+                while(!stopMulthiread){
                     intakeMotorPower = intakeControlMotor.PIDControl(0, intakeMotor.getCurrentPosition());
                     outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
                     outakeMotorPower *= PIDincrement;
@@ -345,14 +358,15 @@ public class AutonomiePedroTest extends OpMode {
                     intakeRotateServo.setPosition((intakeRotateServoPosition+gravityAdder) / 360);
                     outakeArmServo.setPosition(outakeArmServoPosition / 360);
                     outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
-                    telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
+
+                    /*telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
                     telemetry.addData("backLeftPowerCat",backLeftPowerCat);
                     telemetry.addData("frontRightPowerCat",frontRightPowerCat);
                     telemetry.addData("backRightPowerCat",backRightPowerCat);
 
                     telemetry.addLine("This is Motor "+Thread.currentThread().getId());
                     updateTelemetry(telemetry);
-
+                       //*/
 
                 }
             }
@@ -376,5 +390,6 @@ public class AutonomiePedroTest extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
+        stopMulthiread = true;
     }
 }
