@@ -14,8 +14,8 @@ public class IntakeStateRetractedRo2 implements State {
         gravityAdder = 0;
         stateStringIntake = "IntakeStateRetracted";
         isIntakeStateRectracted = true;
-        intakeRotateServoPosition = 0;
-        intakeTargetPos = intakeRo2Transfer; //Waat is going on here why is angle for motor please check
+        intakeRotateServoPosition = intakeRo2SmashPos;
+        intakeTargetPos = intakeSlidersRo2Transfer; //Waat is going on here why is angle for motor please check
         intakeMotorPickUpPower = 0;
         if(wasActivePastActiveIntake){
             wasActivePastActiveIntake = false;

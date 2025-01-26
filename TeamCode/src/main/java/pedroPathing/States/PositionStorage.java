@@ -9,7 +9,7 @@ public class PositionStorage {
     public static double intakeTargetPosAdder=0;
     public static boolean timerNotSet = false;
     public static double intakeTimeTransferAdder = 15;
-    public static double outakeSampleRetracted = 5;
+    public static double outakeSampleRetracted = 12;
     public static double intakeTransferMarjeOfErrorBeforeTransfer=10; //42 //10 more recent
     public static long bambuTransferTimer;
     public static boolean wasBambuExtended = false;
@@ -92,18 +92,32 @@ public class PositionStorage {
     public static boolean SpitOutSampleHM = false;
     public static boolean SpitOutSampleHM2 = false;
     public static boolean PickyUppyOnce = false;
-    public static double intakeRo2Transfer = 200;
+    public static double intakeSlidersRo2Transfer = 168;
     public static double intakeRotateAfterRo2Trasfer = 160;
     public static boolean extendABitAfterRo2Transfer = false;
-    public static double extendABitAfterRo2TransferPos = intakeRotateAfterRo2Trasfer + 50;
+    public static double extendABitAfterRo2TransferPos = intakeRotateAfterRo2Trasfer + 100;
     public static boolean intakeShouldRetractAfterTransfer = false;
+    public static boolean intakeShouldRetractAfterTransferTimerToggle = false;
+    public static long intakeShouldRetractAfterTransferTimer;
+    public static double pickUpAngleRo2V2Adder = 100;
+    public static double intakeRo2SmashPos = 45;
+    public static boolean someExtraThingDoOnce = false;
+    public static boolean transferTimerInit = false;
+    public static double TransferTimer;
+    public static boolean HeadUpIntake = false;
 
     public static void resetStuff(){
+        HeadUpIntake = false;
+        transferTimerInit = false;
+        someExtraThingDoOnce = false;
+        intakeRo2SmashPos = 45;
+        pickUpAngleRo2V2Adder = 100;
+        intakeShouldRetractAfterTransferTimerToggle = false;
         intakeShouldRetractAfterTransfer = false;
-        extendABitAfterRo2TransferPos = intakeRotateAfterRo2Trasfer + 50;
-        extendABitAfterRo2Transfer= false;
         intakeRotateAfterRo2Trasfer = 160;
-        intakeRo2Transfer = 200;
+        extendABitAfterRo2TransferPos = intakeRotateAfterRo2Trasfer + 100;
+        extendABitAfterRo2Transfer= false;
+        intakeSlidersRo2Transfer = 168;
         SpitOutSampleHM = false;
         SpitOutSampleHM2 = false;
         PickyUppyOnce = false;
@@ -125,7 +139,7 @@ public class PositionStorage {
         intakeTargetPosAdder=0;
         timerNotSet = false;
         intakeTimeTransferAdder = 15;
-        outakeSampleRetracted = 5;
+        outakeSampleRetracted = 12;
         intakeTransferMarjeOfErrorBeforeTransfer = 10 ;//old 48 //10 more recent
         wasBambuExtended = false;
         intakeActualZero = 60; //old 75
