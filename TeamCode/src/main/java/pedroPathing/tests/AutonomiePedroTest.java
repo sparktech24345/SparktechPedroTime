@@ -35,8 +35,8 @@ public class AutonomiePedroTest extends OpMode {
     private int pathState;
 
     private final Pose startPose = new Pose(1, 58, Math.toRadians(0)); //start
-    private final Pose startSpecimenPose = new Pose(35, 68, Math.toRadians(0)); //line 1
-    private final Pose intermediaryPos1=new Pose(35,34,Math.toRadians(0)); //line 2
+    private final Pose startSpecimenPose = new Pose(30, 68, Math.toRadians(0)); //line 1
+    private final Pose intermediaryPos1=new Pose(30,34,Math.toRadians(0)); //line 2
     private final Pose sample1LeftPose =new Pose(62,34,Math.toRadians(0)); //line 3
     private final Pose sample1MovePose=new Pose(62,24,Math.toRadians(0)); //line 4
     private final Pose sample1ObservationZonePose =new Pose(15,24,Math.toRadians(0)); //line 5

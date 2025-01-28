@@ -12,6 +12,6 @@ public class OutakeHMandWallPU implements State {
         wasOuttakeStateSpecimen= true;
         wasisOuttakeStateSpecimen = true;
         outakeSampleServoPosition=servoextended;
-        outakeArmServoPosition = 30;
+        outakeArmServoPosition = OuttakeArmWallPickUpPosition;
     }
 }

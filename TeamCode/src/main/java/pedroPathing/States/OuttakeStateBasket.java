@@ -14,7 +14,7 @@ public class OuttakeStateBasket implements State {
          outakeSampleServoPosition=outakeSampleRetracted;
         //outakeArmServoPosition = 150; //185
         //if(armServoPos>=80)
-        outakeArmServoPosition = 280; //changed from 285 to not ascent
+        outakeArmServoPosition = 260; //changed from 285 to not ascent
         intakeMotorPickUpPower =0;
         outakeTargetPos = -2800;
     }

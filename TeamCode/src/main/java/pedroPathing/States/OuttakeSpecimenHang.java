@@ -13,7 +13,7 @@ public class OuttakeSpecimenHang implements State {
         wasisOuttakeStateSpecimen = true;
         if(outakeSampleServoPosition != servoextended)
             outakeSampleServoPosition=outakeSampleRetracted;
-        outakeArmServoPosition = 345;
+        outakeArmServoPosition = outtakeArmSpecimenPut;
         outakeTargetPos = -1850;
     }
 }

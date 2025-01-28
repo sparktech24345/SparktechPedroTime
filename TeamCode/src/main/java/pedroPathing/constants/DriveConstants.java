@@ -1,4 +1,4 @@
-package pedroPathing.tests;
+package pedroPathing.constants;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;

@@ -182,7 +182,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //If bad sample then kick out
-            if (colors.red >= 0.005 || colors.blue >= 0.005) {
+            if (colors.red >= 0.0015 || colors.blue >= 0.0015) {
                 if (color.equals(team)) {
                     wasBadSample = true;
                 } else{
@@ -238,9 +238,9 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //TRANSFER INIT, big if time
-            if (((outakeArmServo.getPosition()*360 <=35))
+            if (((outakeArmServo.getPosition()*360 <= outtakeArmServoPosAtRo2v2TransferPickUp + 5))
                     && outtakeFSM.currentStateOutake == outtakeStateTranfer
-                    && (colors.red >= 0.005 || colors.blue >=0.005)
+                    && (colors.red >= 0.0015 || colors.blue >=0.0015)
                     && !TransferDisabled
                     || gamepad1.right_trigger>=0.4
                     //&& intakeRotateServo.getPosition()*360<=65
@@ -258,45 +258,47 @@ public class RO2v2StyleTranfer extends LinearOpMode {
                 //claw down
                 if (bambuTransferTimer + 200 < System.currentTimeMillis()) {
                     if(doOnceyTransfer) intakeRotateServoPosition = intakeRo2SmashPos;
-                    if(doOnceyTransfer && intakeRotateServo.getPosition()*360 <=52 ){
+                    if(doOnceyTransfer &&  bambuTransferTimer + 1200 < System.currentTimeMillis()){
                         intakeFSM.setState(intakeRetractedRo2);
                         intakeFSM.executeCurrentState();
                         doOnceyTransfer = false;
                         intakeExtraSpinOUTPUTTimer = System.currentTimeMillis();
                         intakeExtraSpinOUTPUTDoOnce = true;
                         //intakeMotorPickUpPower = -0.5;
+                        DontDoTransferBeforeTransfer = true;
                     }
-                    if((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos +8)&& someExtraThingDoOnce) {
+                    if((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos +8)&& someExtraThingDoOnce&&  bambuTransferTimer + 1200 < System.currentTimeMillis()) {
                         noWiglyTransferTimer = System.currentTimeMillis();
                         noWiglyPls = true;
                         someExtraThingDoOnce = false;
                     }
                 }
                 //close thingyy
-                if(noWiglyPls && noWiglyTransferTimer + 1000 < System.currentTimeMillis()){
+                if(noWiglyPls && noWiglyTransferTimer + 200 < System.currentTimeMillis()){
                     outakeSampleServoPosition = outakeSampleRetracted;
                 }
                 //transfer done
-                if(noWiglyPls && noWiglyTransferTimer + 3000 < System.currentTimeMillis()){
+                if(noWiglyPls && noWiglyTransferTimer + 800 < System.currentTimeMillis() && DontDoTransferBeforeTransfer){
                     outtakeFSM.setState(outtakeStandbyDown);
                     outtakeFSM.executeCurrentState();
                     outakeSampleServoPosition = outakeSampleRetracted;
-                    intakeRotateServoPosition = intakeRotateAfterRo2Trasfer;
+                    //intakeRotateServoPosition = intakeRotateAfterRo2Trasfer;
                     extendABitAfterRo2Transfer = true;
                     intakeShouldRetractAfterTransfer = true;
                     noWiglyPls = false;
+                    DontDoTransferBeforeTransfer = false;
                 }
             }
             if(extendABitAfterRo2Transfer){
                 intakeTargetPos = extendABitAfterRo2TransferPos;
                 extendABitAfterRo2Transfer = false;
             }
-            if(intakeShouldRetractAfterTransfer && outakeArmServo.getPosition()*360 >= 69){
+            if(intakeShouldRetractAfterTransfer && outakeArmServo.getPosition()*360 >= outakeArmTransferPos - 10){
                 intakeShouldRetractAfterTransfer = false;
                 intakeShouldRetractAfterTransferTimerToggle = true;
                 intakeShouldRetractAfterTransferTimer = System.currentTimeMillis();
             }
-            if(intakeShouldRetractAfterTransferTimerToggle && intakeShouldRetractAfterTransferTimer + 200 < System.currentTimeMillis()&& !((colors.red >= 0.005 || colors.blue >=0.005))){
+            if(intakeShouldRetractAfterTransferTimerToggle && intakeShouldRetractAfterTransferTimer + 400 < System.currentTimeMillis()&& !((colors.red >= 0.0015 || colors.blue >=0.0015))){
                 intakeFSM.setState(intakeRetractedRo2);
                 intakeFSM.executeCurrentState();
                 intakeShouldRetractAfterTransferTimerToggle = false;
@@ -412,7 +414,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //Outputing Samples if Nedded
-            if(intakeMotorPickUpPower != -0.7)
+            if(intakeMotorPickUpPower != -1)
                 rememberPosOfServoOut = intakeMotorPickUpPower;
             if(Toggle.outputtoggle(gamepad1.right_bumper || wasBadSample)!=0){
                 intakeMotorPickUpPower = -1;
@@ -503,7 +505,9 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             telemetry.addData("intakeCurentPOs", intakeMotor.getCurrentPosition());
             telemetry.addData("intakeTargetPos", intakeTargetPos);
             telemetry.addData("intakepower", intakeMotorPower);//*/
-            telemetry.addData("intake rotate", intakeRotateServo.getPosition()*360);//*/
+            telemetry.addData("intake rotate", intakeRotateServo.getPosition()*360);
+            telemetry.addData("intake Adder", intakeTargetPosAdder);
+            //*/
             //telemetry.addData("servo POs", tester.getPosition());
             //telemetry.addData("y", pos.y);
             //telemetry.addData("x", pos.x);
