@@ -1,5 +1,7 @@
-package pedroPathing.States;
+package pedroPathing;
 
+
+import static pedroPathing.Toggle.*;
 
 @com.acmerobotics.dashboard.config.Config
 public class PositionStorage {
@@ -48,6 +50,7 @@ public class PositionStorage {
     public static boolean isPressedX2 = false;
     public static boolean isPressedY1 = false;
     public static boolean isPressedY2 = false;
+    public static boolean isPressedDL1 = false;
     public static boolean telemetryOhNo= false;
     public static double frontRightPowerCat=0;
     public static double backRightPowerCat=0;
@@ -87,12 +90,12 @@ public class PositionStorage {
     public static boolean intakeExtraSpinDoOnce = false;
     public static boolean intakeExtraSpinOUTPUTDoOnce = false;
     public static double OutTime = 50;
-    public static boolean TransferDisabled = false;
+    public static boolean transferDisabled = false;
     public static long SpitOutSampleHMTimer;
     public static boolean SpitOutSampleHM = false;
     public static boolean SpitOutSampleHM2 = false;
     public static boolean PickyUppyOnce = false;
-    public static double intakeSlidersRo2Transfer = 210;
+    public static double intakeSlidersRo2Transfer = 205;
     public static double intakeRotateAfterRo2Trasfer = 160;
     public static boolean extendABitAfterRo2Transfer = false;
     public static double extendABitAfterRo2TransferPos = intakeSlidersRo2Transfer + 100;
@@ -108,12 +111,26 @@ public class PositionStorage {
     public static boolean stopMulthiread = true;
     public static double outtakeArmServoPosAtRo2v2TransferPickUp = 43;
     public static double outtakeArmSpecimenPut =323;
-    public static double OuttakeArmWallPickUpPosition = 61;
+    public static double OuttakeArmWallPickUpPosition = 64;
     public static boolean DontDoTransferBeforeTransfer = false;
+    public static boolean hangTime = false;
+    public static long autoTimer;
+    public static double IntakeWallPickUpPosition = 0;
+    public static double intakeRotateForWallPickUp = 60;
+    public static boolean takeWhileDisabled = false;
+    public static boolean isOutputting = false;
+    public static boolean wasOutputHM2 = false;
+    public static long timerSticlaDeApa;
 
     public static void resetStuff(){
+        wasOutputHM2 = false;
+        isOutputting = false;
+        takeWhileDisabled = false;
+        intakeRotateForWallPickUp = 60;
+        isPressedDL1 = false;
+        hangTime = false;
         DontDoTransferBeforeTransfer = false;
-        OuttakeArmWallPickUpPosition = 61;
+        OuttakeArmWallPickUpPosition = 64;
         outtakeArmSpecimenPut = 323;
         outtakeArmServoPosAtRo2v2TransferPickUp = 43;
         stopMulthiread = true;
@@ -127,11 +144,11 @@ public class PositionStorage {
         intakeRotateAfterRo2Trasfer = 160;
         extendABitAfterRo2TransferPos = intakeSlidersRo2Transfer + 100;
         extendABitAfterRo2Transfer= false;
-        intakeSlidersRo2Transfer = 210;
+        intakeSlidersRo2Transfer = 205;
         SpitOutSampleHM = false;
         SpitOutSampleHM2 = false;
         PickyUppyOnce = false;
-        TransferDisabled = false;
+        transferDisabled = false;
         intakeExtraSpinDoOnce = false;
         outakeArmTransferPos = 40;
         doOnceyTransfer = false;
@@ -194,6 +211,9 @@ public class PositionStorage {
         gravityAdder = 0;
         team = "TeamNotSet";
         autoSlowdown = false;
+
+        toggle_var = false;
+        toggled = false;
     }
 
 }

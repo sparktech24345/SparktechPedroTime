@@ -1,6 +1,6 @@
 package pedroPathing.States;
 
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 public class OuttakeStateStandbyDownWithSample implements State {
     @Override
     public void execute() {

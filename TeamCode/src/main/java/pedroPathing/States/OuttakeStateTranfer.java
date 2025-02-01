@@ -1,16 +1,14 @@
 package pedroPathing.States;
 
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
-import static pedroPathing.States.PositionStorage.isOuttakeStateStandbyWithSample;
-import static pedroPathing.States.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.States.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.States.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.States.PositionStorage.outakeTargetPos;
-import static pedroPathing.States.PositionStorage.outakeTransferPos;
-import static pedroPathing.States.PositionStorage.servoextended;
-import static pedroPathing.States.PositionStorage.spinyOutputToggle;
-import static pedroPathing.States.PositionStorage.stateStringOutake;
+import static pedroPathing.PositionStorage.isOuttakeStateStandbyWithSample;
+import static pedroPathing.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.PositionStorage.outakeTargetPos;
+import static pedroPathing.PositionStorage.servoextended;
+import static pedroPathing.PositionStorage.spinyOutputToggle;
+import static pedroPathing.PositionStorage.stateStringOutake;
 
 public class OuttakeStateTranfer implements State {
     @Override

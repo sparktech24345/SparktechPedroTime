@@ -1,21 +1,27 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.*;
-
+import static pedroPathing.PositionStorage.IntakeWallPickUpPosition;
+import static pedroPathing.PositionStorage.gravityAdder;
+import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
+import static pedroPathing.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.PositionStorage.isIntakeStateRectracted;
+import static pedroPathing.PositionStorage.stateStringIntake;
+import static pedroPathing.PositionStorage.wasActivePastActiveIntake;
 
 import pedroPathing.Toggle;
 
-public class IntakeStateRetractedRo2 implements State {
+public class IntakeStateWallPURetractionRo2v2 implements State {
     @Override
     public void execute() {
         //System.out.println("Executing IntakeStateRetracted...");
         // Set servo and motor positions for this state
         //telemetry.addData("IntakeStateRectracted",true);
         gravityAdder = 0;
-        stateStringIntake = "IntakeStateRetracted";
+        stateStringIntake = "IntakeStateWallPURetractionRo2v2";
         isIntakeStateRectracted = true;
-        intakeRotateServoPosition = intakeRo2SmashPos;
-        intakeTargetPos = intakeSlidersRo2Transfer; //Waat is going on here why is angle for motor please check
+        intakeTargetPos = IntakeWallPickUpPosition;
         intakeMotorPickUpPower = 0;
         if(wasActivePastActiveIntake){
             wasActivePastActiveIntake = false;

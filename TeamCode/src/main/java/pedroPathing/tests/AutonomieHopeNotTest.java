@@ -1,7 +1,7 @@
 package pedroPathing.tests;
 
-import static pedroPathing.States.PositionStorage.*;
-import static pedroPathing.States.PositionStorage.intakeTargetPos;
+import static pedroPathing.PositionStorage.*;
+import static pedroPathing.PositionStorage.intakeTargetPos;
 
 import android.graphics.Color;
 
@@ -10,7 +10,6 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;

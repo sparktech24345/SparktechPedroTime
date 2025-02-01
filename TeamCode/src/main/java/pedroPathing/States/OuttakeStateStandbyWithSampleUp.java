@@ -1,16 +1,16 @@
 package pedroPathing.States;
 
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
-public class OuttakeStateStandbyWithSample implements State {
+public class OuttakeStateStandbyWithSampleUp implements State {
     @Override
     public void execute() {
         //System.out.println("Executing OuttakeStateStandbyDownWithSample...");
         // Set servo and motor positions for this state
-        stateStringOutake = "OuttakeStateStandbyWithSample";
+        stateStringOutake = "OuttakeStateStandbyWithSampleUp";
         isOuttakeStateStandbyWithSample = true;
-        outakeSampleServoPosition = outakeSampleRetracted;
-        outakeArmServoPosition = outakeTransferPos;
+        spinyOutputToggle = true;
+        outakeArmServoPosition = outakeTransferPos+35;
         outakeTargetPos =0;
     }
 }

@@ -3,15 +3,13 @@ package pedroPathing.tests;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import pedroPathing.States.PositionStorage;
 import pedroPathing.ControlMotor;
 
 import pedroPathing.Toggle;
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
 public class ServoTesting extends LinearOpMode {

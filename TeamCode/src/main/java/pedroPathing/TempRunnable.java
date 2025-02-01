@@ -2,12 +2,10 @@ package pedroPathing;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import pedroPathing.ControlMotor;
 
 
 public class TempRunnable implements Runnable {

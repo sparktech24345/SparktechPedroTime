@@ -1,7 +1,7 @@
 package pedroPathing.old;
 
 
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
 import android.graphics.Color;
 
@@ -27,14 +27,14 @@ import pedroPathing.States.OuttakeStateBasket;
 import pedroPathing.States.OuttakeStateSamplePickUp;
 import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
-import pedroPathing.States.OuttakeStateStandbyWithSample;
-import pedroPathing.States.PositionStorage;
+import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
+import pedroPathing.PositionStorage;
 import pedroPathing.Toggle;
 import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "Robot Teleop", group = "Linear OpMode")
+@TeleOp(name = "Robot sdasdasdasdasdasdadasddTeleop", group = "Linear OpMode")
 @Disabled
 public class MainTeleOP extends LinearOpMode {
 
@@ -98,7 +98,7 @@ public class MainTeleOP extends LinearOpMode {
         OuttakeStateBasket outtakeBasket = new OuttakeStateBasket();
         OuttakeStateSamplePickUp outtakeSamplePickUp = new OuttakeStateSamplePickUp();
         OuttakeStateStandbyDownWithSample outtakeStandbyDown = new OuttakeStateStandbyDownWithSample();
-        OuttakeStateStandbyWithSample outtakeStandby = new OuttakeStateStandbyWithSample();
+        OuttakeStateStandbyWithSampleUp outtakeStandby = new OuttakeStateStandbyWithSampleUp();
         OutakeHMandWallPU outakeHMandWallPU = new OutakeHMandWallPU();
 
         // Initialize Intake states
@@ -342,6 +342,7 @@ public class MainTeleOP extends LinearOpMode {
                 outakeTargetPosAdder += 2;
             if(gamepad1.dpad_down)
                 outakeTargetPosAdder -= 2;
+
 
 
 

@@ -23,18 +23,18 @@ public class Toggle {
     public static boolean toggle_varRight;
 
 
-    public static int FirsToggle(boolean input) {
-        int output;
+    public static boolean FirsToggle(boolean input) {
+        boolean output;
 
         if (input) {
             if (!toggled) {
                 toggle_var = !toggle_var;
                 toggled = true;
             }
-            output = toggle_var ? 1 : 0;
+            output = toggle_var ? true : false;
         } else {
             toggled = false;
-            output = toggle_var ? 1 : 0;
+            output = toggle_var ? true : false;
         }
 
         return output;

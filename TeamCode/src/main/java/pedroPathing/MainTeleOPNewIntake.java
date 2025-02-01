@@ -1,7 +1,7 @@
 package pedroPathing;
 
 
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
 import android.graphics.Color;
 
@@ -18,7 +18,6 @@ import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateRetracted;
-import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
 import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
@@ -27,9 +26,8 @@ import pedroPathing.States.OuttakeStateBasket;
 import pedroPathing.States.OuttakeStateSamplePickUp;
 import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
-import pedroPathing.States.OuttakeStateStandbyWithSample;
+import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
-import pedroPathing.States.PositionStorage;
 import pedroPathing.tests.Config;
 
 
@@ -97,7 +95,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
         OuttakeStateSamplePickUp outtakeSamplePickUp = new OuttakeStateSamplePickUp();
         OuttakeStateStandbyDownWithSample outtakeStandbyDown = new OuttakeStateStandbyDownWithSample();
         OuttakeStateTranfer outtakeStateTranfer = new OuttakeStateTranfer();
-        OuttakeStateStandbyWithSample outtakeStandby = new OuttakeStateStandbyWithSample();
+        OuttakeStateStandbyWithSampleUp outtakeStandby = new OuttakeStateStandbyWithSampleUp();
         OutakeHMandWallPU outakeHMandWallPU = new OutakeHMandWallPU();
 
         // Initialize Intake states
@@ -184,7 +182,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             if (colors.red >= 0.005 || colors.blue >= 0.005) {
                 if (color.equals(team)) {
                     wasBadSample = true;
-                } else if(!TransferDisabled || PickyUppyOnce){
+                } else if(!transferDisabled || PickyUppyOnce){
                     if (wasIntakeStateExtended) {
                         colortimer = System.currentTimeMillis();
                         wasIntakeStateExtended = false;
@@ -224,7 +222,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
             if(gamepad2.a)
                 isPressedA2 = true;
             if(isPressedA2 && !gamepad2.a){
-                TransferDisabled = !TransferDisabled;
+                transferDisabled = !transferDisabled;
                 isPressedA2 = false;
             }
 
@@ -239,7 +237,7 @@ public class MainTeleOPNewIntake extends LinearOpMode {
                     && outtakeFSM.currentStateOutake != outtakeSpecimenHang
                     && outtakeFSM.currentStateOutake != outakeHMandWallPU
                     && (colors.red >= 0.005 || colors.blue >=0.005)
-                    && !TransferDisabled
+                    && !transferDisabled
                     || gamepad2.x
                     //&& intakeRotateServo.getPosition()*360<=65
             ) {

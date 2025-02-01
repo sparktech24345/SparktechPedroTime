@@ -1,27 +1,20 @@
 package pedroPathing.tests;
 
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static pedroPathing.States.PositionStorage.backLeftPowerCat;
-import static pedroPathing.States.PositionStorage.backRightPowerCat;
-import static pedroPathing.States.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.States.PositionStorage.frontRightPowerCat;
-import static pedroPathing.States.PositionStorage.intakeActualZero;
-import static pedroPathing.States.PositionStorage.intakeTargetPos;
-import static pedroPathing.States.PositionStorage.intakeTargetPosAdder;
-import static pedroPathing.States.PositionStorage.outakeTargetPos;
+import static pedroPathing.PositionStorage.backLeftPowerCat;
+import static pedroPathing.PositionStorage.backRightPowerCat;
+import static pedroPathing.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.PositionStorage.frontRightPowerCat;
+import static pedroPathing.PositionStorage.intakeActualZero;
+import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.PositionStorage.intakeTargetPosAdder;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

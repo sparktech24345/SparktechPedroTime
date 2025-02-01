@@ -1,6 +1,6 @@
 package pedroPathing.States;
 
-import static pedroPathing.States.PositionStorage.*;
+import static pedroPathing.PositionStorage.*;
 
 import pedroPathing.Toggle;
 
@@ -16,7 +16,7 @@ public class IntakeStateRetracted implements State {
         intakeRotateServoPosition = intakeTransferAngles;
         intakeTargetPos = intakeActualZero; //Waat is going on here why is angle for motor please check
         //intakeMotorPickUpPower = 0;
-        if(!TransferDisabled) {
+        if(!transferDisabled) {
             intakeExtraSpinTimer = System.currentTimeMillis();
             intakeExtraSpinDoOnce = true;
             intakeMotorPickUpPower = 0.7;

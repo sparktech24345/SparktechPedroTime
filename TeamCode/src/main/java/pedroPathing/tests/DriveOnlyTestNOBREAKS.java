@@ -1,15 +1,12 @@
 package pedroPathing.tests;
 
 
-import static pedroPathing.States.PositionStorage.backLeftPowerCat;
-import static pedroPathing.States.PositionStorage.backRightPowerCat;
-import static pedroPathing.States.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.States.PositionStorage.frontRightPowerCat;
-import static pedroPathing.States.PositionStorage.intakeActualZero;
-import static pedroPathing.States.PositionStorage.intakeTargetPos;
-import static pedroPathing.States.PositionStorage.intakeTargetPosAdder;
+import static pedroPathing.PositionStorage.backLeftPowerCat;
+import static pedroPathing.PositionStorage.backRightPowerCat;
+import static pedroPathing.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.PositionStorage.frontRightPowerCat;
+import static pedroPathing.PositionStorage.intakeTargetPos;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
