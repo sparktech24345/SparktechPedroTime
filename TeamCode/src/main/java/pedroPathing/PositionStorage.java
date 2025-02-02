@@ -116,7 +116,7 @@ public class PositionStorage {
     public static boolean hangTime = false;
     public static long autoTimer;
     public static double IntakeWallPickUpPosition = 0;
-    public static double intakeRotateForWallPickUp = 60;
+    public static double intakeRotateForWallPickUp = 55;
     public static boolean takeWhileDisabled = false;
     public static boolean isOutputting = false;
     public static boolean wasOutputHM2 = false;
@@ -126,7 +126,7 @@ public class PositionStorage {
         wasOutputHM2 = false;
         isOutputting = false;
         takeWhileDisabled = false;
-        intakeRotateForWallPickUp = 60;
+        intakeRotateForWallPickUp = 55;
         isPressedDL1 = false;
         hangTime = false;
         DontDoTransferBeforeTransfer = false;

@@ -527,9 +527,14 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
             //retract for no transfer mode for specimen
             if(intakeFSM.currentStateIntake != intakeExtendedRo2v2HM && !isOutputting && transferDisabled &&  takeWhileDisabled  &&  (colors.red >= 0.0015 || colors.blue >=0.0015)){
-                intakeFSM.setState(intakeStateRetractedForNoTransfer);
-                intakeFSM.executeCurrentState();
-                takeWhileDisabled = false;
+                if (color.equals(team) || color.equals("YELLOW")) {
+                    wasBadSample = true;
+                }
+                else {
+                    intakeFSM.setState(intakeStateRetractedForNoTransfer);
+                    intakeFSM.executeCurrentState();
+                    takeWhileDisabled = false;
+                }
             }
 
 
@@ -624,7 +629,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             outakeArmServo.setPosition(outakeArmServoPosition / 360);
             outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
 
-
+            telemetry.addData("color",color);
             telemetry.addData("IntakeFsm",stateStringIntake);
             telemetry.addData("OutakeFsm",stateStringOutake);
             if(telemetryOhNo)

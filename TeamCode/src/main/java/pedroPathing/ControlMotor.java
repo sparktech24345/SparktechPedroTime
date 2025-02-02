@@ -3,7 +3,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @com.acmerobotics.dashboard.config.Config
 public class ControlMotor {
     public static double integralSum =0;
-    public static double kpIntake =0.0080;
+    public static double kpIntake =0.0090;
     public static double kdIntake =0.0002;
     //double ki=0.02;
     //double kf=0;
@@ -26,6 +26,7 @@ public class ControlMotor {
         lastError = error;
         timer.reset();
         double pid = (error* kpIntake +derivative* kdIntake);
+        if(pid<0) pid*=1.2;
         /*if(pid<0 && curentPosition<40) pid = -0.3;
         if(pid<0 && curentPosition<10) pid = -0.25;
         if(pid<0 && curentPosition<=3) pid = 0;//*/
