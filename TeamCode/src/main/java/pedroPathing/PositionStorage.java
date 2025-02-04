@@ -121,8 +121,10 @@ public class PositionStorage {
     public static boolean isOutputting = false;
     public static boolean wasOutputHM2 = false;
     public static long timerSticlaDeApa;
+    public static boolean didTransfer = false;
 
     public static void resetStuff(){
+        didTransfer = false;
         wasOutputHM2 = false;
         isOutputting = false;
         takeWhileDisabled = false;
