@@ -100,27 +100,27 @@ public class AutonomiePedro4SpecIntake extends OpMode {
 
     /**                         Our Paths!                          */
     private int pathState;
-
-    private final Pose startPose = new Pose(1, 58, Math.toRadians(0)); //start
-    private final Pose startSpecimenPose = new Pose(24.3, 68, Math.toRadians(0)); //line 1
-    private final Pose intermediaryPos1=new Pose(27,32,Math.toRadians(124)); //line 2 //old 124
-    private final Pose intermediaryPos11=new Pose(27.2,32.2,Math.toRadians(124)); //line 2
-    private final Pose sample1LeftPose =new Pose(27,28,Math.toRadians(40)); //line 3
-    private final Pose sample1MovePose=new Pose(27,22,Math.toRadians(124)); //line 4
-    private final Pose sample11MovePose=new Pose(27.3,22.3,Math.toRadians(124)); //line 4
-    private final Pose sample1ObservationZonePose =new Pose(26,18,Math.toRadians(30)); //line 5
-    private final Pose sample2ObservationZonePose =new Pose(18,20,Math.toRadians(0)); //line 8
+    private int subtractor = 1;
+    private final Pose startPose = new Pose(0, 58, Math.toRadians(0)); //start
+    private final Pose startSpecimenPose = new Pose(24.3-subtractor, 68, Math.toRadians(0)); //line 1
+    private final Pose intermediaryPos1=new Pose(27-subtractor,32,Math.toRadians(124)); //line 2 //old 124
+    private final Pose intermediaryPos11=new Pose(27.2-subtractor,32.2,Math.toRadians(124)); //line 2
+    private final Pose sample1LeftPose =new Pose(27-subtractor,28,Math.toRadians(40)); //line 3
+    private final Pose sample1MovePose=new Pose(27-subtractor,22,Math.toRadians(124)); //line 4
+    private final Pose sample11MovePose=new Pose(27.3-subtractor,22.3,Math.toRadians(124)); //line 4
+    private final Pose sample1ObservationZonePose =new Pose(26-subtractor,18,Math.toRadians(30)); //line 5
+    private final Pose sample2ObservationZonePose =new Pose(18-subtractor,20,Math.toRadians(0)); //line 8
     // private final Pose sample3LeftPose =new Pose(62,12,Math.toRadians(0)); //line 9
     // private final Pose sample3MovePose=new Pose(62,6,Math.toRadians(0)); //line 10
     // private final Pose sample3ObservationZonePose =new Pose(15,6,Math.toRadians(0)); //line 11//
-    private final Pose getSpecimenPose=new Pose(0.8,20,Math.toRadians(0));// line 12
-    private final Pose beforeGetSpecimenPose=new Pose(5,20,Math.toRadians(0));// line 12
-    private final Pose ScoreSpecimenPose=new Pose(25,60,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen1Score = new Pose(25,56,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen2Score = new Pose(25,58,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen3Score = new Pose(25,62,Math.toRadians(0)); //all the same, line 13
+    private final Pose getSpecimenPose=new Pose(0.1-subtractor,20,Math.toRadians(0));// line 12
+    private final Pose beforeGetSpecimenPose=new Pose(5-subtractor,20,Math.toRadians(0));// line 12
+    private final Pose ScoreSpecimenPose=new Pose(25-subtractor,60,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen1Score = new Pose(25-subtractor,56,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen2Score = new Pose(25-subtractor,58,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen3Score = new Pose(25-subtractor,62,Math.toRadians(0)); //all the same, line 13
     private final Pose pocketSpecimenPose = ScoreSpecimenPose;
-    private final Pose parkingPose=new Pose(5,5,Math.toRadians(0)); //parking
+    private final Pose parkingPose=new Pose(5-subtractor,5,Math.toRadians(0)); //parking
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
@@ -404,6 +404,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
                     intakeTargetPos = 0;
                     intakeFSM.setState(intakeStateWallPURetraction);
                     intakeFSM.executeCurrentState();
+                    while(autoTimer + 200 > System.currentTimeMillis()){}
                     outtakeFSM.setState(outakeHMandWallPU);
                     outtakeFSM.executeCurrentState();
 
