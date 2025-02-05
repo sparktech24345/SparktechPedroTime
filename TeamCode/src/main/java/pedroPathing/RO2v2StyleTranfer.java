@@ -452,10 +452,10 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //Outputing Samples if Nedded
-            if(intakeMotorPickUpPower != -1)
+            if(intakeMotorPickUpPower != -0.6)
                 rememberPosOfServoOut = intakeMotorPickUpPower;
             if(Toggle.outputtoggle(gamepad1.right_bumper || wasBadSample)!=0){
-                intakeMotorPickUpPower = -1;
+                intakeMotorPickUpPower =-0.6;
                 wasBadSample = false;
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;
@@ -495,7 +495,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             }
 
             if(SpitOutSampleHM2 && intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHMTimer + 450 < System.currentTimeMillis()){
-                intakeMotorPickUpPower = -0.7;
+                intakeMotorPickUpPower = -0.6;
                 SpitOutSampleHM2 = false;
             }
 
