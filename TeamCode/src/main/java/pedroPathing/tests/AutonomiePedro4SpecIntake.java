@@ -16,6 +16,7 @@ import static pedroPathing.PositionStorage.servoextended;
 import static pedroPathing.PositionStorage.stopMulthiread;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -394,7 +395,6 @@ public class AutonomiePedro4SpecIntake extends OpMode {
 
             case 5:
                 if (!follower.isBusy()) {
-
                     autoTimer = System.currentTimeMillis();
                     intakeMotorPickUpPower =-0.8;
                     while(autoTimer + 200 > System.currentTimeMillis()){}
@@ -635,8 +635,9 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         opmodeTimer.resetTimer();
 
 
-
+        FollowerConstants.pathEndTimeoutConstraint = 500;
         Constants.setConstants(FConstants.class, LConstants.class);
+        FollowerConstants.pathEndTimeoutConstraint = 500;
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();

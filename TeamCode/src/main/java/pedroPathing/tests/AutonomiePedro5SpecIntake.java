@@ -16,6 +16,7 @@ import static pedroPathing.PositionStorage.servoextended;
 import static pedroPathing.PositionStorage.stopMulthiread;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -674,7 +675,9 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
 
 
+        FollowerConstants.pathEndTimeoutConstraint = 500;
         Constants.setConstants(FConstants.class, LConstants.class);
+        FollowerConstants.pathEndTimeoutConstraint = 500;
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();

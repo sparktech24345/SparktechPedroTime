@@ -3,6 +3,7 @@ package pedroPathing.tests;
 import static pedroPathing.PositionStorage.*;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -89,26 +90,12 @@ public class AutonomiePedroBasket extends OpMode {
     private int pathState;
 
     private final Pose startPose = new Pose(1, 70, Math.toRadians(90)); //start
-    private final Pose FirstPose2Sample = new Pose(1, 85, Math.toRadians(90)); //line 1
-    private final Pose ThirdSamplePose =new Pose(1,87,Math.toRadians(180)); //line 2 //old 124
-    private final Pose FourthSamplePickUp=new Pose(5,78,Math.toRadians(145)); //line 3
-    private final Pose FourthSampleScore =new Pose(27,82,Math.toRadians(180)); //line 4
-    private final Pose intermediaryPoseBeforePark=new Pose(27,78,Math.toRadians(165)); //line 5
-    private final Pose FourthSamplePickUpa=new Pose(27.3,82,Math.toRadians(200)); //line 6
-    private final Pose FourthSampleScorea =new Pose(27,78,Math.toRadians(165)); //line 7
-    private final Pose sample2ObservationZonePose =new Pose(18,20,Math.toRadians(0)); //line 8
-    // private final Pose sample3LeftPose =new Pose(62,12,Math.toRadians(0)); //line 9
-    // private final Pose sample3MovePose=new Pose(62,6,Math.toRadians(0)); //line 10
-    // private final Pose sample3ObservationZonePose =new Pose(15,6,Math.toRadians(0)); //line 11//
-    private final Pose getSpecimenPose=new Pose(0.8,20,Math.toRadians(0));// line 12
-    private final Pose beforeGetSpecimenPose=new Pose(5,20,Math.toRadians(0));// line 12
-    private final Pose ScoreSpecimenPose=new Pose(25,60,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen1Score = new Pose(25,56,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen2Score = new Pose(25,58,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen3Score = new Pose(25,62,Math.toRadians(0)); //all the same, line 13
-    private final Pose pocketSpecimenPose = ScoreSpecimenPose;
-    //private final Pose parkingPose=new Pose(5,5,Math.toRadians(0)); //parking
-    private final Pose parkingPose=new Pose(27,82,Math.toRadians(180)); //parking
+    private final Pose FirstPose2Sample = new Pose(16, 94, Math.toRadians(150)); //line 1
+    private final Pose ThirdSamplePose =new Pose(17.2,102,Math.toRadians(169)); //line 2 //old 124
+    private final Pose FourthSamplePickUp=new Pose(21,100,Math.toRadians(201)); //line 3
+    private final Pose FourthSampleScore =new Pose(21.2,102,Math.toRadians(169)); //line 4
+    private final Pose intermediaryPoseBeforePark=new Pose(52.5,71,Math.toRadians(270)); //line 5
+    private final Pose parkingPose=new Pose(52.5,82,Math.toRadians(270)); //parking
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
@@ -213,29 +200,35 @@ public class AutonomiePedroBasket extends OpMode {
                     }
                     outtakeFSM.setState(outtakeStateTranfer);
                     outtakeFSM.executeCurrentState();
-
-                    //presumably after it has picked up and its transfering
                     autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 2000 > System.currentTimeMillis()){}
+                    while (autoTimer + 3000 > System.currentTimeMillis() && !didTransfer) {
+                    }
+                    if(didTransfer) {
+                        //presumably after it has picked up and its transfering
 
-                    //evade situatin where the rising sliders will hit basket with the servo alr there
-                    outakeTargetPos = -2800;
+                        //evade situatin where the rising sliders will hit basket with the servo alr there
+                        outakeTargetPos = -2800;
 
-                    //actual basket pose
-                    autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 400 > System.currentTimeMillis()){}
-                    autoTimer = System.currentTimeMillis();
-                    outtakeFSM.setState(outtakeBasket);
+                        //actual basket pose
+                        autoTimer = System.currentTimeMillis();
+                        while (autoTimer + 600 > System.currentTimeMillis()) {
+                        }
+                        autoTimer = System.currentTimeMillis();
+                        outtakeFSM.setState(outtakeBasket);
 
-                    //wait for stuff to happen stuff
-                    autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 200 > System.currentTimeMillis()){}
-                    outakeSampleServoPosition = servoextended;
+                        //wait for stuff to happen stuff
+                        autoTimer = System.currentTimeMillis();
+                        while (autoTimer + 200 > System.currentTimeMillis()) {
+                        }
+                        outakeSampleServoPosition = servoextended;
 
-                    //wait after release
-                    autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 200 > System.currentTimeMillis()){}
-
+                        //wait after release
+                        autoTimer = System.currentTimeMillis();
+                        while (autoTimer + 200 > System.currentTimeMillis()) {
+                        }
+                        if(!didTransfer) intakeTargetPos = intakeSlidersRo2Transfer;
+                        didTransfer = false;
+                    }
                     outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
                     outtakeFSM.executeCurrentState();
 
@@ -265,21 +258,27 @@ public class AutonomiePedroBasket extends OpMode {
                     outtakeFSM.executeCurrentState();
 
                     autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 2000 > System.currentTimeMillis()){}
-                    outtakeFSM.setState(outtakeBasket);
-                    outtakeFSM.executeCurrentState();
+                    while(autoTimer + 3000 > System.currentTimeMillis() && !didTransfer){}
 
-                    autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 200 > System.currentTimeMillis()){}
-                    outakeSampleServoPosition = servoextended;
+                    if(didTransfer) {
+                        outtakeFSM.setState(outtakeBasket);
+                        outtakeFSM.executeCurrentState();
 
-                    //wait after release
-                    autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 200 > System.currentTimeMillis()){}
+                        autoTimer = System.currentTimeMillis();
+                        while (autoTimer + 1200 > System.currentTimeMillis()) {
+                        }
+                        outakeSampleServoPosition = servoextended;
 
-                    outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
-                    outtakeFSM.executeCurrentState();
+                        //wait after release
+                        autoTimer = System.currentTimeMillis();
+                        while (autoTimer + 200 > System.currentTimeMillis()) {
+                        }
 
+                        outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
+                        outtakeFSM.executeCurrentState();
+                        if(!didTransfer) intakeTargetPos = intakeSlidersRo2Transfer;
+                        didTransfer = false;
+                    }
 
                     follower.followPath(goToFourthSamplePickUp, true);
                     setPathState(3);
@@ -315,7 +314,7 @@ public class AutonomiePedroBasket extends OpMode {
                     outtakeFSM.setState(outtakeBasket);
                     outtakeFSM.executeCurrentState();
                     autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 1000 > System.currentTimeMillis()){}
+                    while(autoTimer + 2000 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
 
                     //wait after release
@@ -371,8 +370,9 @@ public class AutonomiePedroBasket extends OpMode {
         opmodeTimer.resetTimer();
 
 
-
+        FollowerConstants.pathEndTimeoutConstraint = 2000;
         Constants.setConstants(FConstants.class, LConstants.class);
+        FollowerConstants.pathEndTimeoutConstraint = 2000;
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();
