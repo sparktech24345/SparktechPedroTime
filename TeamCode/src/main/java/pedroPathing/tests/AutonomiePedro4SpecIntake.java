@@ -12,6 +12,7 @@ import static pedroPathing.PositionStorage.outakeSampleRetracted;
 import static pedroPathing.PositionStorage.outakeSampleServoPosition;
 import static pedroPathing.PositionStorage.outakeTargetPos;
 import static pedroPathing.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.PositionStorage.resetStuff;
 import static pedroPathing.PositionStorage.servoextended;
 import static pedroPathing.PositionStorage.stopMulthiread;
 
@@ -38,6 +39,7 @@ import java.util.concurrent.Executors;
 import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
+import pedroPathing.States.IntakeStateExtendedRo2v2;
 import pedroPathing.States.IntakeStateExtendedRo2v2Auto;
 import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
@@ -76,7 +78,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
 
     // Initialize Intake states
     IntakeStateRetractedRo2 intakeRetractedRo2 = new IntakeStateRetractedRo2();
-    IntakeStateExtendedRo2v2Auto intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2Auto();
+    IntakeStateExtendedRo2v2 intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2();
     IntakeStateExtendedHM intakeExtendedRo2v2HM = new IntakeStateExtendedHM();
     IntakeStateWallPURetraction intakeStateWallPURetraction = new IntakeStateWallPURetraction();
 
@@ -617,6 +619,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         // These loop the movements of the robot
         follower.update();
         autonomousPathUpdate();
+        resetStuff();
 
         // Feedback to Driver Hub
         telemetry.addData("path state", pathState);
@@ -633,7 +636,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-
+        resetStuff();
 
         FollowerConstants.pathEndTimeoutConstraint = 500;
         Constants.setConstants(FConstants.class, LConstants.class);
@@ -653,8 +656,6 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                stopMulthiread = false;
-
                 double intakeMotorPower = 0;
                 double outakeMotorPower = 0;
                 DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
@@ -676,7 +677,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
                 Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
                 Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
 
-
+                stopMulthiread = false;
                 while(!stopMulthiread){
                     intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
                     outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());

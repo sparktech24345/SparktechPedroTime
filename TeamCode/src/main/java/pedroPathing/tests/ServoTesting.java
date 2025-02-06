@@ -32,6 +32,7 @@ public class ServoTesting extends LinearOpMode {
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
         //Servo tester = hardwareMap.get(Servo.class, "tester");
         ControlMotor intakeControlMotor = new ControlMotor();
+        resetStuff();
         waitForStart();
 
         if (isStopRequested()) return;

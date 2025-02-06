@@ -87,9 +87,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
         Config.configureOtos(telemetry, myOtos);
         //Thread
 
-
-
-
+        
         //TODO maybe start the Thread        multiThread.start();
 
         // Initialize Outtake states

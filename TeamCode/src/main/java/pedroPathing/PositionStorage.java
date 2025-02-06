@@ -102,7 +102,7 @@ public class PositionStorage {
     public static boolean intakeShouldRetractAfterTransfer = false;
     public static boolean intakeShouldRetractAfterTransferTimerToggle = false;
     public static long intakeShouldRetractAfterTransferTimer;
-    public static double pickUpAngleRo2V2Adder = 100;
+    public static double pickUpAngleRo2V2Adder = 105;
     public static double intakeRo2SmashPos = 45;
     public static boolean someExtraThingDoOnce = false;
     public static boolean transferTimerInit = false;
@@ -122,8 +122,12 @@ public class PositionStorage {
     public static boolean wasOutputHM2 = false;
     public static long timerSticlaDeApa;
     public static boolean didTransfer = false;
+    public static boolean isRaised = false;
+    public static boolean shouldBeRaised = false;
 
     public static void resetStuff(){
+        shouldBeRaised = false;
+        isRaised = false;
         didTransfer = false;
         wasOutputHM2 = false;
         isOutputting = false;
@@ -135,12 +139,12 @@ public class PositionStorage {
         OuttakeArmWallPickUpPosition = 64;
         outtakeArmSpecimenPut = 323;
         outtakeArmServoPosAtRo2v2TransferPickUp = 43;
-        stopMulthiread = true;
+        //stopMulthiread = true;
         HeadUpIntake = false;
         transferTimerInit = false;
         someExtraThingDoOnce = false;
         intakeRo2SmashPos = 45;
-        pickUpAngleRo2V2Adder = 100;
+        pickUpAngleRo2V2Adder = 105;
         intakeShouldRetractAfterTransferTimerToggle = false;
         intakeShouldRetractAfterTransfer = false;
         intakeRotateAfterRo2Trasfer = 160;
