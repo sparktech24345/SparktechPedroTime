@@ -25,9 +25,7 @@ public class IntakeStateExtendedRo2v2Auto implements State {
         wasActivePastActiveIntake = true;
         wasBambuExtended = true;
         PickyUppyOnce = true;
-        intakeRotateServoPosition = IntakeServoColectPos + pickUpAngleRo2V2Adder -65;
-        if(gravityAdder==0)
-            gravityAdder = 7;
+        intakeRotateServoPosition = IntakeServoColectPos + pickUpAngleRo2V2Adder - 65;
         intakeMotorPickUpPower = 1;
     }
 }

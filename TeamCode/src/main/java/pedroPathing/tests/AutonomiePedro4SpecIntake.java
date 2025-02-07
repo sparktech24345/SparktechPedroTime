@@ -78,7 +78,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
 
     // Initialize Intake states
     IntakeStateRetractedRo2 intakeRetractedRo2 = new IntakeStateRetractedRo2();
-    IntakeStateExtendedRo2v2 intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2();
+    IntakeStateExtendedRo2v2Auto intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2Auto();
     IntakeStateExtendedHM intakeExtendedRo2v2HM = new IntakeStateExtendedHM();
     IntakeStateWallPURetraction intakeStateWallPURetraction = new IntakeStateWallPURetraction();
 
@@ -105,7 +105,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
     private int pathState;
     private final int subtractor = 0;
     private final Pose startPose = new Pose(0, 58, Math.toRadians(0)); //start
-    private final Pose startSpecimenPose = new Pose(24-subtractor, 68, Math.toRadians(0)); //line 1
+    private final Pose startSpecimenPose = new Pose(24.3-subtractor, 68, Math.toRadians(0)); //line 1
     private final Pose intermediaryPos1=new Pose(27-subtractor,32,Math.toRadians(124)); //line 2 //old 124
     private final Pose intermediaryPos11=new Pose(27.2-subtractor,32.2,Math.toRadians(124)); //line 2
     private final Pose sample1LeftPose =new Pose(27-subtractor,28,Math.toRadians(40)); //line 3
@@ -116,12 +116,12 @@ public class AutonomiePedro4SpecIntake extends OpMode {
     // private final Pose sample3LeftPose =new Pose(62,12,Math.toRadians(0)); //line 9
     // private final Pose sample3MovePose=new Pose(62,6,Math.toRadians(0)); //line 10
     // private final Pose sample3ObservationZonePose =new Pose(15,6,Math.toRadians(0)); //line 11//
-    private final Pose getSpecimenPose=new Pose(0.1-subtractor,20,Math.toRadians(0));// line 12
+    private final Pose getSpecimenPose=new Pose(0.5-subtractor,20,Math.toRadians(0));// line 12
     private final Pose beforeGetSpecimenPose=new Pose(5-subtractor,20,Math.toRadians(0));// line 12
     private final Pose ScoreSpecimenPose=new Pose(25-subtractor,60,Math.toRadians(0)); //all the same, line 13
     private final Pose specimen1Score = new Pose(25-subtractor,56,Math.toRadians(0)); //all the same, line 13
     private final Pose specimen2Score = new Pose(25-subtractor,58,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen3Score = new Pose(25-subtractor,62,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen3Score = new Pose(25-subtractor,54,Math.toRadians(0)); //all the same, line 13
     private final Pose pocketSpecimenPose = ScoreSpecimenPose;
     private final Pose parkingPose=new Pose(5-subtractor,5,Math.toRadians(0)); //parking
 
@@ -291,8 +291,9 @@ public class AutonomiePedro4SpecIntake extends OpMode {
                 if (!follower.isBusy()) {
                     outtakeFSM.setState(outtakeSpecimenHang);
                     outtakeFSM.executeCurrentState();
+                    outakeTargetPos = -1900;
                     autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 350 > System.currentTimeMillis()){}
+                    while(autoTimer + 450 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
 
                 follower.followPath(moveSample1a, true);
@@ -524,7 +525,8 @@ public class AutonomiePedro4SpecIntake extends OpMode {
                     autoTimer = System.currentTimeMillis();
                     outtakeFSM.setState(outtakeSpecimenHangAuto);
                     outtakeFSM.executeCurrentState();
-                    while(autoTimer + 350 > System.currentTimeMillis()){}
+                    outakeTargetPos = -1900;
+                    while(autoTimer + 450 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
                     autoTimer = System.currentTimeMillis();
                     while(autoTimer + 50 > System.currentTimeMillis()){}
@@ -558,7 +560,8 @@ public class AutonomiePedro4SpecIntake extends OpMode {
                     autoTimer = System.currentTimeMillis();
                     outtakeFSM.setState(outtakeSpecimenHangAuto);
                     outtakeFSM.executeCurrentState();
-                    while(autoTimer + 350 > System.currentTimeMillis()){}
+                    outakeTargetPos = -1900;
+                    while(autoTimer + 450 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
                     autoTimer = System.currentTimeMillis();
                     while(autoTimer + 50 > System.currentTimeMillis()){}
@@ -592,7 +595,8 @@ public class AutonomiePedro4SpecIntake extends OpMode {
                     autoTimer = System.currentTimeMillis();
                     outtakeFSM.setState(outtakeSpecimenHangAuto);
                     outtakeFSM.executeCurrentState();
-                    while(autoTimer + 350 > System.currentTimeMillis()){}
+                    outakeTargetPos = -1900;
+                    while(autoTimer + 450 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
                     autoTimer = System.currentTimeMillis();
                     while(autoTimer + 50 > System.currentTimeMillis()){}
@@ -619,7 +623,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         // These loop the movements of the robot
         follower.update();
         autonomousPathUpdate();
-        resetStuff();
+        //resetStuff();
 
         // Feedback to Driver Hub
         telemetry.addData("path state", pathState);
@@ -636,7 +640,6 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-        resetStuff();
 
         FollowerConstants.pathEndTimeoutConstraint = 500;
         Constants.setConstants(FConstants.class, LConstants.class);

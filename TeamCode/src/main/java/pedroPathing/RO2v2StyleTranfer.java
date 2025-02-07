@@ -450,13 +450,25 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //Outputing Samples if Nedded
-            if(intakeMotorPickUpPower != -0.62)
+            if(intakeMotorPickUpPower != -0.5)
                 rememberPosOfServoOut = intakeMotorPickUpPower;
             if(Toggle.outputtoggle(gamepad1.right_bumper || wasBadSample)!=0){
-                intakeMotorPickUpPower =-0.62;
+                intakeMotorPickUpPower =-0.5;
                 wasBadSample = false;
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;
+
+
+            //Outaputing samples with gamepad 2 for HM
+            if(intakeMotorPickUpPower != -0.52)
+                rememberPosOfServoOut = intakeMotorPickUpPower;
+            if(Toggle.outputtoggle2(gamepad1.right_bumper || wasBadSample)!=0){
+                intakeMotorPickUpPower =-0.52;
+                wasBadSample = false;
+            }
+            else intakeMotorPickUpPower = rememberPosOfServoOut;
+
+
 
             //extra spin after taking
             if(intakeExtraSpinTimer + 25 < System.currentTimeMillis() && intakeExtraSpinDoOnce){
@@ -495,12 +507,12 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             }
 
             if(SpitOutSampleHM2 && intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHMTimer + 450 < System.currentTimeMillis()){
-                intakeMotorPickUpPower = -0.62;
+                intakeMotorPickUpPower = -0.52;
                 SpitOutSampleHM2 = false;
             }
 
 
-            if(intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHM && SpitOutSampleHMTimer + 750 < System.currentTimeMillis()){
+            if(intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHM && SpitOutSampleHMTimer + 1250 < System.currentTimeMillis()){
                 intakeFSM.setState(intakeStateRetractedForNoTransfer);
                 intakeFSM.executeCurrentState();
                 outtakeFSM.setState(outtakeStandbyDown);

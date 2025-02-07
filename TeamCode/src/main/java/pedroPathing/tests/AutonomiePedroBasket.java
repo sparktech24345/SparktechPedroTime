@@ -86,14 +86,14 @@ public class AutonomiePedroBasket extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(1, 70, Math.toRadians(90)); //start
+    private final Pose startPose = new Pose(1, 70.5, Math.toRadians(90)); //start
     private final Pose SampleScoringPose = new Pose(15, 98, Math.toRadians(135)); //line 1
     private final Pose SampleScoringPoseFakeThirdFake = new Pose(18, 98, Math.toRadians(135)); //line 1
     private final Pose SampleScoringPoseFakeSecondFake= new Pose(18, 94, Math.toRadians(135)); //line 1
-    private final Pose SampleScoringPoseFake = new Pose(11, 89, Math.toRadians(135)); //line 1
+    private final Pose SampleScoringPoseFake = new Pose(11, 88, Math.toRadians(135)); //line 1
     private final Pose FirstSamplePickUP =new Pose(22,91,Math.toRadians(168)); //line 2 //old 124
     private final Pose SecondSamplePickUp=new Pose(22,98,Math.toRadians(167)); //line 3
-    private final Pose ThirdSamplePickUp=new Pose(20,100,Math.toRadians(210)); //line 3
+    private final Pose ThirdSamplePickUp=new Pose(20,100,Math.toRadians(194)); //line 3
     private final Pose intermediaryPoseBeforePark=new Pose(52.5,100,Math.toRadians(270)); //line 5
     private final Pose intermediaryPoseBeforePark2=new Pose(52.5,85,Math.toRadians(270)); //line 5
     private final Pose parkingPose=new Pose(52.5,69,Math.toRadians(270)); //parking
@@ -240,6 +240,7 @@ public class AutonomiePedroBasket extends OpMode {
                     outtakeFSM.setState(outtakeStateTranfer);
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 4000 > System.currentTimeMillis() && (colors.red >= 0.0015 || colors.blue >= 0.0015)){}
+                    Wait(500);
                     didTransfer = false;
                     outakeTargetPos = -2800;
                     shouldBeRaised= true;
@@ -292,6 +293,7 @@ public class AutonomiePedroBasket extends OpMode {
                     outtakeFSM.setState(outtakeStateTranfer);
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 4000 > System.currentTimeMillis() && (colors.red >= 0.0015 || colors.blue >= 0.0015)){}
+                    Wait(500);
                     didTransfer = false;
                     outakeTargetPos = -2800;
                     shouldBeRaised= true;
@@ -345,6 +347,7 @@ public class AutonomiePedroBasket extends OpMode {
                     outtakeFSM.setState(outtakeStateTranfer);
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 4000 > System.currentTimeMillis() && (colors.red >= 0.0015 || colors.blue >= 0.0015)){}
+                    Wait(500);
                     outakeTargetPos = -2800;
                     shouldBeRaised= true;
                     intakeFSM.setState(intakeRetractedRo2);
@@ -368,8 +371,6 @@ public class AutonomiePedroBasket extends OpMode {
                     shouldBeRaised= false;
                     isRaised = false;
                     didTransfer = false;
-                    outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
-                    outtakeFSM.executeCurrentState();
                     intakeFSM.setState(intakeRetractedRo2);
                     intakeFSM.executeCurrentState();
                     follower.followPath(goToPointBeforePark,true);
@@ -379,6 +380,8 @@ public class AutonomiePedroBasket extends OpMode {
 
             case 8:
                 if(!follower.isBusy()) {
+                    outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
+                    outtakeFSM.executeCurrentState();
                 follower.followPath(goToPointBeforePark2,true);
                 setPathState(9);
             }
