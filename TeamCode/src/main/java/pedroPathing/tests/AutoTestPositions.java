@@ -51,7 +51,7 @@ import pedroPathing.constants.LConstants;
 
 
 @Autonomous(name = "AutoTestPositions", group = "Examples")
-@Disabled
+
 public class AutoTestPositions extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -441,7 +441,7 @@ public class AutoTestPositions extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
-        stopMulthiread = true;
+        executorService.shutdownNow();
     }
 
 

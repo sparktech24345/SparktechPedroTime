@@ -653,6 +653,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
 
 
         // our stuff
+
         executorService.execute(new Runnable() {
             @Override
             public void run() {
@@ -724,6 +725,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
-        stopMulthiread = true;
+        executorService.shutdownNow();
     }
 }
+//        executorService.shutdown();

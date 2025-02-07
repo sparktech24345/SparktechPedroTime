@@ -605,7 +605,7 @@ public class AutonomiePedroBasket extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
-        stopMulthiread = true;
+        executorService.shutdownNow();
     }
 
     private void Wait(long toWait){

@@ -3,7 +3,6 @@ package pedroPathing.tests;
 import static pedroPathing.PositionStorage.PIDincrement;
 import static pedroPathing.PositionStorage.autoTimer;
 import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
 import static pedroPathing.PositionStorage.intakeRotateServoPosition;
 import static pedroPathing.PositionStorage.intakeTargetPos;
 import static pedroPathing.PositionStorage.intakeTargetPosAdder;
@@ -12,6 +11,7 @@ import static pedroPathing.PositionStorage.outakeSampleRetracted;
 import static pedroPathing.PositionStorage.outakeSampleServoPosition;
 import static pedroPathing.PositionStorage.outakeTargetPos;
 import static pedroPathing.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.PositionStorage.resetStuff;
 import static pedroPathing.PositionStorage.servoextended;
 import static pedroPathing.PositionStorage.stopMulthiread;
 
@@ -25,6 +25,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -38,12 +39,13 @@ import java.util.concurrent.Executors;
 import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
-import pedroPathing.States.IntakeStateExtendedRo2v2Auto;
+import pedroPathing.States.IntakeStateExtendedRo2v2;
 import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
 import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
 import pedroPathing.States.OuttakeSpecimenHang;
+import pedroPathing.States.OuttakeSpecimenHangAuto;
 import pedroPathing.States.OuttakeStateBasket;
 import pedroPathing.States.OuttakeStateSamplePickUp;
 import pedroPathing.States.OuttakeStateSpecimen;
@@ -55,8 +57,9 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 
-@Autonomous(name = "AutonomiePedro5SpecIntake", group = "Examples")
-public class AutonomiePedro5SpecIntake extends OpMode {
+@Autonomous(name = "AutonomiePedroFOURSpecIntakeT2", group = "Examples")
+@Disabled
+public class AutonomiePedro4SpecIntakeT2 extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
 
@@ -65,6 +68,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
     OuttakeStateSpecimenAuto outtakeSpecimenAuto = new OuttakeStateSpecimenAuto();
     OuttakeStateSpecimen outtakeSpecimen = new OuttakeStateSpecimen();
     OuttakeSpecimenHang outtakeSpecimenHang = new OuttakeSpecimenHang();
+    OuttakeSpecimenHangAuto outtakeSpecimenHangAuto = new OuttakeSpecimenHangAuto();
     OuttakeStateBasket outtakeBasket = new OuttakeStateBasket();
     OuttakeStateSamplePickUp outtakeSamplePickUp = new OuttakeStateSamplePickUp();
     OuttakeStateStandbyDownWithSample outtakeStandbyDown = new OuttakeStateStandbyDownWithSample();
@@ -74,7 +78,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
     // Initialize Intake states
     IntakeStateRetractedRo2 intakeRetractedRo2 = new IntakeStateRetractedRo2();
-    IntakeStateExtendedRo2v2Auto intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2Auto();
+    IntakeStateExtendedRo2v2 intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2();
     IntakeStateExtendedHM intakeExtendedRo2v2HM = new IntakeStateExtendedHM();
     IntakeStateWallPURetraction intakeStateWallPURetraction = new IntakeStateWallPURetraction();
 
@@ -87,41 +91,29 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
 
 
-
-
-
-
-
-
-
-
-
-
     /**                         Our Paths!                          */
     private int pathState;
-
-    private final Pose startPose = new Pose(1, 58, Math.toRadians(0)); //start
-    private final Pose startSpecimenPose = new Pose(24.3, 68, Math.toRadians(0)); //line 1
-    private final Pose intermediaryPos1=new Pose(27,32,Math.toRadians(124)); //line 2 //old 124
-    private final Pose intermediaryPos11=new Pose(27.2,32.2,Math.toRadians(124)); //line 2
-    private final Pose sample1LeftPose =new Pose(27,28,Math.toRadians(40)); //line 3
-    private final Pose sample1MovePose=new Pose(27,22,Math.toRadians(124)); //line 4
-    private final Pose sample11MovePose=new Pose(27.3,22.3,Math.toRadians(124)); //line 4
-    private final Pose sample1ObservationZonePose =new Pose(26,18,Math.toRadians(30)); //line 5
-    private final Pose sample2LeftPose =new Pose(27,12,Math.toRadians(120)); //line 6
-    private final Pose sample22LeftPose =new Pose(27.2,12.2,Math.toRadians(120)); //line 6
-    private final Pose sample2MovePose=new Pose(18,12,Math.toRadians(0)); //line 7
-    private final Pose sample2ObservationZonePose =new Pose(18,20,Math.toRadians(0)); //line 8
+    private final int subtractor = 0;
+    private final Pose startPose = new Pose(0, 58, Math.toRadians(0)); //start
+    private final Pose startSpecimenPose = new Pose(24-subtractor, 68, Math.toRadians(0)); //line 1
+    private final Pose intermediaryPos1=new Pose(27-subtractor,32,Math.toRadians(124)); //line 2 //old 124
+    private final Pose intermediaryPos11=new Pose(27.2-subtractor,32.2,Math.toRadians(124)); //line 2
+    private final Pose sample1LeftPose =new Pose(27-subtractor,28,Math.toRadians(40)); //line 3
+    private final Pose sample1MovePose=new Pose(27-subtractor,22,Math.toRadians(124)); //line 4
+    private final Pose sample11MovePose=new Pose(27.3-subtractor,22.3,Math.toRadians(124)); //line 4
+    private final Pose sample1ObservationZonePose =new Pose(26-subtractor,18,Math.toRadians(30)); //line 5
+    private final Pose sample2ObservationZonePose =new Pose(18-subtractor,20,Math.toRadians(0)); //line 8
     // private final Pose sample3LeftPose =new Pose(62,12,Math.toRadians(0)); //line 9
     // private final Pose sample3MovePose=new Pose(62,6,Math.toRadians(0)); //line 10
     // private final Pose sample3ObservationZonePose =new Pose(15,6,Math.toRadians(0)); //line 11//
-    private final Pose getSpecimenPose=new Pose(0,20,Math.toRadians(0));// line 12
-    private final Pose ScoreSpecimenPose=new Pose(25,60,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen1Score = ScoreSpecimenPose;
-    private final Pose specimen2Score = ScoreSpecimenPose;
-    private final Pose specimen3Score = ScoreSpecimenPose;
+    private final Pose getSpecimenPose=new Pose(0.1-subtractor,20,Math.toRadians(0));// line 12
+    private final Pose beforeGetSpecimenPose=new Pose(5-subtractor,20,Math.toRadians(0));// line 12
+    private final Pose ScoreSpecimenPose=new Pose(25-subtractor,60,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen1Score = new Pose(25-subtractor,56,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen2Score = new Pose(25-subtractor,58,Math.toRadians(0)); //all the same, line 13
+    private final Pose specimen3Score = new Pose(25-subtractor,62,Math.toRadians(0)); //all the same, line 13
     private final Pose pocketSpecimenPose = ScoreSpecimenPose;
-    private final Pose parkingPose=new Pose(5,5,Math.toRadians(0)); //parking
+    private final Pose parkingPose=new Pose(5-subtractor,5,Math.toRadians(0)); //parking
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
@@ -131,7 +123,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
 
     private Path forward,parking;
-    private PathChain scorePocketSpecimen,moveSample1a,moveSample1b,moveSample1c,moveSample1d, moveSample2a,moveSample2b,moveSample2c,moveSample3a,pickUpSpecimen1,pickUpSpecimen2,pickUpSpecimen3, scoreSpecimen1, scoreSpecimen2, scoreSpecimen3,pocketSpecimen,stand1,stand11,stand2,stand22,stand3,stand33;
+    private PathChain temp1,temp2,moveSample1a,moveSample1b,moveSample1c,moveSample1d,moveSample2c,moveSample3a,pickUpSpecimen1,pickUpSpecimen2,pickUpSpecimen3, scoreSpecimen1, scoreSpecimen2, scoreSpecimen3,pocketSpecimen,stand1,stand11,stand2,stand22,stand3,stand33;
 
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
@@ -208,36 +200,10 @@ public class AutonomiePedro5SpecIntake extends OpMode {
                 .setLinearHeadingInterpolation(sample1MovePose.getHeading(), sample1ObservationZonePose.getHeading())
                 .build();
 
-        moveSample2a=follower.pathBuilder()
-                //goes from the observation zone pose after pushing sample 1 to the top left cornener of the sample
-                .addPath(new BezierLine(new Point(sample1ObservationZonePose), new Point(sample22LeftPose)))
-                .setLinearHeadingInterpolation(sample1ObservationZonePose.getHeading(), sample22LeftPose.getHeading())
-                .build();
-
-        stand3=follower.pathBuilder()
-                //goes from the observation zone pose after pushing sample 1 to the top left cornener of the sample
-                .addPath(new BezierLine(new Point(sample22LeftPose), new Point(sample2LeftPose)))
-                .setLinearHeadingInterpolation(sample22LeftPose.getHeading(), sample2LeftPose.getHeading())
-                .build();
-        /*stand33=follower.pathBuilder()
-                //goes from the observation zone pose after pushing sample 1 to the top left cornener of the sample
-                .addPath(new BezierLine(new Point(sample22LeftPose), new Point(sample2LeftPose)))
-                .setLinearHeadingInterpolation(sample22LeftPose.getHeading(), sample2LeftPose.getHeading())
-                .build();//*/
-
-
-
-
-        moveSample2b=follower.pathBuilder()
-                //goes from the top left corner of the sample to in front of it
-                .addPath(new BezierLine(new Point(sample2LeftPose),new Point(sample2MovePose)))
-                .setLinearHeadingInterpolation(sample2LeftPose.getHeading(),sample2MovePose.getHeading())
-                .build();
-
         moveSample2c=follower.pathBuilder()
                 //push sample 2 in the observation zone
-                .addPath(new BezierLine(new Point(sample2MovePose),new Point(sample2ObservationZonePose)))
-                .setLinearHeadingInterpolation(sample2MovePose.getHeading(), sample2ObservationZonePose.getHeading())
+                .addPath(new BezierLine(new Point(sample1ObservationZonePose),new Point(sample2ObservationZonePose)))
+                .setLinearHeadingInterpolation(sample1ObservationZonePose.getHeading(), sample2ObservationZonePose.getHeading())
                 .build();
 
         moveSample3a=follower.pathBuilder()
@@ -254,8 +220,14 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
         scoreSpecimen1=follower.pathBuilder()
                 //Go from bar after puttin Specimen 1 to the specimen colect pose
-                .addPath(new BezierLine(new Point(specimen1Score),new Point(getSpecimenPose)))
-                .setLinearHeadingInterpolation(specimen1Score.getHeading(),getSpecimenPose.getHeading())
+                .addPath(new BezierLine(new Point(specimen1Score),new Point(beforeGetSpecimenPose)))
+                .setLinearHeadingInterpolation(specimen1Score.getHeading(),beforeGetSpecimenPose.getHeading())
+                .build();
+
+        temp1 =follower.pathBuilder()
+                //Go from bar after puttin Specimen 1 to the specimen colect pose
+                .addPath(new BezierLine(new Point(beforeGetSpecimenPose),new Point(getSpecimenPose)))
+                .setLinearHeadingInterpolation(beforeGetSpecimenPose.getHeading(),getSpecimenPose.getHeading())
                 .build();
 
         pickUpSpecimen2=follower.pathBuilder()
@@ -266,26 +238,20 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
         scoreSpecimen2=follower.pathBuilder()
                 //Go from bar after puttin Specimen 2 to the specimen colect pose
-                .addPath(new BezierLine(new Point(specimen2Score),new Point(getSpecimenPose)))
-                .setLinearHeadingInterpolation(specimen2Score.getHeading(),getSpecimenPose.getHeading())
+                .addPath(new BezierLine(new Point(specimen2Score),new Point(beforeGetSpecimenPose)))
+                .setLinearHeadingInterpolation(specimen2Score.getHeading(),beforeGetSpecimenPose.getHeading())
+                .build();
+
+        temp2 =follower.pathBuilder()
+                //Go from bar after puttin Specimen 2 to the specimen colect pose
+                .addPath(new BezierLine(new Point(beforeGetSpecimenPose),new Point(getSpecimenPose)))
+                .setLinearHeadingInterpolation(beforeGetSpecimenPose.getHeading(),getSpecimenPose.getHeading())
                 .build();
 
         pickUpSpecimen3=follower.pathBuilder()
                 //Go from the specimen colect pose to the specimen score pose
                 .addPath(new BezierLine(new Point(getSpecimenPose), new Point(specimen3Score)))
                 .setLinearHeadingInterpolation(getSpecimenPose.getHeading(), specimen3Score.getHeading())
-                .build();
-
-        scoreSpecimen3=follower.pathBuilder()
-                //Go from bar after puttin Specimen 3 to the specimen colect pose
-                .addPath(new BezierLine(new Point(specimen3Score),new Point(getSpecimenPose)))
-                .setLinearHeadingInterpolation(specimen3Score.getHeading(),getSpecimenPose.getHeading())
-                .build();
-
-        pocketSpecimen=follower.pathBuilder()
-                //Go from the specimen colect pose to the specimen score pose
-                .addPath(new BezierLine(new Point(getSpecimenPose),new Point(pocketSpecimenPose)))
-                .setLinearHeadingInterpolation(getSpecimenPose.getHeading(),pocketSpecimenPose.getHeading())
                 .build();
 
         //Go from bar after puttin Specimen 4 to parking and end path
@@ -302,7 +268,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
         NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
         switch (pathState) {
-            case 0:
+            case 68:
                 if(!follower.isBusy()) {
                     follower.followPath(forward,true);
                     setPathState(1);
@@ -421,27 +387,30 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
             case 5:
                 if (!follower.isBusy()) {
-
                     autoTimer = System.currentTimeMillis();
                     intakeMotorPickUpPower =-0.8;
                     while(autoTimer + 200 > System.currentTimeMillis()){}
                     intakeMotorPickUpPower =0;
                     autoTimer = System.currentTimeMillis();
                     //while(autoTimer + 200 > System.currentTimeMillis()){}
-                    intakeTargetPos = 150;
+                    intakeTargetPos = 0;
+                    intakeFSM.setState(intakeStateWallPURetraction);
+                    intakeFSM.executeCurrentState();
+                    while(autoTimer + 200 > System.currentTimeMillis()){}
+                    outtakeFSM.setState(outakeHMandWallPU);
+                    outtakeFSM.executeCurrentState();
 
 
-
-                    follower.followPath(moveSample2a, true);
-                    setPathState(54);
+                    follower.followPath(moveSample2c, true);
+                    setPathState(8);
                 }
                 break;
 
 
-            case 54:
+            /*case 54:
                 if (!follower.isBusy()) {
-                    follower.followPath(stand3);
-                    setPathState(6);
+                    follower.followPath(moveSample2c);
+                    setPathState(8);
                 }
                 break;
 
@@ -453,7 +422,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
                 break;//*/
 
 
-            case 6:
+            /*case 6:
                 if (!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeFSM.setState(intakeExtendedRo2v2Auto);
@@ -499,7 +468,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
                     follower.followPath(moveSample2c, true);
                     setPathState(8);
                 }
-                break;
+                break;//*/
 
             case 8:
                 if (!follower.isBusy()) {
@@ -543,7 +512,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
             case 13:
                 if (!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
-                    outtakeFSM.setState(outtakeSpecimenHang);
+                    outtakeFSM.setState(outtakeSpecimenHangAuto);
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 350 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
@@ -552,9 +521,15 @@ public class AutonomiePedro5SpecIntake extends OpMode {
                     outtakeFSM.setState(outakeHMandWallPU);
                     outtakeFSM.executeCurrentState();
                     follower.followPath(scoreSpecimen1);
-                    setPathState(14);
+                    setPathState(61);
                 }
                 break;
+
+            case 61:
+                if (!follower.isBusy()) {
+                    follower.followPath(temp1, true);
+                    setPathState(14);
+                }
 
             case 14:
                 if (!follower.isBusy()) {
@@ -571,7 +546,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
             case 15:
                 if (!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
-                    outtakeFSM.setState(outtakeSpecimenHang);
+                    outtakeFSM.setState(outtakeSpecimenHangAuto);
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 350 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
@@ -580,9 +555,15 @@ public class AutonomiePedro5SpecIntake extends OpMode {
                     outtakeFSM.setState(outakeHMandWallPU);
                     outtakeFSM.executeCurrentState();
                     follower.followPath(scoreSpecimen2);
-                    setPathState(16);
+                    setPathState(60);
                 }
                 break;
+
+            case 60:
+                if (!follower.isBusy()) {
+                    follower.followPath(temp2, true);
+                    setPathState(16);
+                }
 
             case 16:
                 if (!follower.isBusy()) {
@@ -599,35 +580,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
             case 17:
                 if (!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
-                    outtakeFSM.setState(outtakeSpecimenHang);
-                    outtakeFSM.executeCurrentState();
-                    while(autoTimer + 350 > System.currentTimeMillis()){}
-                    outakeSampleServoPosition = servoextended;
-                    autoTimer = System.currentTimeMillis();
-                    while(autoTimer + 50 > System.currentTimeMillis()){}
-                    outtakeFSM.setState(outakeHMandWallPU);
-                    outtakeFSM.executeCurrentState();
-                    follower.followPath(scoreSpecimen3);
-                    setPathState(18);
-                }
-                break;
-
-            case 18:
-                if (!follower.isBusy()) {
-                    autoTimer = System.currentTimeMillis();
-                    outakeSampleServoPosition= outakeSampleRetracted;
-                    while(autoTimer + 50 > System.currentTimeMillis()){}
-                    outtakeFSM.setState(outtakeSpecimenAuto);
-                    outtakeFSM.executeCurrentState();
-                    follower.followPath(pocketSpecimen);
-                    setPathState(19);
-                }
-                break;
-
-            case 19:
-                if (!follower.isBusy()) {
-                    autoTimer = System.currentTimeMillis();
-                    outtakeFSM.setState(outtakeSpecimenHang);
+                    outtakeFSM.setState(outtakeSpecimenHangAuto);
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 350 > System.currentTimeMillis()){}
                     outakeSampleServoPosition = servoextended;
@@ -656,6 +609,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
         // These loop the movements of the robot
         follower.update();
         autonomousPathUpdate();
+        resetStuff();
 
         // Feedback to Driver Hub
         telemetry.addData("path state", pathState);
@@ -672,8 +626,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-
-
+        resetStuff();
 
         FollowerConstants.pathEndTimeoutConstraint = 500;
         Constants.setConstants(FConstants.class, LConstants.class);
@@ -690,11 +643,10 @@ public class AutonomiePedro5SpecIntake extends OpMode {
 
 
         // our stuff
+
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-                stopMulthiread = false;
-
                 double intakeMotorPower = 0;
                 double outakeMotorPower = 0;
                 DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
@@ -716,7 +668,7 @@ public class AutonomiePedro5SpecIntake extends OpMode {
                 Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
                 Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
 
-
+                stopMulthiread = false;
                 while(!stopMulthiread){
                     intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
                     outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
