@@ -124,8 +124,10 @@ public class PositionStorage {
     public static boolean didTransfer = false;
     public static boolean isRaised = false;
     public static boolean shouldBeRaised = false;
+    public static boolean isOutputinHM = false;
 
     public static void resetStuff(){
+        isOutputinHM = false;
         shouldBeRaised = false;
         isRaised = false;
         didTransfer = false;

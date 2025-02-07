@@ -1,4 +1,4 @@
-package pedroPathing.tests;
+package pedroPathing.Autos;
 
 import static pedroPathing.PositionStorage.PIDincrement;
 import static pedroPathing.PositionStorage.autoTimer;
@@ -763,6 +763,8 @@ public class AutonomiePedro5SpecIntake extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
+        super.stop();
         executorService.shutdownNow();
+        stopMulthiread = true;
     }
 }

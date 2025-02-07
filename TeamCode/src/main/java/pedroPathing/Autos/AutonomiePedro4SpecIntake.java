@@ -1,9 +1,8 @@
-package pedroPathing.tests;
+package pedroPathing.Autos;
 
 import static pedroPathing.PositionStorage.PIDincrement;
 import static pedroPathing.PositionStorage.autoTimer;
 import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
 import static pedroPathing.PositionStorage.intakeRotateServoPosition;
 import static pedroPathing.PositionStorage.intakeTargetPos;
 import static pedroPathing.PositionStorage.intakeTargetPosAdder;
@@ -12,7 +11,6 @@ import static pedroPathing.PositionStorage.outakeSampleRetracted;
 import static pedroPathing.PositionStorage.outakeSampleServoPosition;
 import static pedroPathing.PositionStorage.outakeTargetPos;
 import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.resetStuff;
 import static pedroPathing.PositionStorage.servoextended;
 import static pedroPathing.PositionStorage.stopMulthiread;
 
@@ -39,7 +37,6 @@ import java.util.concurrent.Executors;
 import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
-import pedroPathing.States.IntakeStateExtendedRo2v2;
 import pedroPathing.States.IntakeStateExtendedRo2v2Auto;
 import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
@@ -728,7 +725,9 @@ public class AutonomiePedro4SpecIntake extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
+        super.stop();
         executorService.shutdownNow();
+        stopMulthiread = true;
     }
 }
 //        executorService.shutdown();

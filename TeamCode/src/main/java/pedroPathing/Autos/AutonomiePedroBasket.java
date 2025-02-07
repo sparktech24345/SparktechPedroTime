@@ -1,15 +1,9 @@
-package pedroPathing.tests;
+package pedroPathing.Autos;
 
-import static pedroPathing.PositionStorage.autoTimer;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.PositionStorage.servoextended;
-import static pedroPathing.PositionStorage.stopMulthiread;
+import static pedroPathing.PositionStorage.*;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -18,7 +12,6 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -32,6 +25,7 @@ import java.util.concurrent.Executors;
 import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
+import pedroPathing.States.IntakeStateExtendedRo2v2;
 import pedroPathing.States.IntakeStateExtendedRo2v2Auto;
 import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
@@ -50,11 +44,11 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 
-@Autonomous(name = "AutoTestPositions", group = "Examples")
-
-public class AutoTestPositions extends OpMode {
+@Autonomous(name = "AutonomiePedroBasket", group = "Examples")
+public class AutonomiePedroBasket extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
+    private boolean retractOnce = true;
 
 
     // Initialize Outtake states
@@ -72,6 +66,7 @@ public class AutoTestPositions extends OpMode {
     // Initialize Intake states
     IntakeStateRetractedRo2 intakeRetractedRo2 = new IntakeStateRetractedRo2();
     IntakeStateExtendedRo2v2Auto intakeExtendedRo2v2Auto = new IntakeStateExtendedRo2v2Auto();
+    IntakeStateExtendedRo2v2 intakeExtendedRo2v2 = new IntakeStateExtendedRo2v2();
     IntakeStateExtendedHM intakeExtendedRo2v2HM = new IntakeStateExtendedHM();
     IntakeStateWallPURetraction intakeStateWallPURetraction = new IntakeStateWallPURetraction();
 
@@ -85,39 +80,20 @@ public class AutoTestPositions extends OpMode {
 
 
 
-
-
-
-
-
-
-
-
-
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(1, 70, Math.toRadians(90)); //start
-    private final Pose FirstSampleScorePose = new Pose(1, 85, Math.toRadians(90)); //line 1
-    private final Pose SecondSamplePickUP=new Pose(1,87,Math.toRadians(180)); //line 2 //old 124
-    private final Pose SecondSampleScore=new Pose(5,78,Math.toRadians(145)); //line 3
-    private final Pose ThirdSamplePickUp =new Pose(27,82,Math.toRadians(180)); //line 4
-    private final Pose ThirdSampleScore=new Pose(27,78,Math.toRadians(165)); //line 5
-    private final Pose FourthSamplePickUp=new Pose(27.3,82,Math.toRadians(200)); //line 6
-    private final Pose FourthSampleScore =new Pose(27,78,Math.toRadians(165)); //line 7
-    private final Pose sample2ObservationZonePose =new Pose(18,20,Math.toRadians(0)); //line 8
-    // private final Pose sample3LeftPose =new Pose(62,12,Math.toRadians(0)); //line 9
-    // private final Pose sample3MovePose=new Pose(62,6,Math.toRadians(0)); //line 10
-    // private final Pose sample3ObservationZonePose =new Pose(15,6,Math.toRadians(0)); //line 11//
-    private final Pose getSpecimenPose=new Pose(0.8,20,Math.toRadians(0));// line 12
-    private final Pose beforeGetSpecimenPose=new Pose(5,20,Math.toRadians(0));// line 12
-    private final Pose ScoreSpecimenPose=new Pose(25,60,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen1Score = new Pose(25,56,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen2Score = new Pose(25,58,Math.toRadians(0)); //all the same, line 13
-    private final Pose specimen3Score = new Pose(25,62,Math.toRadians(0)); //all the same, line 13
-    private final Pose pocketSpecimenPose = ScoreSpecimenPose;
-    //private final Pose parkingPose=new Pose(5,5,Math.toRadians(0)); //parking
-    private final Pose parkingPose=new Pose(27,82,Math.toRadians(180)); //parking
+    private final Pose startPose = new Pose(1, 70.5, Math.toRadians(90)); //start
+    private final Pose SampleScoringPose = new Pose(15, 98, Math.toRadians(135)); //line 1
+    private final Pose SampleScoringPoseFakeThirdFake = new Pose(18, 98, Math.toRadians(135)); //line 1
+    private final Pose SampleScoringPoseFakeSecondFake= new Pose(18, 94, Math.toRadians(135)); //line 1
+    private final Pose SampleScoringPoseFake = new Pose(11, 88, Math.toRadians(135)); //line 1
+    private final Pose FirstSamplePickUP =new Pose(22,91,Math.toRadians(168)); //line 2 //old 124
+    private final Pose SecondSamplePickUp=new Pose(22,98,Math.toRadians(167)); //line 3
+    private final Pose ThirdSamplePickUp=new Pose(20,100,Math.toRadians(194)); //line 3
+    private final Pose intermediaryPoseBeforePark=new Pose(52.5,100,Math.toRadians(270)); //line 5
+    private final Pose intermediaryPoseBeforePark2=new Pose(52.5,85,Math.toRadians(270)); //line 5
+    private final Pose parkingPose=new Pose(52.5,69,Math.toRadians(270)); //parking
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
@@ -126,9 +102,8 @@ public class AutoTestPositions extends OpMode {
 
 
 
-    private Path forward,parking;
-    private PathChain goToPickUpSecondSample,ScoreSecondSample,goToPickUpThirdSample;
-
+    private Path goToFirstPoint,parking;
+    private PathChain PickUpFirstSample,ScoreFirstSample,PickUpSecondSample,ScoreSecondSample,PickUpThirdSample,ScoreThirdSample,goToPointBeforePark,goToPointBeforePark2;
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
     public void buildPaths() {
@@ -149,28 +124,59 @@ public class AutoTestPositions extends OpMode {
          * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
 
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
-        forward = new Path(new BezierLine(new Point(startPose), new Point(FirstSampleScorePose)));
-        forward.setLinearHeadingInterpolation(startPose.getHeading(), FirstSampleScorePose.getHeading());
+        goToFirstPoint = new Path(new BezierLine(new Point(startPose), new Point(SampleScoringPoseFake)));
+        goToFirstPoint.setLinearHeadingInterpolation(startPose.getHeading(), SampleScoringPoseFake.getHeading());
 
-        goToPickUpSecondSample=follower.pathBuilder()
+        PickUpFirstSample =follower.pathBuilder()
                 //goes from bar to an intermediete pose (submersible corner)
-                .addPath(new BezierLine(new Point(FirstSampleScorePose), new Point(SecondSamplePickUP)))
-                .setLinearHeadingInterpolation(FirstSampleScorePose.getHeading(), SecondSamplePickUP.getHeading())
+                .addPath(new BezierLine(new Point(SampleScoringPoseFake), new Point(FirstSamplePickUP)))
+                .setLinearHeadingInterpolation(SampleScoringPoseFake.getHeading(), FirstSamplePickUP.getHeading())
                 .build();
-        ScoreSecondSample=follower.pathBuilder()
+
+        ScoreFirstSample =follower.pathBuilder()
                 //goes from bar to an intermediete pose (submersible corner)
-                .addPath(new BezierLine(new Point(SecondSamplePickUP), new Point(SecondSampleScore)))
-                .setLinearHeadingInterpolation(SecondSamplePickUP.getHeading(), SecondSampleScore.getHeading())
+                .addPath(new BezierLine(new Point(FirstSamplePickUP), new Point(SampleScoringPoseFakeSecondFake)))
+                .setLinearHeadingInterpolation(FirstSamplePickUP.getHeading(), SampleScoringPoseFakeSecondFake.getHeading())
                 .build();
-        goToPickUpThirdSample=follower.pathBuilder()
+
+        PickUpSecondSample =follower.pathBuilder()
                 //goes from bar to an intermediete pose (submersible corner)
-                .addPath(new BezierLine(new Point(SecondSampleScore), new Point(ThirdSamplePickUp)))
-                .setLinearHeadingInterpolation(SecondSampleScore.getHeading(), ThirdSamplePickUp.getHeading())
+                .addPath(new BezierLine(new Point(SampleScoringPoseFakeSecondFake), new Point(SecondSamplePickUp)))
+                .setLinearHeadingInterpolation(SampleScoringPoseFakeSecondFake.getHeading(), SecondSamplePickUp.getHeading())
+                .build();
+
+        ScoreSecondSample =follower.pathBuilder()
+                //goes from bar to an intermediete pose (submersible corner)
+                .addPath(new BezierLine(new Point(SecondSamplePickUp), new Point(SampleScoringPoseFakeThirdFake)))
+                .setLinearHeadingInterpolation(SecondSamplePickUp.getHeading(), SampleScoringPoseFakeThirdFake.getHeading())
+                .build();
+
+        PickUpThirdSample =follower.pathBuilder()
+                //goes from bar to an intermediete pose (submersible corner)
+                .addPath(new BezierLine(new Point(SampleScoringPoseFakeThirdFake), new Point(ThirdSamplePickUp)))
+                .setLinearHeadingInterpolation(SampleScoringPoseFakeThirdFake.getHeading(), ThirdSamplePickUp.getHeading())
+                .build();
+
+        ScoreThirdSample =follower.pathBuilder()
+                //goes from bar to an intermediete pose (submersible corner)
+                .addPath(new BezierLine(new Point(ThirdSamplePickUp), new Point(SampleScoringPose)))
+                .setLinearHeadingInterpolation(ThirdSamplePickUp.getHeading(), SampleScoringPose.getHeading())
+                .build();
+
+        goToPointBeforePark =follower.pathBuilder()
+                //goes from bar to an intermediete pose (submersible corner)
+                .addPath(new BezierLine(new Point(SampleScoringPose), new Point(intermediaryPoseBeforePark)))
+                .setLinearHeadingInterpolation(SampleScoringPose.getHeading(), intermediaryPoseBeforePark.getHeading())
+                .build();
+        goToPointBeforePark2 =follower.pathBuilder()
+                //goes from bar to an intermediete pose (submersible corner)
+                .addPath(new BezierLine(new Point(intermediaryPoseBeforePark), new Point(intermediaryPoseBeforePark2)))
+                .setLinearHeadingInterpolation(intermediaryPoseBeforePark.getHeading(), intermediaryPoseBeforePark2.getHeading())
                 .build();
 
         //Go from bar after puttin Specimen 4 to parking and end path
-        parking = new Path(new BezierLine(new Point(specimen3Score), new Point(parkingPose)));
-        parking.setLinearHeadingInterpolation(specimen3Score.getHeading(), parkingPose.getHeading());
+        parking = new Path(new BezierLine(new Point(intermediaryPoseBeforePark2), new Point(parkingPose)));
+        parking.setLinearHeadingInterpolation(intermediaryPoseBeforePark2.getHeading(), parkingPose.getHeading());
 
     }
 
@@ -182,58 +188,212 @@ public class AutoTestPositions extends OpMode {
         NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
         switch (pathState) {
-            case 12:
+            case 0:
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
-                    outtakeFSM.setState(outtakeBasket);
-                    outtakeFSM.executeCurrentState();
-                    while(autoTimer + 500 > System.currentTimeMillis()){}
-                        follower.followPath(forward,true);
-                        setPathState(1);
-
+                    outakeTargetPos = -2800;
+                    shouldBeRaised= true;
+                    //while(autoTimer + 500 > System.currentTimeMillis()){}
+                    follower.followPath(goToFirstPoint,true);
+                    setPathState(1);
                 }
                 break;
 
             case 1:
+                if(isRaised){
+                    outtakeFSM.setState(outtakeBasket);
+                    outtakeFSM.executeCurrentState();
+                }
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
+                    //while(!(outtakeFSM.currentStateOutake == outtakeBasket) && autoTimer + 1000 > System.currentTimeMillis()){}
+                    Wait(300);
                     outakeSampleServoPosition = servoextended;
+                    Wait(250);
+                    shouldBeRaised= false;
+                    isRaised = false;
                     outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
                     outtakeFSM.executeCurrentState();
-                    follower.followPath(goToPickUpSecondSample,true);
+                    follower.followPath(PickUpFirstSample,true);
                     setPathState(2);
                 }
                 break;
-
             case 2:
                 if(!follower.isBusy()) {
-                    while(autoTimer + 1000 > System.currentTimeMillis()){}
                     autoTimer = System.currentTimeMillis();
-                    intakeFSM.setState(intakeExtendedRo2v2Auto);
+                    Wait(500);
+                    intakeFSM.setState(intakeExtendedRo2v2);
                     intakeFSM.executeCurrentState();
+                    autoTimer = System.currentTimeMillis();
                     while(autoTimer + 1500 > System.currentTimeMillis() && (colors.red <= 0.0012 && colors.blue <= 0.0012)){
                         colors = colorSensor.getNormalizedColors();
-                        if(autoTimer + 200 < System.currentTimeMillis()) {
+                        if(autoTimer + 400 < System.currentTimeMillis()) {
                             intakeTargetPos = 510;
                         }
-                        if(autoTimer + 300 < System.currentTimeMillis()) {
+                        if(autoTimer + 500 < System.currentTimeMillis()) {
                             intakeMotorPickUpPower = 1;
                         }
                     }
-                    while(autoTimer + 1000 > System.currentTimeMillis()){}
-                    outtakeFSM.setState(outtakeBasket);
+                    outtakeFSM.setState(outtakeStateTranfer);
                     outtakeFSM.executeCurrentState();
-                    while(autoTimer + 1000 > System.currentTimeMillis()){}
-                    follower.followPath(ScoreSecondSample, true);
+                    while(autoTimer + 4000 > System.currentTimeMillis() && (colors.red >= 0.0015 || colors.blue >= 0.0015)){}
+                    Wait(500);
+                    didTransfer = false;
+                    outakeTargetPos = -2800;
+                    shouldBeRaised= true;
+                    intakeFSM.setState(intakeRetractedRo2);
+                    intakeFSM.executeCurrentState();
+                    follower.followPath(ScoreFirstSample, true);
                     setPathState(3);
                 }
                 break;
 
             case 3:
+                if(isRaised){
+                    outtakeFSM.setState(outtakeBasket);
+                    outtakeFSM.executeCurrentState();
+                }
                 if(!follower.isBusy()) {
-                    //follower.followPath(goToPickUpThirdSample,true);
+                    autoTimer = System.currentTimeMillis();
+                    //while(!(outtakeFSM.currentStateOutake == outtakeBasket) && autoTimer + 1500 > System.currentTimeMillis()){}
+                    Wait(300);
+                    outakeSampleServoPosition = servoextended;
+                    Wait(250);
+                    shouldBeRaised= false;
+                    isRaised = false;
+                    didTransfer = false;
+                    outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
+                    outtakeFSM.executeCurrentState();
+                    follower.followPath(PickUpSecondSample,true);
+                    intakeTargetPos = 80;
+                    setPathState(4);
+                }
+                break;
+
+
+            case 4:
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
+                    Wait(500);
+                    intakeFSM.setState(intakeExtendedRo2v2);
+                    intakeFSM.executeCurrentState();
+                    autoTimer = System.currentTimeMillis();
+                    while(autoTimer + 1500 > System.currentTimeMillis() && (colors.red <= 0.0012 && colors.blue <= 0.0012)){
+                        colors = colorSensor.getNormalizedColors();
+                        if(autoTimer + 500 < System.currentTimeMillis()) {
+                            intakeTargetPos = 510;
+                        }
+                        if(autoTimer + 600 < System.currentTimeMillis()) {
+                            intakeMotorPickUpPower = 1;
+                        }
+                    }
+                    outtakeFSM.setState(outtakeStateTranfer);
+                    outtakeFSM.executeCurrentState();
+                    while(autoTimer + 4000 > System.currentTimeMillis() && (colors.red >= 0.0015 || colors.blue >= 0.0015)){}
+                    Wait(500);
+                    didTransfer = false;
+                    outakeTargetPos = -2800;
+                    shouldBeRaised= true;
+                    intakeFSM.setState(intakeRetractedRo2);
+                    intakeFSM.executeCurrentState();
+                    follower.followPath(ScoreSecondSample, true);
+                    setPathState(5);
+                }
+                break;
+
+            case 5:
+                if(isRaised){
+                    outtakeFSM.setState(outtakeBasket);
+                    outtakeFSM.executeCurrentState();
+                }
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
+                    //while(!(outtakeFSM.currentStateOutake == outtakeBasket) && autoTimer + 1500 > System.currentTimeMillis()){}
+                    Wait(300);
+                    outakeSampleServoPosition = servoextended;
+                    Wait(250);
+                    shouldBeRaised= false;
+                    isRaised = false;
+                    follower.followPath(PickUpThirdSample,true);
+                    setPathState(6);
+                    autoTimer = System.currentTimeMillis();
+                }
+                break;
+
+            case 6:
+                if(retractOnce && autoTimer + 450 < System.currentTimeMillis()) {
+                    outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
+                    outtakeFSM.executeCurrentState();
+                    retractOnce = false;
+                }
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
+                    Wait(500);
+                    intakeFSM.setState(intakeExtendedRo2v2);
+                    intakeFSM.executeCurrentState();
+                    autoTimer = System.currentTimeMillis();
+                    while(autoTimer + 1500 > System.currentTimeMillis() && (colors.red <= 0.0012 && colors.blue <= 0.0012)){
+                        colors = colorSensor.getNormalizedColors();
+                        if(autoTimer + 300 < System.currentTimeMillis()) {
+                            intakeTargetPos = 510;
+                        }
+                        if(autoTimer + 400 < System.currentTimeMillis()) {
+                            intakeMotorPickUpPower = 1;
+                        }
+                    }
+                    outtakeFSM.setState(outtakeStateTranfer);
+                    outtakeFSM.executeCurrentState();
+                    while(autoTimer + 4000 > System.currentTimeMillis() && (colors.red >= 0.0015 || colors.blue >= 0.0015)){}
+                    Wait(500);
+                    outakeTargetPos = -2800;
+                    shouldBeRaised= true;
+                    intakeFSM.setState(intakeRetractedRo2);
+                    intakeFSM.executeCurrentState();
+                    follower.followPath(ScoreThirdSample, true);
+                    setPathState(7);
+                }
+                break;
+
+            case 7:
+                if(isRaised){
+                    outtakeFSM.setState(outtakeBasket);
+                    outtakeFSM.executeCurrentState();
+                }
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
+                    //while(!(outtakeFSM.currentStateOutake == outtakeBasket) && autoTimer + 1500 > System.currentTimeMillis()){}
+                    Wait(300);
+                    outakeSampleServoPosition = servoextended;
+                    Wait(250);
+                    shouldBeRaised= false;
+                    isRaised = false;
+                    didTransfer = false;
+                    intakeFSM.setState(intakeRetractedRo2);
+                    intakeFSM.executeCurrentState();
+                    follower.followPath(goToPointBeforePark,true);
+                    setPathState(8);
+                }
+                break;
+
+            case 8:
+                if(!follower.isBusy()) {
+                    outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
+                    outtakeFSM.executeCurrentState();
+                follower.followPath(goToPointBeforePark2,true);
+                setPathState(9);
+            }
+                break;
+            case 9:
+                if(!follower.isBusy()) {
                     follower.followPath(parking,true);
-                    setPathState(-1);
+                    setPathState(10);
+                }
+                break;
+
+                case 10:
+                if(!follower.isBusy()) {
+                    outakeArmServoPosition = 250;
+                    setPathState(80);
                 }
                 break;
         }
@@ -254,12 +414,17 @@ public class AutoTestPositions extends OpMode {
         follower.update();
         autonomousPathUpdate();
 
+
+
         // Feedback to Driver Hub
         telemetry.addData("path state", pathState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("heading in degrees", Math.toDegrees(follower.getPose().getHeading()));
         telemetry.addData("intakerotate",intakeRotateServoPosition);
+        telemetry.addData("isRaised",isRaised);
+        telemetry.addData("ShouldBeRaised",shouldBeRaised);
+        telemetry.addData("didTransfer",didTransfer);
         telemetry.update();
     }
 
@@ -269,10 +434,11 @@ public class AutoTestPositions extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+        resetStuff();
 
-
-
+        FollowerConstants.pathEndTimeoutConstraint = 700;
         Constants.setConstants(FConstants.class, LConstants.class);
+        FollowerConstants.pathEndTimeoutConstraint = 700;
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();
@@ -288,8 +454,6 @@ public class AutoTestPositions extends OpMode {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-
-                stopMulthiread = false;
 
                 double intakeMotorPower = 0;
                 double outakeMotorPower = 0;
@@ -315,10 +479,13 @@ public class AutoTestPositions extends OpMode {
                 NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
                 NormalizedRGBA colors = colorSensor.getNormalizedColors();
+                stopMulthiread = false;
+                while(!stopMulthiread){
 
 
-                while(true){
-                    /*colors = colorSensor.getNormalizedColors();
+                    if(outakeLeftMotor.getCurrentPosition()< -2400 && shouldBeRaised) isRaised = true;
+                    else isRaised = false;
+                    colors = colorSensor.getNormalizedColors();
                     intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
                     outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
                     outakeMotorPower *= PIDincrement;
@@ -334,19 +501,15 @@ public class AutoTestPositions extends OpMode {
                     outakeArmServo.setPosition(outakeArmServoPosition / 360);
                     outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
 
-                    /*telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
-                    telemetry.addData("backLeftPowerCat",backLeftPowerCat);
-                    telemetry.addData("frontRightPowerCat",frontRightPowerCat);
-                    telemetry.addData("backRightPowerCat",backRightPowerCat);
-
-                    telemetry.addLine("This is Motor "+Thread.currentThread().getId());
-                    updateTelemetry(telemetry);
-                       
+                    //telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
+                    // telemetry.addData("backLeftPowerCat",backLeftPowerCat);
+                    // telemetry.addData("frontRightPowerCat",frontRightPowerCat);
+                    // telemetry.addData("backRightPowerCat",backRightPowerCat);
+                    // telemetry.addLine("This is Motor "+Thread.currentThread().getId());
+                    // updateTelemetry(telemetry);//
 
 
-
-
-
+                    //transfer
                     if (((outakeArmServo.getPosition() * 360 <= outtakeArmServoPosAtRo2v2TransferPickUp + 5))
                             && outtakeFSM.currentStateOutake == outtakeStateTranfer
                             && (colors.red >= 0.0015 || colors.blue >= 0.0015)
@@ -384,6 +547,7 @@ public class AutoTestPositions extends OpMode {
                         //close thingyy
                         if (noWiglyPls && noWiglyTransferTimer + 200 < System.currentTimeMillis()) {
                             outakeSampleServoPosition = outakeSampleRetracted;
+                            didTransfer = true;
                         }
                         //transfer done
                         if (noWiglyPls && noWiglyTransferTimer + 500 < System.currentTimeMillis() && DontDoTransferBeforeTransfer) {
@@ -395,7 +559,6 @@ public class AutoTestPositions extends OpMode {
                             intakeShouldRetractAfterTransfer = true;
                             noWiglyPls = false;
                             DontDoTransferBeforeTransfer = false;
-                            didTransfer = true;
                         }
                     }
                     if (extendABitAfterRo2Transfer && !transferDisabled) {
@@ -413,12 +576,13 @@ public class AutoTestPositions extends OpMode {
                         intakeShouldRetractAfterTransferTimerToggle = false;
                     }
                     //*/
-                    telemetry.addData("path state", pathState);
-                    telemetry.addData("x", follower.getPose().getX());
-                    telemetry.addData("y", follower.getPose().getY());
-                    telemetry.addData("heading", follower.getPose().getHeading());
-                    telemetry.addData("intakerotate",intakeRotateServoPosition);
-                    telemetry.update();
+
+                    //telemetry.addData("path state", pathState);
+                    //telemetry.addData("x", follower.getPose().getX());
+                    //telemetry.addData("y", follower.getPose().getY());
+                    //telemetry.addData("heading", follower.getPose().getHeading());
+                    //telemetry.addData("intakerotate",intakeRotateServoPosition);
+                    //telemetry.update();
                 }
             }
         });
@@ -441,10 +605,17 @@ public class AutoTestPositions extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
+        super.stop();
         executorService.shutdownNow();
+        stopMulthiread = true;
     }
 
-
+    private void Wait(long toWait){
+        long time = System.currentTimeMillis();
+        while(time + toWait > System.currentTimeMillis()){
+            telemetry.addData("Is manually waiting",true);
+        }
+    }
 
 
 }

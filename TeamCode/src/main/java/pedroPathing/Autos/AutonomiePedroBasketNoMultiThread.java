@@ -1,6 +1,40 @@
-package pedroPathing.tests;
+package pedroPathing.Autos;
 
-import static pedroPathing.PositionStorage.*;
+import static pedroPathing.PositionStorage.DontDoTransferBeforeTransfer;
+import static pedroPathing.PositionStorage.PIDincrement;
+import static pedroPathing.PositionStorage.autoTimer;
+import static pedroPathing.PositionStorage.bambuTransferTimer;
+import static pedroPathing.PositionStorage.didTransfer;
+import static pedroPathing.PositionStorage.doOnceyTransfer;
+import static pedroPathing.PositionStorage.extendABitAfterRo2Transfer;
+import static pedroPathing.PositionStorage.extendABitAfterRo2TransferPos;
+import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTDoOnce;
+import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTTimer;
+import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.PositionStorage.intakeRo2SmashPos;
+import static pedroPathing.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransfer;
+import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimer;
+import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimerToggle;
+import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.PositionStorage.intakeTargetPosAdder;
+import static pedroPathing.PositionStorage.isRaised;
+import static pedroPathing.PositionStorage.noWiglyPls;
+import static pedroPathing.PositionStorage.noWiglyTransferTimer;
+import static pedroPathing.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.PositionStorage.outakeArmTransferPos;
+import static pedroPathing.PositionStorage.outakeSampleRetracted;
+import static pedroPathing.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.PositionStorage.outakeTargetPos;
+import static pedroPathing.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.PositionStorage.outtakeArmServoPosAtRo2v2TransferPickUp;
+import static pedroPathing.PositionStorage.resetStuff;
+import static pedroPathing.PositionStorage.servoextended;
+import static pedroPathing.PositionStorage.shouldBeRaised;
+import static pedroPathing.PositionStorage.someExtraThingDoOnce;
+import static pedroPathing.PositionStorage.stopMulthiread;
+import static pedroPathing.PositionStorage.transferDisabled;
+import static pedroPathing.PositionStorage.wasBambuExtended;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
@@ -12,17 +46,13 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import pedroPathing.ControlMotor;
 import pedroPathing.States.IntakeFSM;
@@ -44,14 +74,37 @@ import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name = "AutonomiePedroBasket", group = "Examples")
-public class AutonomiePedroBasket extends OpMode {
+@Autonomous(name = "AutonomiePedroBasketNoMultiThread", group = "Examples")
+public class AutonomiePedroBasketNoMultiThread extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private boolean retractOnce = true;
+
+//Stuff
+
+
+
+    double intakeMotorPower = 0;
+    double outakeMotorPower = 0;
+    DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+    DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
+    DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
+    DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
+
+    ControlMotor intakeControlMotor = new ControlMotor();
+    ControlMotor outakeControlMotor = new ControlMotor();
+    Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+    Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+    Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
+
+    NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
+
+    NormalizedRGBA colors = colorSensor.getNormalizedColors();
+
+
+
 
 
     // Initialize Outtake states
@@ -97,11 +150,6 @@ public class AutonomiePedroBasket extends OpMode {
     private final Pose intermediaryPoseBeforePark=new Pose(52.5,100,Math.toRadians(270)); //line 5
     private final Pose intermediaryPoseBeforePark2=new Pose(52.5,85,Math.toRadians(270)); //line 5
     private final Pose parkingPose=new Pose(52.5,69,Math.toRadians(270)); //parking
-
-    ControlMotor intakeControlMotor;
-    ControlMotor outakeControlMotor;
-
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
 
 
 
@@ -408,29 +456,6 @@ public class AutonomiePedroBasket extends OpMode {
         pathState = pState;
         pathTimer.resetTimer();
     }
-
-    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
-    @Override
-    public void loop() {
-
-        // These loop the movements of the robot
-        follower.update();
-        autonomousPathUpdate();
-
-
-
-        // Feedback to Driver Hub
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading in degrees", Math.toDegrees(follower.getPose().getHeading()));
-        telemetry.addData("intakerotate",intakeRotateServoPosition);
-        telemetry.addData("isRaised",isRaised);
-        telemetry.addData("ShouldBeRaised",shouldBeRaised);
-        telemetry.addData("didTransfer",didTransfer);
-        telemetry.update();
-    }
-
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
@@ -454,144 +479,168 @@ public class AutonomiePedroBasket extends OpMode {
 
 
         // our stuff
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
 
-                double intakeMotorPower = 0;
-                double outakeMotorPower = 0;
-                DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
-                DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
-                DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
-                DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
-                intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-                outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        double intakeMotorPower = 0;
+        double outakeMotorPower = 0;
+        DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+        DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
+        DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
+        DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-                intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-                intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-                intakeControlMotor = new ControlMotor();
-                outakeControlMotor = new ControlMotor();
-                //servos
-                outakeSampleServoPosition = outakeSampleRetracted;
-                Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
-                Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
-                Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
+        intakeControlMotor = new ControlMotor();
+        outakeControlMotor = new ControlMotor();
+        //servos
+        outakeSampleServoPosition = outakeSampleRetracted;
+        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
 
-                NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
+        NormalizedColorSensor colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
-                NormalizedRGBA colors = colorSensor.getNormalizedColors();
-                stopMulthiread = false;
-                while(!stopMulthiread){
-
-
-                    if(outakeLeftMotor.getCurrentPosition()< -2400 && shouldBeRaised) isRaised = true;
-                    else isRaised = false;
-                    colors = colorSensor.getNormalizedColors();
-                    intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-                    outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
-                    outakeMotorPower *= PIDincrement;
-
-                    intakeMotor.setPower(intakeMotorPower);
-                    outakeRightMotor.setPower(outakeMotorPower);
-                    outakeLeftMotor.setPower(outakeMotorPower);
-                    intakeSpinMotor.setPower(intakeMotorPickUpPower);
-
-
-                    //Set servo Positions
-                    intakeRotateServo.setPosition((intakeRotateServoPosition) / 360);
-                    outakeArmServo.setPosition(outakeArmServoPosition / 360);
-                    outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
-
-                    //telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
-                    // telemetry.addData("backLeftPowerCat",backLeftPowerCat);
-                    // telemetry.addData("frontRightPowerCat",frontRightPowerCat);
-                    // telemetry.addData("backRightPowerCat",backRightPowerCat);
-                    // telemetry.addLine("This is Motor "+Thread.currentThread().getId());
-                    // updateTelemetry(telemetry);//
-
-
-                    //transfer
-                    if (((outakeArmServo.getPosition() * 360 <= outtakeArmServoPosAtRo2v2TransferPickUp + 5))
-                            && outtakeFSM.currentStateOutake == outtakeStateTranfer
-                            && (colors.red >= 0.0015 || colors.blue >= 0.0015)
-                            && !transferDisabled
-                            || gamepad1.right_trigger >= 0.4
-                    ) {
-
-                        //start timer
-                        if (wasBambuExtended) {
-                            bambuTransferTimer = System.currentTimeMillis();
-                            wasBambuExtended = false;
-                            doOnceyTransfer = true;
-                            someExtraThingDoOnce = true;
-                        }
-
-                        //ACTUAL TRANSFER
-                        //claw down
-                        if (bambuTransferTimer + 200 < System.currentTimeMillis()) {
-                            if (doOnceyTransfer) intakeRotateServoPosition = intakeRo2SmashPos;
-                            if (doOnceyTransfer && bambuTransferTimer + 600 < System.currentTimeMillis()) {
-                                intakeFSM.setState(intakeRetractedRo2);
-                                intakeFSM.executeCurrentState();
-                                doOnceyTransfer = false;
-                                intakeExtraSpinOUTPUTTimer = System.currentTimeMillis();
-                                intakeExtraSpinOUTPUTDoOnce = true;
-                                //intakeMotorPickUpPower = -0.5;
-                                DontDoTransferBeforeTransfer = true;
-                            }
-                            if ((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos + 8) && someExtraThingDoOnce && bambuTransferTimer + 600 < System.currentTimeMillis()) {
-                                noWiglyTransferTimer = System.currentTimeMillis();
-                                noWiglyPls = true;
-                                someExtraThingDoOnce = false;
-                            }
-                        }
-                        //close thingyy
-                        if (noWiglyPls && noWiglyTransferTimer + 200 < System.currentTimeMillis()) {
-                            outakeSampleServoPosition = outakeSampleRetracted;
-                            didTransfer = true;
-                        }
-                        //transfer done
-                        if (noWiglyPls && noWiglyTransferTimer + 500 < System.currentTimeMillis() && DontDoTransferBeforeTransfer) {
-                            outtakeFSM.setState(outtakeStandbyDown);
-                            outtakeFSM.executeCurrentState();
-                            outakeSampleServoPosition = outakeSampleRetracted;
-                            //intakeRotateServoPosition = intakeRotateAfterRo2Trasfer;
-                            extendABitAfterRo2Transfer = true;
-                            intakeShouldRetractAfterTransfer = true;
-                            noWiglyPls = false;
-                            DontDoTransferBeforeTransfer = false;
-                        }
-                    }
-                    if (extendABitAfterRo2Transfer && !transferDisabled) {
-                        intakeTargetPos = extendABitAfterRo2TransferPos;
-                        extendABitAfterRo2Transfer = false;
-                    }
-                    if (intakeShouldRetractAfterTransfer && outakeArmServo.getPosition() * 360 >= outakeArmTransferPos - 10 && !transferDisabled) {
-                        intakeShouldRetractAfterTransfer = false;
-                        intakeShouldRetractAfterTransferTimerToggle = true;
-                        intakeShouldRetractAfterTransferTimer = System.currentTimeMillis();
-                    }
-                    if (intakeShouldRetractAfterTransferTimerToggle && intakeShouldRetractAfterTransferTimer + 400 < System.currentTimeMillis() && !((colors.red >= 0.0015 || colors.blue >= 0.0015)) && !transferDisabled) {
-                        intakeFSM.setState(intakeRetractedRo2);
-                        intakeFSM.executeCurrentState();
-                        intakeShouldRetractAfterTransferTimerToggle = false;
-                    }
-                    //*/
-
-                    //telemetry.addData("path state", pathState);
-                    //telemetry.addData("x", follower.getPose().getX());
-                    //telemetry.addData("y", follower.getPose().getY());
-                    //telemetry.addData("heading", follower.getPose().getHeading());
-                    //telemetry.addData("intakerotate",intakeRotateServoPosition);
-                    //telemetry.update();
-                }
-            }
-        });
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
         //*/
         //end of our stuff
     }
+
+
+    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
+    @Override
+    public void loop() {
+
+        // These loop the movements of the robot
+        follower.update();
+        autonomousPathUpdate();
+
+
+
+
+        //Our Stuff For LOOP
+
+        if(outakeLeftMotor.getCurrentPosition()< -2400 && shouldBeRaised) isRaised = true;
+        else isRaised = false;
+        colors = colorSensor.getNormalizedColors();
+        intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+        outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
+        outakeMotorPower *= PIDincrement;
+
+        intakeMotor.setPower(intakeMotorPower);
+        outakeRightMotor.setPower(outakeMotorPower);
+        outakeLeftMotor.setPower(outakeMotorPower);
+        intakeSpinMotor.setPower(intakeMotorPickUpPower);
+
+
+        //Set servo Positions
+        intakeRotateServo.setPosition((intakeRotateServoPosition) / 360);
+        outakeArmServo.setPosition(outakeArmServoPosition / 360);
+        outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
+
+        //telemetry.addData("frontLeftPowerCat",frontLeftPowerCat);
+        // telemetry.addData("backLeftPowerCat",backLeftPowerCat);
+        // telemetry.addData("frontRightPowerCat",frontRightPowerCat);
+        // telemetry.addData("backRightPowerCat",backRightPowerCat);
+        // telemetry.addLine("This is Motor "+Thread.currentThread().getId());
+        // updateTelemetry(telemetry);//
+
+
+        //transfer
+        if (((outakeArmServo.getPosition() * 360 <= outtakeArmServoPosAtRo2v2TransferPickUp + 5))
+                && outtakeFSM.currentStateOutake == outtakeStateTranfer
+                && (colors.red >= 0.0015 || colors.blue >= 0.0015)
+                && !transferDisabled
+                || gamepad1.right_trigger >= 0.4
+        ) {
+
+            //start timer
+            if (wasBambuExtended) {
+                bambuTransferTimer = System.currentTimeMillis();
+                wasBambuExtended = false;
+                doOnceyTransfer = true;
+                someExtraThingDoOnce = true;
+            }
+
+            //ACTUAL TRANSFER
+            //claw down
+            if (bambuTransferTimer + 200 < System.currentTimeMillis()) {
+                if (doOnceyTransfer) intakeRotateServoPosition = intakeRo2SmashPos;
+                if (doOnceyTransfer && bambuTransferTimer + 600 < System.currentTimeMillis()) {
+                    intakeFSM.setState(intakeRetractedRo2);
+                    intakeFSM.executeCurrentState();
+                    doOnceyTransfer = false;
+                    intakeExtraSpinOUTPUTTimer = System.currentTimeMillis();
+                    intakeExtraSpinOUTPUTDoOnce = true;
+                    //intakeMotorPickUpPower = -0.5;
+                    DontDoTransferBeforeTransfer = true;
+                }
+                if ((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos + 8) && someExtraThingDoOnce && bambuTransferTimer + 600 < System.currentTimeMillis()) {
+                    noWiglyTransferTimer = System.currentTimeMillis();
+                    noWiglyPls = true;
+                    someExtraThingDoOnce = false;
+                }
+            }
+            //close thingyy
+            if (noWiglyPls && noWiglyTransferTimer + 200 < System.currentTimeMillis()) {
+                outakeSampleServoPosition = outakeSampleRetracted;
+                didTransfer = true;
+            }
+            //transfer done
+            if (noWiglyPls && noWiglyTransferTimer + 500 < System.currentTimeMillis() && DontDoTransferBeforeTransfer) {
+                outtakeFSM.setState(outtakeStandbyDown);
+                outtakeFSM.executeCurrentState();
+                outakeSampleServoPosition = outakeSampleRetracted;
+                //intakeRotateServoPosition = intakeRotateAfterRo2Trasfer;
+                extendABitAfterRo2Transfer = true;
+                intakeShouldRetractAfterTransfer = true;
+                noWiglyPls = false;
+                DontDoTransferBeforeTransfer = false;
+            }
+        }
+        if (extendABitAfterRo2Transfer && !transferDisabled) {
+            intakeTargetPos = extendABitAfterRo2TransferPos;
+            extendABitAfterRo2Transfer = false;
+        }
+        if (intakeShouldRetractAfterTransfer && outakeArmServo.getPosition() * 360 >= outakeArmTransferPos - 10 && !transferDisabled) {
+            intakeShouldRetractAfterTransfer = false;
+            intakeShouldRetractAfterTransferTimerToggle = true;
+            intakeShouldRetractAfterTransferTimer = System.currentTimeMillis();
+        }
+        if (intakeShouldRetractAfterTransferTimerToggle && intakeShouldRetractAfterTransferTimer + 400 < System.currentTimeMillis() && !((colors.red >= 0.0015 || colors.blue >= 0.0015)) && !transferDisabled) {
+            intakeFSM.setState(intakeRetractedRo2);
+            intakeFSM.executeCurrentState();
+            intakeShouldRetractAfterTransferTimerToggle = false;
+        }
+        //*/
+
+        //telemetry.addData("path state", pathState);
+        //telemetry.addData("x", follower.getPose().getX());
+        //telemetry.addData("y", follower.getPose().getY());
+        //telemetry.addData("heading", follower.getPose().getHeading());
+        //telemetry.addData("intakerotate",intakeRotateServoPosition);
+        //telemetry.update();
+
+
+
+
+        // Feedback to Driver Hub
+        telemetry.addData("path state", pathState);
+        telemetry.addData("x", follower.getPose().getX());
+        telemetry.addData("y", follower.getPose().getY());
+        telemetry.addData("heading in degrees", Math.toDegrees(follower.getPose().getHeading()));
+        telemetry.addData("intakerotate",intakeRotateServoPosition);
+        telemetry.addData("isRaised",isRaised);
+        telemetry.addData("ShouldBeRaised",shouldBeRaised);
+
+        telemetry.addData("didTransfer",didTransfer);
+        telemetry.update();
+    }
+
+
+
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
@@ -608,7 +657,6 @@ public class AutonomiePedroBasket extends OpMode {
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
-        executorService.shutdownNow();
     }
 
     private void Wait(long toWait){
