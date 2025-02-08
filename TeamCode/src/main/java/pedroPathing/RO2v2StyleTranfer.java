@@ -3,6 +3,7 @@ package pedroPathing;
 
 import static pedroPathing.PositionStorage.*;
 import static pedroPathing.Toggle.toggle_var;
+import static pedroPathing.Toggle.toggledVarButton2;
 
 import android.graphics.Color;
 
@@ -266,7 +267,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
                         doOnceyTransfer = false;
                         intakeExtraSpinOUTPUTTimer = System.currentTimeMillis();
                         intakeExtraSpinOUTPUTDoOnce = true;
-                        //intakeMotorPickUpPower = -0.5;
+                        //intakeMotorPickUpPower = -0.55;
                         DontDoTransferBeforeTransfer = true;
                     }
                     if((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos +8)&& someExtraThingDoOnce&&  bambuTransferTimer + 600 < System.currentTimeMillis()) {
@@ -450,21 +451,20 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //Outputing Samples if Nedded
-            if(intakeMotorPickUpPower != -0.5)
+            if(intakeMotorPickUpPower != -0.55)
                 rememberPosOfServoOut = intakeMotorPickUpPower;
-            if((Toggle.outputtoggle(gamepad1.right_bumper || wasBadSample)!=0) || (Toggle.outputtoggle2(isOutputinHM)!=0)){
-                intakeMotorPickUpPower =-0.5;
+            if((Toggle.outputtoggle(gamepad1.right_bumper || wasBadSample)!=0) || isOutputinHM){
+                intakeMotorPickUpPower =-0.55;
                 wasBadSample = false;
-                isOutputinHM = false;
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;
 
 
             /*//Outaputing samples with gamepad 2 for HM
-            if(intakeMotorPickUpPower != -0.5 && intakeMotorPickUpPower != -0.5)
+            if(intakeMotorPickUpPower != -0.55 && intakeMotorPickUpPower != -0.55)
                 rememberPosOfServoOut = intakeMotorPickUpPower;
             if(Toggle.outputtoggle2(isOutputinHM)!=0){
-                intakeMotorPickUpPower =-0.5;
+                intakeMotorPickUpPower =-0.55;
                 isOutputinHM = false;
             }
             else intakeMotorPickUpPower = rememberPosOfServoOut;//*/
@@ -498,29 +498,33 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             if(gamepad2.b)
                 isPressedB2 = true;
             if(isPressedB2 && !gamepad2.b){
-                intakeFSM.setState(intakeExtendedRo2v2HM);
-                intakeFSM.executeCurrentState();
-                SpitOutSampleHMTimer = System.currentTimeMillis();
-                SpitOutSampleHM = true;
-                SpitOutSampleHM2 = true;
+                if(isOutputinHM){ isOutputinHM = false;}
+                else {
+                    intakeFSM.setState(intakeExtendedRo2v2HM);
+                    intakeFSM.executeCurrentState();
+                    SpitOutSampleHMTimer = System.currentTimeMillis();
+                    SpitOutSampleHM = true;
+                    SpitOutSampleHM2 = true;
+                    isOutputting = true;
+                }
                 isPressedB2 = false;
-                isOutputting = true;
-                isOutputinHM = true;
             }
 
             if(SpitOutSampleHM2 && intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHMTimer + 450 < System.currentTimeMillis()){
-                intakeMotorPickUpPower = -0.5;
+                //intakeMotorPickUpPower = -0.55;
                 SpitOutSampleHM2 = false;
+                isOutputinHM = true;
             }
 
 
-            if(intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHM && SpitOutSampleHMTimer + 1250 < System.currentTimeMillis()){
+            if(intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHM && SpitOutSampleHMTimer + 650 < System.currentTimeMillis() && !isOutputinHM){
                 intakeFSM.setState(intakeStateRetractedForNoTransfer);
                 intakeFSM.executeCurrentState();
                 outtakeFSM.setState(outtakeStandbyDown);
                 outtakeFSM.executeCurrentState();
                 isOutputting = false;
                 SpitOutSampleHM = false;
+                isOutputinHM = false;
                 intakeMotorPickUpPower =0;
             }
 

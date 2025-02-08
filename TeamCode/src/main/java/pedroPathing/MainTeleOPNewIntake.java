@@ -374,9 +374,9 @@ public class MainTeleOPNewIntake extends LinearOpMode {
 
             //OutakeIncrement
             if(gamepad1.dpad_up)
-                outakeTargetPosAdder += 2;
+                outakeTargetPosAdder += 5;
             if(gamepad1.dpad_down)
-                outakeTargetPosAdder -= 2;
+                outakeTargetPosAdder -= 5;
 
 
 

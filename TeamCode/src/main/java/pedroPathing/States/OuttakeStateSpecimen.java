@@ -15,6 +15,6 @@ public class OuttakeStateSpecimen implements State {
         //outakeArmServoPosition = 150; //190
         //if(armServoPos>=100)
             outakeArmServoPosition = outtakeArmSpecimenPut;
-        outakeTargetPos = -outakeTargetPosAdder-1350;
+        outakeTargetPos = -outakeTargetPosAdder-1300;
     }
 }
