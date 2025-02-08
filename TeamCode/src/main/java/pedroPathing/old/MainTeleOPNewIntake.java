@@ -1,4 +1,4 @@
-package pedroPathing;
+package pedroPathing.old;
 
 
 import static pedroPathing.PositionStorage.*;
@@ -6,6 +6,7 @@ import static pedroPathing.PositionStorage.*;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,6 +15,8 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import pedroPathing.ControlMotor;
+import pedroPathing.PositionStorage;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateExtendedHM;
@@ -28,11 +31,13 @@ import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
+import pedroPathing.Toggle;
 import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Robot Teleop NEW INTAKE", group = "Linear OpMode")
+@Disabled
 public class MainTeleOPNewIntake extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
