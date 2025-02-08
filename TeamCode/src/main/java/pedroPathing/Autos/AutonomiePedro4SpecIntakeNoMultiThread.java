@@ -52,7 +52,7 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 
-@Autonomous(name = "AutonomiePedroFOURSpecIntake", group = "Examples")
+@Autonomous(name = "AutonomiePedro4SpecIntakeNoMultiThread", group = "Examples")
 public class AutonomiePedro4SpecIntakeNoMultiThread extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
