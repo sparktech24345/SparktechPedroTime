@@ -40,6 +40,7 @@ import pedroPathing.constants.*;
  */
 @Config
 @TeleOp(group = "Teleop Test", name = "Localization Test")
+@Disabled
 public class LocalizationTest extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;

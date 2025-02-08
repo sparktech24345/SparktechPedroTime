@@ -46,6 +46,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -77,6 +78,7 @@ import pedroPathing.constants.LConstants;
 
 
 @Autonomous(name = "AutonomiePedroBasketNoMultiThread", group = "Examples")
+@Disabled
 public class AutonomiePedroBasketNoMultiThread extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;

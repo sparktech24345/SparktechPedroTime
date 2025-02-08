@@ -7,6 +7,7 @@ import static pedroPathing.PositionStorage.frontLeftPowerCat;
 import static pedroPathing.PositionStorage.frontRightPowerCat;
 import static pedroPathing.PositionStorage.intakeTargetPos;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,7 +19,7 @@ import java.util.concurrent.Executors;
 import pedroPathing.ControlMotor;
 
 @TeleOp(name = "NO BREAKES DRIFT TIME", group = "Linear OpMode")
-
+@Disabled
 public class DriveOnlyTestNOBREAKS extends LinearOpMode {
     ExecutorService executorService = Executors.newFixedThreadPool(2);
 

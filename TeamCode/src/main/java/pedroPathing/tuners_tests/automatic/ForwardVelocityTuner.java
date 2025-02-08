@@ -49,6 +49,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Forward Velocity Tuner DANGER", group = "Automatic Tuners")
+@Disabled
 public class ForwardVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();
 

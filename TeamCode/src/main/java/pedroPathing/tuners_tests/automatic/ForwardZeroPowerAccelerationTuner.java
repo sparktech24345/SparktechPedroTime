@@ -50,7 +50,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Forward Zero Power Acceleration Tuner DANGER", group = "Automatic Tuners")
-
+@Disabled
 public class ForwardZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 

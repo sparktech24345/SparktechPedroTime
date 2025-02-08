@@ -9,6 +9,7 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -26,6 +27,7 @@ import pedroPathing.constants.LConstants;
  * @version 1.0, 12/30/2024
  */
 @Autonomous(name = "Triangle", group = "Examples")
+@Disabled
 public class Triangle extends OpMode {
     private Follower follower;
 

@@ -50,7 +50,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Strafe Velocity Tuner DANGER", group = "Automatic Tuners")
-
+@Disabled
 public class StrafeVelocityTuner extends OpMode {
     private ArrayList<Double> velocities = new ArrayList<>();
 
