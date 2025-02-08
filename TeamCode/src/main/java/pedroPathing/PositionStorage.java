@@ -125,8 +125,14 @@ public class PositionStorage {
     public static boolean isRaised = false;
     public static boolean shouldBeRaised = false;
     public static boolean isOutputinHM = false;
+    public static double addedTimer=0;
+    public static double intakeTransferSlidersAdder=0;
+    public static boolean someOtherBollean = false;
 
     public static void resetStuff(){
+        someOtherBollean = false;
+        intakeTransferSlidersAdder=0;
+        addedTimer =0;
         isOutputinHM = false;
         shouldBeRaised = false;
         isRaised = false;

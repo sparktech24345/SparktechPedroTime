@@ -262,15 +262,22 @@ public class RO2v2StyleTranfer extends LinearOpMode {
                 if (bambuTransferTimer + 200 < System.currentTimeMillis()) {
                     if(doOnceyTransfer) intakeRotateServoPosition = intakeRo2SmashPos;
                     if(doOnceyTransfer &&  bambuTransferTimer + 600 < System.currentTimeMillis()){
-                        intakeFSM.setState(intakeRetractedRo2);
-                        intakeFSM.executeCurrentState();
+                        intakeTargetPos =  intakeSlidersRo2Transfer + 60;
                         doOnceyTransfer = false;
                         intakeExtraSpinOUTPUTTimer = System.currentTimeMillis();
                         intakeExtraSpinOUTPUTDoOnce = true;
                         //intakeMotorPickUpPower = -0.55;
                         DontDoTransferBeforeTransfer = true;
+                        someOtherBollean = true;
                     }
-                    if((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos +8)&& someExtraThingDoOnce&&  bambuTransferTimer + 600 < System.currentTimeMillis()) {
+                    if(someOtherBollean && bambuTransferTimer + 800 < System.currentTimeMillis()){
+                        intakeFSM.setState(intakeRetractedRo2);
+                        intakeFSM.executeCurrentState();
+                        intakeTargetPos += intakeTransferSlidersAdder;
+                        intakeTransferSlidersAdder = 0;
+                        someOtherBollean = false;
+                    }
+                    if((intakeMotor.getCurrentPosition() <= intakeTargetPosAdder + intakeTargetPos +14)&& someExtraThingDoOnce&&  bambuTransferTimer + 800 + addedTimer < System.currentTimeMillis()) {
                         noWiglyTransferTimer = System.currentTimeMillis();
                         noWiglyPls = true;
                         someExtraThingDoOnce = false;
@@ -361,18 +368,24 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             if (gamepad2.dpad_left) {
                 intakeTargetPos = 510;
                 gravityAdder = 1;
+                intakeTransferSlidersAdder=0;
             } // 4/4
             if (gamepad2.dpad_down) {
                 intakeTargetPos = 377;
                 gravityAdder = 1;
+                intakeTransferSlidersAdder=0;
             } // 3/4
             if (gamepad2.dpad_right){
                 intakeTargetPos = 245; // 2/4
                 gravityAdder = 1;
+                addedTimer = 500;
+                intakeTransferSlidersAdder=-20;
             }
             if(gamepad2.dpad_up) {
                 intakeTargetPos = 112;  // 1/4
                 gravityAdder = 1;
+                addedTimer = 500;
+                intakeTransferSlidersAdder=-30;
             }
             if(gamepad2.left_bumper)
                 intakeTargetPos = 0;
