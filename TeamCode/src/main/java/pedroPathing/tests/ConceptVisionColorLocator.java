@@ -35,6 +35,7 @@ import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -106,8 +107,22 @@ public class ConceptVisionColorLocator extends LinearOpMode
          *                                    object, such as when removing noise from an image.
          *                                    "pixels" in the range of 2-4 are suitable for low res images.
          */
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+        ColorBlobLocatorProcessor colorLocatorBlue = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .build();
+        ColorBlobLocatorProcessor colorLocatorRed = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .build();
+        ColorBlobLocatorProcessor colorLocatorYellow = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
@@ -127,7 +142,9 @@ public class ConceptVisionColorLocator extends LinearOpMode
          *      .setCamera(BuiltinCameraDirection.BACK)    ... for a Phone Camera
          */
         VisionPortal portal = new VisionPortal.Builder()
-                .addProcessor(colorLocator)
+                .addProcessor(colorLocatorRed)
+                .addProcessor(colorLocatorBlue)
+                .addProcessor(colorLocatorYellow)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "camera"))
                 .build();
@@ -141,7 +158,10 @@ public class ConceptVisionColorLocator extends LinearOpMode
             telemetry.addData("preview on/off", "... Camera Stream\n");
 
             // Read the current list
-            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            List<ColorBlobLocatorProcessor.Blob> blobs = new ArrayList<>();
+            blobs.addAll(colorLocatorRed.getBlobs());
+            blobs.addAll(colorLocatorBlue.getBlobs());
+            blobs.addAll(colorLocatorYellow.getBlobs());
 
             /*
              * The list of Blobs can be filtered to remove unwanted Blobs.
