@@ -26,6 +26,7 @@ import android.util.Size;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.acmerobotics.dashboard.FtcDashboard;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -203,6 +204,12 @@ public class ConceptVisionColorLocator extends LinearOpMode
                           b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
             }
 
+
+            FtcDashboard dashboard = FtcDashboard.getInstance();
+            Telemetry dashboardTelemetry = dashboard.getTelemetry();
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            FtcDashboard.getInstance().startCameraStream(portal, 10);
+            dashboardTelemetry.update();
             telemetry.update();
             sleep(50);
         }

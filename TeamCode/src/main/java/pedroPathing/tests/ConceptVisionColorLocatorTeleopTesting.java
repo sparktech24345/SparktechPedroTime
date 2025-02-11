@@ -23,6 +23,7 @@ package pedroPathing.tests;
 
 import android.util.Size;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -67,6 +68,8 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
         /* Build a "Color Locator" vision processor based on the ColorBlobLocatorProcessor class.
          * - Specify the color range you are looking for.  You can use a predefined color, or create you own color range
          *     .setTargetColorRange(ColorRange.BLUE)                      // use a predefined color match
@@ -230,6 +233,9 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
                           b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
             }
 
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            FtcDashboard.getInstance().startCameraStream(portal, 10);
+            dashboardTelemetry.update();
             telemetry.update();
             sleep(50);
         }
