@@ -153,7 +153,9 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
                 .build();
 
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
+        dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+        dashboardTelemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
 
         // WARNING:  To be able to view the stream preview on the Driver Station, this code runs in INIT mode.
         while (opModeIsActive() || opModeInInit())
@@ -168,27 +170,27 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
             AtomicInteger i = new AtomicInteger(1);
             colorLocatorRed.getBlobs().forEach( blob -> {
                 if(blob.getBoxFit() != null) {
-                    telemetry.addData("Red Blob " + i + " Size Y", blob.getBoxFit().size.height);
-                    telemetry.addData("Red Blob " + i + " Size X", blob.getBoxFit().size.width);
-                    telemetry.addData("Red Blob " + i + " Angle", blob.getBoxFit().angle);
+                    //telemetry.addData("Red Blob " + i + " Size Y", blob.getBoxFit().size.height);
+                    //telemetry.addData("Red Blob " + i + " Size X", blob.getBoxFit().size.width);
+                    //telemetry.addData("Red Blob " + i + " Angle", blob.getBoxFit().angle);
                     i.getAndIncrement();
                 }
             });
             AtomicInteger j = new AtomicInteger(1);
             colorLocatorYellow.getBlobs().forEach( blob -> {
                 if(blob.getBoxFit() != null) {
-                    telemetry.addData("Yellow Blob " + j + " Size Y", blob.getBoxFit().size.height);
-                    telemetry.addData("Yellow Blob " + j + " Size X", blob.getBoxFit().size.width);
-                    telemetry.addData("Yellow Blob " + j + " Angle", blob.getBoxFit().angle);
+                    //telemetry.addData("Yellow Blob " + j + " Size Y", blob.getBoxFit().size.height);
+                    //telemetry.addData("Yellow Blob " + j + " Size X", blob.getBoxFit().size.width);
+                    //telemetry.addData("Yellow Blob " + j + " Angle", blob.getBoxFit().angle);
                     j.getAndIncrement();
                 }
             });
             AtomicInteger k = new AtomicInteger(1);
             colorLocatorBlue.getBlobs().forEach( blob -> {
                 if(blob.getBoxFit() != null) {
-                    telemetry.addData("Blue Blob " + k + " Size Y", blob.getBoxFit().size.height);
-                    telemetry.addData("Blue Blob " + k + " Size X", blob.getBoxFit().size.width);
-                    telemetry.addData("Blue Blob " + k + " Angle", blob.getBoxFit().angle);
+                    //telemetry.addData("Blue Blob " + k + " Size Y", blob.getBoxFit().size.height);
+                    //telemetry.addData("Blue Blob " + k + " Size X", blob.getBoxFit().size.width);
+                    //telemetry.addData("Blue Blob " + k + " Angle", blob.getBoxFit().angle);
                     k.getAndIncrement();
                 }
             });
@@ -224,12 +226,15 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
              */
 
             telemetry.addLine(" Area Density Aspect  Center");
+            dashboardTelemetry.addLine(" Area Density Aspect  Center");
 
             // Display the size (area) and center location for each Blob.
             for(ColorBlobLocatorProcessor.Blob b : blobs)
             {
                 RotatedRect boxFit = b.getBoxFit();
-                telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
+                dashboardTelemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
+                          b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
+                dashboardTelemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                           b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
             }
 
