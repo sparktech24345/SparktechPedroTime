@@ -164,24 +164,30 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
             blobs.addAll(colorLocatorYellow.getBlobs());
             AtomicInteger i = new AtomicInteger(1);
             colorLocatorRed.getBlobs().forEach( blob -> {
-                telemetry.addData("Red Blob " + i + " Size Y", blob.getBoxFit().size.height);
-                telemetry.addData("Red Blob " + i + " Size X", blob.getBoxFit().size.width);
-                telemetry.addData("Red Blob " + i + " Angle", blob.getBoxFit().angle);
-                i.getAndIncrement();
+                if(blob.getBoxFit() != null) {
+                    telemetry.addData("Red Blob " + i + " Size Y", blob.getBoxFit().size.height);
+                    telemetry.addData("Red Blob " + i + " Size X", blob.getBoxFit().size.width);
+                    telemetry.addData("Red Blob " + i + " Angle", blob.getBoxFit().angle);
+                    i.getAndIncrement();
+                }
             });
             AtomicInteger j = new AtomicInteger(1);
             colorLocatorYellow.getBlobs().forEach( blob -> {
-                telemetry.addData("Yellow Blob " + j + " Size Y", blob.getBoxFit().size.height);
-                telemetry.addData("Yellow Blob " + j + " Size X", blob.getBoxFit().size.width);
-                telemetry.addData("Yellow Blob " + j + " Angle", blob.getBoxFit().angle);
-                j.getAndIncrement();
+                if(blob.getBoxFit() != null) {
+                    telemetry.addData("Yellow Blob " + j + " Size Y", blob.getBoxFit().size.height);
+                    telemetry.addData("Yellow Blob " + j + " Size X", blob.getBoxFit().size.width);
+                    telemetry.addData("Yellow Blob " + j + " Angle", blob.getBoxFit().angle);
+                    j.getAndIncrement();
+                }
             });
             AtomicInteger k = new AtomicInteger(1);
             colorLocatorBlue.getBlobs().forEach( blob -> {
-                telemetry.addData("Blue Blob " + k + " Size Y", blob.getBoxFit().size.height);
-                telemetry.addData("Blue Blob " + k + " Size X", blob.getBoxFit().size.width);
-                telemetry.addData("Blue Blob " + k +" Angle", blob.getBoxFit().angle);
-                k.getAndIncrement();
+                if(blob.getBoxFit() != null) {
+                    telemetry.addData("Blue Blob " + k + " Size Y", blob.getBoxFit().size.height);
+                    telemetry.addData("Blue Blob " + k + " Size X", blob.getBoxFit().size.width);
+                    telemetry.addData("Blue Blob " + k + " Angle", blob.getBoxFit().angle);
+                    k.getAndIncrement();
+                }
             });
 
             /*
