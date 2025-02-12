@@ -1,15 +1,30 @@
 package pedroPathing.tests;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
+import org.firstinspires.ftc.vision.opencv.ColorRange;
+import org.firstinspires.ftc.vision.opencv.ColorSpace;
+import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
+
 
 import pedroPathing.ControlMotor;
 
 import pedroPathing.Toggle;
 import static pedroPathing.PositionStorage.*;
+
+import android.util.Size;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
 public class ServoTesting extends LinearOpMode {
@@ -23,6 +38,8 @@ public class ServoTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
         Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
         Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
         Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
@@ -30,6 +47,15 @@ public class ServoTesting extends LinearOpMode {
         DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+
+        VisionPortal portal = new VisionPortal.Builder()
+                .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "camera"))
+                .build();
+        dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
+
+
+
         //Servo tester = hardwareMap.get(Servo.class, "tester");
         ControlMotor intakeControlMotor = new ControlMotor();
         resetStuff();
@@ -67,6 +93,9 @@ public class ServoTesting extends LinearOpMode {
             telemetry.addData("intakeRotateServoPos(TBS)", intakeRotateServo.getPosition());
             telemetry.addData("outake motor pos ", outakeLeftMotor.getCurrentPosition());
             telemetry.addData("intake motor pos ", intakeMotor.getCurrentPosition());
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            FtcDashboard.getInstance().startCameraStream(portal, 10);
+            dashboardTelemetry.update();
             telemetry.update();
 
 

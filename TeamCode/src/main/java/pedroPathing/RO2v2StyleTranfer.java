@@ -6,7 +6,9 @@ import static pedroPathing.Toggle.toggle_var;
 import static pedroPathing.Toggle.toggledVarButton2;
 
 import android.graphics.Color;
+import android.util.Size;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -34,6 +36,15 @@ import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.tests.Config;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
+import org.firstinspires.ftc.vision.opencv.ColorRange;
+import org.firstinspires.ftc.vision.opencv.ColorSpace;
+import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.RotatedRect;
+import org.opencv.core.Scalar;
 
 
 @com.acmerobotics.dashboard.config.Config
@@ -88,7 +99,14 @@ public class RO2v2StyleTranfer extends LinearOpMode {
         Config.configureOtos(telemetry, myOtos);
         //Thread
 
-        
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        VisionPortal portal = new VisionPortal.Builder()
+                .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "camera"))
+                .build();
+        dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
+
         //TODO maybe start the Thread        multiThread.start();
 
         // Initialize Outtake states
@@ -665,6 +683,9 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             telemetry.addData("OutakeFsm",stateStringOutake);
             if(telemetryOhNo)
                 telemetry.addData("OH NOOOO",true);
+            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            FtcDashboard.getInstance().startCameraStream(portal, 10);
+            dashboardTelemetry.update();
             updateTelemetry(telemetry);
         }
         //multiRunnable.stopRunning();

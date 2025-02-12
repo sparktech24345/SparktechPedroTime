@@ -21,11 +21,14 @@
 
 package pedroPathing.tests;
 
+import static pedroPathing.PositionStorage.outakeArmServoPosition;
+
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -64,8 +67,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 
-@TeleOp(name = "Vision Color-Locator Teleop Testing", group = "Concept")
-public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
+@TeleOp(name = "Vision Color-Locator Teleop TestingWITHSERVO", group = "Concept")
+public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMode
 {
     public static final ColorRange FTC_YELLOW = new ColorRange(
             ColorSpace.RGB,
@@ -117,30 +120,42 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
          *                                    object, such as when removing noise from an image.
          *                                    "pixels" in the range of 2-4 are suitable for low res images.
          */
+
         ColorBlobLocatorProcessor colorLocatorBlue = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(new ColorRange(
                         ColorSpace.RGB,
-                        new Scalar( 16,   0, 220),
+                        new Scalar( 16,   0, 225), //blue
                         new Scalar(255, 127, 255)
                 ))         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .setBlurSize(0)// Smooth the transitions between different colors in image
+                .setErodeSize(2)
                 .build();
         ColorBlobLocatorProcessor colorLocatorRed = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+                .setTargetColorRange(new ColorRange(
+                        ColorSpace.RGB,
+                        new Scalar( 230, 0,  0),  //red
+                        new Scalar(255, 219, 180)
+                ))         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .setBlurSize(0)                               // Smooth the transitions between different colors in image
+                .setErodeSize(2)
                 .build();
         ColorBlobLocatorProcessor colorLocatorYellow = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
+                .setTargetColorRange(new ColorRange(
+                        ColorSpace.RGB,
+                        new Scalar( 220, 220,   0),  //yellow
+                        new Scalar(255, 255, 255)
+                ))         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .setBlurSize(0)                               // Smooth the transitions between different colors in image
+                .setErodeSize(2)
                 .build();
 
         /*
@@ -163,6 +178,8 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
                 .setCamera(hardwareMap.get(WebcamName.class, "camera"))
                 .build();
 
+        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        outakeArmServo.setPosition((double) 144 / 360);
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
@@ -227,8 +244,8 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
              *   A blob's Aspect ratio is the ratio of boxFit long side to short side.
              *   A perfect Square has an aspect ratio of 1.  All others are > 1
              */
-            ColorBlobLocatorProcessor.Util.filterByArea(500, 20000, blobs);  // filter out very small blobs.
-
+            //ColorBlobLocatorProcessor.Util.filterByArea(500, 20000, blobs);  // filter out very small blobs.
+            ColorBlobLocatorProcessor.Util.filterByArea(300, 10000, blobs);  // filter out very small blobs.
             /*
              * The list of Blobs can be sorted using the same Blob attributes as listed above.
              * No more than one sort call should be made.  Sorting can use ascending or descending order.
@@ -261,7 +278,7 @@ public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
             }
 
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            FtcDashboard.getInstance().startCameraStream(portal, 10);
+            FtcDashboard.getInstance().startCameraStream(portal, 30);
             dashboardTelemetry.update();
             telemetry.update();
             sleep(50);
