@@ -1,14 +1,87 @@
 package pedroPathing;
 
 
-import static pedroPathing.PositionStorage.*;
+import static pedroPathing.PositionStorage.DontDoTransferBeforeTransfer;
+import static pedroPathing.PositionStorage.HeadUpIntake;
+import static pedroPathing.PositionStorage.PIDincrement;
+import static pedroPathing.PositionStorage.SpitOutSampleHM;
+import static pedroPathing.PositionStorage.SpitOutSampleHM2;
+import static pedroPathing.PositionStorage.SpitOutSampleHMTimer;
+import static pedroPathing.PositionStorage.addedTimer;
+import static pedroPathing.PositionStorage.afterSpecimenOpenTime;
+import static pedroPathing.PositionStorage.armServoPos;
+import static pedroPathing.PositionStorage.backLeftPowerCat;
+import static pedroPathing.PositionStorage.backRightPowerCat;
+import static pedroPathing.PositionStorage.bambuTransferTimer;
+import static pedroPathing.PositionStorage.colortimer;
+import static pedroPathing.PositionStorage.doOnceyTransfer;
+import static pedroPathing.PositionStorage.extendABitAfterRo2Transfer;
+import static pedroPathing.PositionStorage.extendABitAfterRo2TransferPos;
+import static pedroPathing.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.PositionStorage.frontRightPowerCat;
+import static pedroPathing.PositionStorage.goToPickUp;
+import static pedroPathing.PositionStorage.gravityAdder;
+import static pedroPathing.PositionStorage.hangTime;
+import static pedroPathing.PositionStorage.intakeExtraSpinDoOnce;
+import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTDoOnce;
+import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTTimer;
+import static pedroPathing.PositionStorage.intakeExtraSpinTimer;
+import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.PositionStorage.intakeRo2SmashPos;
+import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
+import static pedroPathing.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransfer;
+import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimer;
+import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimerToggle;
+import static pedroPathing.PositionStorage.intakeSlidersRo2Transfer;
+import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.PositionStorage.intakeTargetPosAdder;
+import static pedroPathing.PositionStorage.intakeTransferSlidersAdder;
+import static pedroPathing.PositionStorage.isHeldBascket;
+import static pedroPathing.PositionStorage.isOutputinHM;
+import static pedroPathing.PositionStorage.isOutputting;
+import static pedroPathing.PositionStorage.isOuttakeStateStandbyWithSample;
+import static pedroPathing.PositionStorage.isPressedA1;
+import static pedroPathing.PositionStorage.isPressedA2;
+import static pedroPathing.PositionStorage.isPressedB1;
+import static pedroPathing.PositionStorage.isPressedB2;
+import static pedroPathing.PositionStorage.isPressedDL1;
+import static pedroPathing.PositionStorage.isPressedX1;
+import static pedroPathing.PositionStorage.isPressedY1;
+import static pedroPathing.PositionStorage.isPressedY2;
+import static pedroPathing.PositionStorage.noWiglyPls;
+import static pedroPathing.PositionStorage.noWiglyTransferTimer;
+import static pedroPathing.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.PositionStorage.outakeArmTransferPos;
+import static pedroPathing.PositionStorage.outakeSampleRetracted;
+import static pedroPathing.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.PositionStorage.outakeTargetPos;
+import static pedroPathing.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.PositionStorage.outtakeArmServoPosAtRo2v2TransferPickUp;
+import static pedroPathing.PositionStorage.rememberPosOfServoOut;
+import static pedroPathing.PositionStorage.servoextended;
+import static pedroPathing.PositionStorage.shouldTransfer;
+import static pedroPathing.PositionStorage.someExtraThingDoOnce;
+import static pedroPathing.PositionStorage.someOtherBollean;
+import static pedroPathing.PositionStorage.startingTimer2;
+import static pedroPathing.PositionStorage.startingTimer5;
+import static pedroPathing.PositionStorage.stateStringIntake;
+import static pedroPathing.PositionStorage.stateStringOutake;
+import static pedroPathing.PositionStorage.takeWhileDisabled;
+import static pedroPathing.PositionStorage.team;
+import static pedroPathing.PositionStorage.telemetryOhNo;
+import static pedroPathing.PositionStorage.timerSticlaDeApa;
+import static pedroPathing.PositionStorage.transferDisabled;
+import static pedroPathing.PositionStorage.transferTimerInit;
+import static pedroPathing.PositionStorage.wasBadSample;
+import static pedroPathing.PositionStorage.wasBambuExtended;
+import static pedroPathing.PositionStorage.wasIntakeStateExtended;
+import static pedroPathing.PositionStorage.wasOutputHM;
+import static pedroPathing.PositionStorage.wasOutputHM2;
 import static pedroPathing.Toggle.toggle_var;
-import static pedroPathing.Toggle.toggledVarButton2;
 
 import android.graphics.Color;
-import android.util.Size;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,7 +97,6 @@ import pedroPathing.States.IntakeStateExtendedRo2v2;
 import pedroPathing.States.IntakeStateRetractedForNoTransfer;
 import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
-import pedroPathing.States.IntakeStateWallPURetractionHM;
 import pedroPathing.States.IntakeStateWallPURetractionRo2v2;
 import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
@@ -36,20 +108,11 @@ import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.tests.Config;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ColorSpace;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "RO2v4StyleTrafr", group = "Linear OpMode")
-public class RO2v2StyleTranfer extends LinearOpMode {
+@TeleOp(name = "AutoAimMain", group = "Linear OpMode")
+public class AutoAimMain extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
 

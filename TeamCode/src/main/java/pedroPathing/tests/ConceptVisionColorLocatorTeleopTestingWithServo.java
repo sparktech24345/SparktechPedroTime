@@ -21,6 +21,8 @@
 
 package pedroPathing.tests;
 
+import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.PositionStorage.intakeTargetPosAdder;
 import static pedroPathing.PositionStorage.outakeArmServoPosition;
 
 import android.util.Size;
@@ -28,6 +30,8 @@ import android.util.Size;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -43,6 +47,8 @@ import org.opencv.core.Scalar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import pedroPathing.ControlMotor;
 
 /*
  * This OpMode illustrates how to use a video source (camera) to locate specifically colored regions
@@ -66,7 +72,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-
+@com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Vision Color-Locator Teleop TestingWITHSERVO", group = "Concept")
 public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMode
 {
@@ -75,11 +81,19 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
             new Scalar(175, 125, 0),
             new Scalar( 255, 225,  70)
     );
+
+    double intakeMotorPower = 0;
+    int lateralTargetPos = 0;
+    int verticalTargetPos = 0;
+    int targetAngle =0;
+
+    public static double multiplyValue = 1.08;
     @Override
     public void runOpMode()
     {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
         /* Build a "Color Locator" vision processor based on the ColorBlobLocatorProcessor class.
          * - Specify the color range you are looking for.  You can use a predefined color, or create you own color range
          *     .setTargetColorRange(ColorRange.BLUE)                      // use a predefined color match
@@ -179,6 +193,9 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
                 .build();
 
         Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        ControlMotor intakeControlMotor = new ControlMotor();
         outakeArmServo.setPosition((double) 144 / 360);
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
@@ -258,29 +275,72 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
             dashboardTelemetry.addLine(" Area Density Aspect  Center Angle");
 
             // Display the size (area) and center location for each Blob.
-            for(ColorBlobLocatorProcessor.Blob b : blobs)
-            {
+            ColorBlobLocatorProcessor.Blob selectedBlob = null; // Variable to hold the blob with the maximum y coordinate
+            int maxY = Integer.MIN_VALUE; // Initialize maxY to the smallest possible integer
+
+            for (ColorBlobLocatorProcessor.Blob b : blobs) {
                 String color = "Cat";
-                if(colorLocatorRed.getBlobs().contains(b))
+                if (colorLocatorRed.getBlobs().contains(b))
                     color = "Red";
-                if(colorLocatorBlue.getBlobs().contains(b))
+                if (colorLocatorBlue.getBlobs().contains(b))
                     color = "Blue";
-                if(colorLocatorYellow.getBlobs().contains(b))
+                if (colorLocatorYellow.getBlobs().contains(b))
                     color = "Yellow";
 
                 RotatedRect boxFit = b.getBoxFit();
                 telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
-
-                          b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) +" "+ b.getBoxFit().angle + " " + color);
+                        b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) + " " + b.getBoxFit().angle + " " + color);
 
                 dashboardTelemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
-                          b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) + " "+  b.getBoxFit().angle + " " + color);
+                        b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) + " " + b.getBoxFit().angle + " " + color);
+
+                // Check if the current blob has a higher y coordinate than the current maxY
+                if ((int) boxFit.center.y > maxY) {
+                    maxY = (int) boxFit.center.y; // Update maxY
+                    selectedBlob = b; // Update selectedBlob to the current blob
+                }
             }
+            telemetry.addLine(" ");
+            telemetry.addLine(" ");
+            dashboardTelemetry.addLine(" ");
+            dashboardTelemetry.addLine(" ");
+// After the loop, selectedBlob will hold the blob with the maximum y coordinate
+            if (selectedBlob != null) {
+                String color = "Cat";
+                if (colorLocatorRed.getBlobs().contains(selectedBlob))
+                    color = "Red";
+                if (colorLocatorBlue.getBlobs().contains(selectedBlob))
+                    color = "Blue";
+                if (colorLocatorYellow.getBlobs().contains(selectedBlob))
+                    color = "Yellow";
+                // You can now perform actions with the selectedBlob
+                // For example, you might want to log its details or process it further
+                RotatedRect selectedBoxFit = selectedBlob.getBoxFit();
+                lateralTargetPos = (int) Math.abs(selectedBoxFit.center.x-240);
+                verticalTargetPos = (int)  Math.abs(480-selectedBoxFit.center.y);
+                verticalTargetPos = (int) Math.pow(verticalTargetPos,multiplyValue);
+                targetAngle = (int) selectedBlob.getBoxFit().angle;
+                telemetry.addLine("Selected Blob: " + selectedBlob.getContourArea() + " at (" + (int) selectedBoxFit.center.x + ", " + (int) selectedBoxFit.center.y + ")" + " " + selectedBlob.getBoxFit().angle + " " + color);
+                dashboardTelemetry.addLine("Selected Blob: " + selectedBlob.getContourArea() + " at (" + (int) selectedBoxFit.center.x + ", " + (int) selectedBoxFit.center.y + ")" + " " + selectedBlob.getBoxFit().angle + " " + color);
+                telemetry.addLine("target:  X" + lateralTargetPos + " Y " + verticalTargetPos + " angle " + targetAngle);
+                dashboardTelemetry.addLine("target:  X" + lateralTargetPos + " Y " + verticalTargetPos + " angle " + targetAngle);
+            }
+
+
+            if(gamepad1.a && verticalTargetPos < 500)
+                intakeTargetPos = verticalTargetPos;
+            if(gamepad1.b)
+                intakeTargetPos=0;
 
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             FtcDashboard.getInstance().startCameraStream(portal, 30);
             dashboardTelemetry.update();
             telemetry.update();
+
+
+            intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            intakeMotor.setPower(intakeMotorPower);
+
             sleep(50);
         }
     }
