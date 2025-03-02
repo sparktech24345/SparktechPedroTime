@@ -128,8 +128,11 @@ public class PositionStorage {
     public static double addedTimer=0;
     public static double intakeTransferSlidersAdder=0;
     public static boolean someOtherBollean = false;
+    public static long teoBdayTimer;
+    public static int teoBdayCase=0;
 
     public static void resetStuff(){
+        teoBdayCase=0;
         someOtherBollean = false;
         intakeTransferSlidersAdder=0;
         addedTimer =0;

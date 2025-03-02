@@ -35,8 +35,8 @@ import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "RO2v4StyleTrafr", group = "Linear OpMode")
-public class RO2v2StyleTranfer extends LinearOpMode {
+@TeleOp(name = "La multi ani Teo!!", group = "Linear OpMode")
+public class TeoBday extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
 
@@ -113,6 +113,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
         IntakeFSM intakeFSM = new IntakeFSM(intakeRetractedRo2);
         intakeFSM.executeCurrentState();
 
+        teoBdayTimer = System.currentTimeMillis();
 
         intakeRotateServo.setPosition(intakeRotateServoPosition / 360);
         outakeArmServo.setPosition(outakeArmServoPosition / 360);
@@ -128,6 +129,17 @@ public class RO2v2StyleTranfer extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
+
+            //temp
+            if(teoBdayTimer < System.currentTimeMillis()+8000){
+                teoBdayTimer = System.currentTimeMillis();
+                teoBdayCase++;
+            }
+
+
+
+
+
             ///gamepad1
             double vertical = gamepad1.left_stick_y;
             double horizontal = gamepad1.left_stick_x;
@@ -169,7 +181,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
             //Declare colors and team output
-            telemetry.addData("Curent team:", team);
+            //telemetry.addData("Curent team:", team);
             String color = "";
             if (colors.red > colors.blue && colors.red > colors.green)
                 color = "BLUE"; //ACTUALLY RED BUT NEEDS INVERSION TO SPIT OUT
@@ -242,7 +254,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
                     && (colors.red >= 0.0015 || colors.blue >=0.0015)
                     && !transferDisabled
                     || gamepad1.right_trigger>=0.4
-                //&& intakeRotateServo.getPosition()*360<=65
+                    //&& intakeRotateServo.getPosition()*360<=65
             ) {
 
                 //start timer
@@ -310,7 +322,6 @@ public class RO2v2StyleTranfer extends LinearOpMode {
                 intakeShouldRetractAfterTransferTimerToggle = false;
             }
             //risky
-            telemetry.addData("noWiglyPls", noWiglyPls);
 
 
 
@@ -541,8 +552,6 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
 
-
-
             //Intake target position
             if (intakeinput < 0)
                 intakeTargetPos += 15;
@@ -566,8 +575,6 @@ public class RO2v2StyleTranfer extends LinearOpMode {
 
 
 
-
-
             //PID STUFF
             double intakeMotorPower = 0;
             intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
@@ -582,7 +589,6 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             backRightPowerCat = (pivot - vertical + horizontal);
             frontLeftPowerCat = (pivot + vertical - horizontal);
             backLeftPowerCat = (pivot + vertical + horizontal);
-
 
 
             //TELEMETRY
@@ -602,8 +608,8 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             telemetry.addData("intakeCurentPOs", intakeMotor.getCurrentPosition());
             telemetry.addData("intakeTargetPos", intakeTargetPos);
             telemetry.addData("intakepower", intakeMotorPower);//*/
-            telemetry.addData("intake rotate", intakeRotateServo.getPosition()*360);
-            telemetry.addData("intake Adder", intakeTargetPosAdder);
+            //telemetry.addData("intake rotate", intakeRotateServo.getPosition()*360);
+            //telemetry.addData("intake Adder", intakeTargetPosAdder);
             //*/
             //telemetry.addData("servo POs", tester.getPosition());
             //telemetry.addData("y", pos.y);
@@ -651,19 +657,76 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             intakeSpinMotor.setPower(intakeMotorPickUpPower);
 
 
+
             //Set servo Positions
             intakeRotateServo.setPosition((intakeRotateServoPosition+gravityAdder) / 360);
             outakeArmServo.setPosition(outakeArmServoPosition / 360);
             outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
 
-            telemetry.addData("color",color);
-            telemetry.addData("IntakeFsm",stateStringIntake);
-            telemetry.addData("OutakeFsm",stateStringOutake);
+            //telemetry.addData("color",color);
+            //telemetry.addData("IntakeFsm",stateStringIntake);
+            //telemetry.addData("OutakeFsm",stateStringOutake);
+            telemetry.addData("La multi ani Teo!!!","");
+            telemetry.addData(TeoBdayString(teoBdayCase),"");
             if(telemetryOhNo)
                 telemetry.addData("OH NOOOO",true);
             updateTelemetry(telemetry);
         }
         //multiRunnable.stopRunning();
+    }
+
+    public String TeoBdayString(int cas){
+        String outString = "La multi ani Teoooo";
+        switch (cas){
+            case 1:
+                outString = "Buna Teeeoooo, sper ca citesti asta";
+                break;
+
+            case 2:
+                outString = "La multi ani si tot ce iti doresti!";
+                break;
+
+            case 3:
+                outString = "sper sa ai parte de cei mai buni prieteni si experiente acum de ziua ta";
+                break;
+
+            case 4:
+                outString = "iti urez tot ce e ma bun si iti garantez ca";
+                break;
+
+            case 5:
+                outString = "de acum in colo totul va fi din ce in ce mai bine";
+                break;
+
+            case 6:
+                outString = "sper ca am fost un prieten cat mai bun pentru tine";
+                break;
+
+            case 7:
+                outString = "mai ajutat si m-ai facut sa rad la momentele de bine si de rau";
+                break;
+
+            case 8:
+                outString = "ai fost mereu acolo pentru mine si ma bucur ca am avut atunci ncredere sa incep conversatia";
+                break;
+
+            case 9:
+                outString = "esti un prieten foarte bun si iti multumesc pentru tot ce ai facut pentru mine";
+                break;
+
+            case 10:
+                outString = "promit sa raman mereu alaturi de tine si sa te ajut la orice ocazie";
+                break;
+
+            case 11:
+                outString = "dinou, la multi ani Teo!, la multi ani prietenului meu!";
+                break;
+
+            default:
+                outString = "La multi ani Teoooo";
+                break;
+        }
+        return outString;
     }
 
 }
