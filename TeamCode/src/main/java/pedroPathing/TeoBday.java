@@ -131,7 +131,7 @@ public class TeoBday extends LinearOpMode {
         while (opModeIsActive()) {
 
             //temp
-            if(teoBdayTimer < System.currentTimeMillis()+8000){
+            if(teoBdayTimer +6000 < System.currentTimeMillis()){
                 teoBdayTimer = System.currentTimeMillis();
                 teoBdayCase++;
             }
