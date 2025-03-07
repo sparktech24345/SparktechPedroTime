@@ -22,27 +22,21 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class AutoPid extends LinearOpMode {
 
 
+
+
+    //==============================\\
+
+    double overShoot=0;
+    int targetPosition = 500; //limit but ith overshoot space
+    String motorName = "intakeMotor";
+    boolean reverse = true;
     public static double autoKp=0;
     public static double autoKd=0;
 
+    //===============================\\
+
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-
-        //==============================\\
-
-
-        int targetPosition = 500; //limit but ith overshoot space
-        String motorName = "intakeMotor";
-        boolean reverse = true;
-
-
-        //===============================\\
-
-
-//
-        double overShoot=0;
         double lastOverShoot = 0;
         boolean isActive=false;
         double maxOverShoot = 0;
