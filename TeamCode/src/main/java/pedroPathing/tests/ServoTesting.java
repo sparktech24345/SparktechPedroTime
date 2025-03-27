@@ -80,7 +80,6 @@ public class ServoTesting extends LinearOpMode {
 // 0 la rotate 60 pozitie baschet
 
 
-
             if (Toggle.outputtoggle(gamepad1.right_trigger > 0) != 0)
                 intakeServoPower = Toggle.outputtoggle(gamepad1.right_trigger > 0);
 
@@ -93,6 +92,14 @@ public class ServoTesting extends LinearOpMode {
             telemetry.addData("intakeRotateServoPos(TBS)", intakeRotateServo.getPosition());
             telemetry.addData("outake motor pos ", outakeLeftMotor.getCurrentPosition());
             telemetry.addData("intake motor pos ", intakeMotor.getCurrentPosition());
+            dashboardTelemetry.addData("outakeArmServoPOS GO TO", outakeArmServoPosition);
+            dashboardTelemetry.addData("outakeArmServoPOS", outakeArmServo.getPosition());
+            dashboardTelemetry.addData("outakeSamplePOS", outakeSampleServo.getPosition());
+            dashboardTelemetry.addData("outakeSamplePOS GO TO ", outakeSampleServoPosition);
+            dashboardTelemetry.addData("intakeRotateServoPosition", intakeRotateServoPosition);
+            dashboardTelemetry.addData("intakeRotateServoPos(TBS)", intakeRotateServo.getPosition());
+            dashboardTelemetry.addData("outake motor pos ", outakeLeftMotor.getCurrentPosition());
+            dashboardTelemetry.addData("intake motor pos ", intakeMotor.getCurrentPosition());
             int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             FtcDashboard.getInstance().startCameraStream(portal, 10);
             dashboardTelemetry.update();

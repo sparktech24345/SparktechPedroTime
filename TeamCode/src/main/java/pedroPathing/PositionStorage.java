@@ -130,8 +130,10 @@ public class PositionStorage {
     public static boolean someOtherBollean = false;
     public static long teoBdayTimer;
     public static int teoBdayCase=0;
+    public static int intakeOutputTruBotPosition = 15;
 
     public static void resetStuff(){
+        intakeOutputTruBotPosition = 15;
         teoBdayCase=0;
         someOtherBollean = false;
         intakeTransferSlidersAdder=0;

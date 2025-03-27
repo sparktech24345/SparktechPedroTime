@@ -8,6 +8,7 @@ import static pedroPathing.PositionStorage.resetStuff;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,8 +19,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@TeleOp(name = "Motor Testing", group = "Linear OpMode")
+@TeleOp(name = "AutoPid", group = "Linear OpMode")
+@Disabled
 public class AutoPid extends LinearOpMode {
+
 
 
 
