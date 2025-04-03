@@ -1,6 +1,9 @@
 package pedroPathing;
 
 import static pedroPathing.OrganizedPositionStorage.*;
+
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+
 public class ClassWithStates {
 
     //state holders
@@ -50,9 +53,24 @@ public class ClassWithStates {
 
     //***************************************************************************\\
 
+    public static enum colorSensorOutty{
+        noSample,
+        correctSample,
+        wrongSample,
+    }
 
+    public static colorSensorOutty currentStateOfSampleInIntake = colorSensorOutty.noSample;
 
+    //***************************************************************************\\
 
+    public static enum colorList{
+        teamNotSet,
+        red,
+        blue,
+        yellow,
+    }
+
+    public static colorList currentTeam = colorList.teamNotSet;
 
 
 
@@ -134,14 +152,34 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeStandBy;
     }
 
+    public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam){
+        if(!(colors.red >= 0.0015 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
+        colorList color=colorList.teamNotSet;
+
+        if (colors.red > colors.blue && colors.red > colors.green)
+            color = colorList.red;
+        if (colors.blue > colors.red && colors.blue > colors.green)
+            color = colorList.blue;
+        if (colors.green > colors.blue && colors.green > colors.red)
+            color = colorList.yellow;
+
+        if(color == currentTeam) return colorSensorOutty.correctSample;
+        else return colorSensorOutty.wrongSample;
+
+
+
+    }
+
+
+
+
 
 
     //init method cuz why not
 
-    public static void initStates(){
+    public static void initStates() {
         outtakeStandBy();
         intakeCabinFullInBot();
         intakeRetracted();
     }
-
 }

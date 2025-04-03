@@ -647,7 +647,7 @@ public class RO2v2StyleTranfer extends LinearOpMode {
             backRightMotor.setPower(backRightPowerCat);
             intakeMotor.setPower(intakeMotorPower);
             outakeRightMotor.setPower(outakeMotorPower);
-            outakeLeftMotor.setPower(outakeMotorPower);//*/
+            outakeLeftMotor.setPower(outakeMotorPower);
             intakeSpinMotor.setPower(intakeMotorPickUpPower);
 
 

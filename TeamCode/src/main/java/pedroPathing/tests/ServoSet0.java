@@ -13,20 +13,22 @@ public class ServoSet0 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        Servo tester = hardwareMap.get(Servo.class, "outakeArmServo");
+        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
         pos=0;
         if (isStopRequested()) return;
         waitForStart();
         while (opModeIsActive()) {
-
             if(gamepad1.a) pos++;
             if(gamepad1.b) pos--;
-
-            tester.setPosition(pos);
-            telemetry.addData("position", tester.getPosition());
+            outakeArmServo.setPosition(pos);
+            intakeRotateServo.setPosition(0);
+            outakeSampleServo.setPosition(0);
+            telemetry.addData("position outakeArmServo", outakeArmServo.getPosition());
+            telemetry.addData("position intakeRotateServo", intakeRotateServo.getPosition());
+            telemetry.addData("position outakeSampleServo", outakeSampleServo.getPosition());
             updateTelemetry(telemetry);
         }
-
     }
 }
