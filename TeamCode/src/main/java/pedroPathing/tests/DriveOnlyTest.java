@@ -1,13 +1,13 @@
 package pedroPathing.tests;
 
 
-import static pedroPathing.PositionStorage.backLeftPowerCat;
-import static pedroPathing.PositionStorage.backRightPowerCat;
-import static pedroPathing.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.PositionStorage.frontRightPowerCat;
-import static pedroPathing.PositionStorage.intakeActualZero;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.intakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.backLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.backRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.intakeActualZero;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPosAdder;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 
 @TeleOp(name = "Only Drive Teleop", group = "Linear OpMode")
 @Disabled

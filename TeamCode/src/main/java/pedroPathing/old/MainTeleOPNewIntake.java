@@ -1,7 +1,7 @@
 package pedroPathing.old;
 
 
-import static pedroPathing.PositionStorage.*;
+import static pedroPathing.newOld.PositionStorage.*;
 
 import android.graphics.Color;
 
@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import pedroPathing.ControlMotor;
-import pedroPathing.PositionStorage;
+import pedroPathing.newOld.ControlMotor;
+import pedroPathing.newOld.PositionStorage;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;
 import pedroPathing.States.IntakeStateExtendedHM;
@@ -31,7 +31,7 @@ import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
-import pedroPathing.Toggle;
+import pedroPathing.newOld.Toggle;
 import pedroPathing.tests.Config;
 
 

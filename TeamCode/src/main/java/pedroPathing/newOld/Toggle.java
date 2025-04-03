@@ -1,4 +1,4 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 public class Toggle {
     public static boolean toggled;

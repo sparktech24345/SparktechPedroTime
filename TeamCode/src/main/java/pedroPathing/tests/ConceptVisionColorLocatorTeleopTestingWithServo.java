@@ -21,9 +21,8 @@
 
 package pedroPathing.tests;
 
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.intakeTargetPosAdder;
-import static pedroPathing.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPosAdder;
 
 import android.util.Size;
 
@@ -48,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 
 /*
  * This OpMode illustrates how to use a video source (camera) to locate specifically colored regions

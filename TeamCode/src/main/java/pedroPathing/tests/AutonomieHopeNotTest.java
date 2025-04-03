@@ -1,7 +1,7 @@
 package pedroPathing.tests;
 
-import static pedroPathing.PositionStorage.*;
-import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.*;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
 
 import android.graphics.Color;
 
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 
 @Autonomous(group = "drive")
 @Disabled

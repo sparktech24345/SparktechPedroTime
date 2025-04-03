@@ -1,20 +1,12 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.intakeActualZero;
-import static pedroPathing.PositionStorage.intakeExtraSpinDoOnce;
-import static pedroPathing.PositionStorage.intakeExtraSpinTimer;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeSlidersRo2Transfer;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.intakeTransferAngles;
-import static pedroPathing.PositionStorage.isIntakeStateRectracted;
-import static pedroPathing.PositionStorage.stateStringIntake;
-import static pedroPathing.PositionStorage.transferDisabled;
-import static pedroPathing.PositionStorage.wasActivePastActiveIntake;
-
-import pedroPathing.Toggle;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.intakeSlidersRo2Transfer;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.isIntakeStateRectracted;
+import static pedroPathing.newOld.PositionStorage.stateStringIntake;
 
 public class IntakeStateRetractedForNoTransfer implements State {
     @Override

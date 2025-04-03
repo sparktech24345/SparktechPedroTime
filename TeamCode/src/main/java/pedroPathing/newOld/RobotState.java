@@ -1,4 +1,4 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import pedroPathing.ControlMotor;
 
 public class RobotState {
     private static RobotState robotState=null;

@@ -1,11 +1,11 @@
 package pedroPathing.tests;
 
 
-import static pedroPathing.PositionStorage.backLeftPowerCat;
-import static pedroPathing.PositionStorage.backRightPowerCat;
-import static pedroPathing.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.PositionStorage.frontRightPowerCat;
-import static pedroPathing.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.backLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.backRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 
 @TeleOp(name = "NO BREAKES DRIFT TIME", group = "Linear OpMode")
 @Disabled

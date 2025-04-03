@@ -1,30 +1,30 @@
 package pedroPathing.tests;
 
-import static pedroPathing.PositionStorage.IntakeServoColectPos;
-import static pedroPathing.PositionStorage.PIDincrement;
-import static pedroPathing.PositionStorage.backLeftPowerCat;
-import static pedroPathing.PositionStorage.backRightPowerCat;
-import static pedroPathing.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.PositionStorage.frontRightPowerCat;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.isIntakeStateExtended;
-import static pedroPathing.PositionStorage.isIntakeStateRectracted;
-import static pedroPathing.PositionStorage.isOuttakeStateSamplePickUp;
-import static pedroPathing.PositionStorage.isOuttakeStateSpecimen;
-import static pedroPathing.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.servoextended;
-import static pedroPathing.PositionStorage.wasActivePastActiveIntake;
-import static pedroPathing.PositionStorage.wasActiveintake;
-import static pedroPathing.PositionStorage.wasBambuExtended;
-import static pedroPathing.PositionStorage.wasIntakeStateExtended;
-import static pedroPathing.PositionStorage.wasOuttakeStateSpecimen;
+import static pedroPathing.newOld.PositionStorage.IntakeServoColectPos;
+import static pedroPathing.newOld.PositionStorage.PIDincrement;
+import static pedroPathing.newOld.PositionStorage.backLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.backRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.isIntakeStateExtended;
+import static pedroPathing.newOld.PositionStorage.isIntakeStateRectracted;
+import static pedroPathing.newOld.PositionStorage.isOuttakeStateSamplePickUp;
+import static pedroPathing.newOld.PositionStorage.isOuttakeStateSpecimen;
+import static pedroPathing.newOld.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeSampleRetracted;
+import static pedroPathing.newOld.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.servoextended;
+import static pedroPathing.newOld.PositionStorage.wasActivePastActiveIntake;
+import static pedroPathing.newOld.PositionStorage.wasActiveintake;
+import static pedroPathing.newOld.PositionStorage.wasBambuExtended;
+import static pedroPathing.newOld.PositionStorage.wasIntakeStateExtended;
+import static pedroPathing.newOld.PositionStorage.wasOuttakeStateSpecimen;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -42,7 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 
 @Autonomous(group = "drive")
 @Disabled

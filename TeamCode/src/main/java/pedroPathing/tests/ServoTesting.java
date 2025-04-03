@@ -9,22 +9,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ColorSpace;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
 
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 
-import pedroPathing.Toggle;
-import static pedroPathing.PositionStorage.*;
+import pedroPathing.newOld.Toggle;
+import static pedroPathing.newOld.PositionStorage.*;
 
 import android.util.Size;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
 public class ServoTesting extends LinearOpMode {

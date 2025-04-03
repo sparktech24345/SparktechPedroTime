@@ -1,84 +1,84 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 
-import static pedroPathing.PositionStorage.DontDoTransferBeforeTransfer;
-import static pedroPathing.PositionStorage.HeadUpIntake;
-import static pedroPathing.PositionStorage.PIDincrement;
-import static pedroPathing.PositionStorage.SpitOutSampleHM;
-import static pedroPathing.PositionStorage.SpitOutSampleHM2;
-import static pedroPathing.PositionStorage.SpitOutSampleHMTimer;
-import static pedroPathing.PositionStorage.addedTimer;
-import static pedroPathing.PositionStorage.afterSpecimenOpenTime;
-import static pedroPathing.PositionStorage.armServoPos;
-import static pedroPathing.PositionStorage.backLeftPowerCat;
-import static pedroPathing.PositionStorage.backRightPowerCat;
-import static pedroPathing.PositionStorage.bambuTransferTimer;
-import static pedroPathing.PositionStorage.colortimer;
-import static pedroPathing.PositionStorage.doOnceyTransfer;
-import static pedroPathing.PositionStorage.extendABitAfterRo2Transfer;
-import static pedroPathing.PositionStorage.extendABitAfterRo2TransferPos;
-import static pedroPathing.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.PositionStorage.frontRightPowerCat;
-import static pedroPathing.PositionStorage.goToPickUp;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.hangTime;
-import static pedroPathing.PositionStorage.intakeExtraSpinDoOnce;
-import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTDoOnce;
-import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTTimer;
-import static pedroPathing.PositionStorage.intakeExtraSpinTimer;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRo2SmashPos;
-import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransfer;
-import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimer;
-import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimerToggle;
-import static pedroPathing.PositionStorage.intakeSlidersRo2Transfer;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.intakeTargetPosAdder;
-import static pedroPathing.PositionStorage.intakeTransferSlidersAdder;
-import static pedroPathing.PositionStorage.isHeldBascket;
-import static pedroPathing.PositionStorage.isOutputinHM;
-import static pedroPathing.PositionStorage.isOutputting;
-import static pedroPathing.PositionStorage.isOuttakeStateStandbyWithSample;
-import static pedroPathing.PositionStorage.isPressedA1;
-import static pedroPathing.PositionStorage.isPressedA2;
-import static pedroPathing.PositionStorage.isPressedB1;
-import static pedroPathing.PositionStorage.isPressedB2;
-import static pedroPathing.PositionStorage.isPressedDL1;
-import static pedroPathing.PositionStorage.isPressedX1;
-import static pedroPathing.PositionStorage.isPressedY1;
-import static pedroPathing.PositionStorage.isPressedY2;
-import static pedroPathing.PositionStorage.noWiglyPls;
-import static pedroPathing.PositionStorage.noWiglyTransferTimer;
-import static pedroPathing.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.PositionStorage.outakeArmTransferPos;
-import static pedroPathing.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.outtakeArmServoPosAtRo2v2TransferPickUp;
-import static pedroPathing.PositionStorage.rememberPosOfServoOut;
-import static pedroPathing.PositionStorage.servoextended;
-import static pedroPathing.PositionStorage.shouldTransfer;
-import static pedroPathing.PositionStorage.someExtraThingDoOnce;
-import static pedroPathing.PositionStorage.someOtherBollean;
-import static pedroPathing.PositionStorage.startingTimer2;
-import static pedroPathing.PositionStorage.startingTimer5;
-import static pedroPathing.PositionStorage.stateStringIntake;
-import static pedroPathing.PositionStorage.stateStringOutake;
-import static pedroPathing.PositionStorage.takeWhileDisabled;
-import static pedroPathing.PositionStorage.team;
-import static pedroPathing.PositionStorage.telemetryOhNo;
-import static pedroPathing.PositionStorage.timerSticlaDeApa;
-import static pedroPathing.PositionStorage.transferDisabled;
-import static pedroPathing.PositionStorage.transferTimerInit;
-import static pedroPathing.PositionStorage.wasBadSample;
-import static pedroPathing.PositionStorage.wasBambuExtended;
-import static pedroPathing.PositionStorage.wasIntakeStateExtended;
-import static pedroPathing.PositionStorage.wasOutputHM;
-import static pedroPathing.PositionStorage.wasOutputHM2;
-import static pedroPathing.Toggle.toggle_var;
+import static pedroPathing.newOld.PositionStorage.DontDoTransferBeforeTransfer;
+import static pedroPathing.newOld.PositionStorage.HeadUpIntake;
+import static pedroPathing.newOld.PositionStorage.PIDincrement;
+import static pedroPathing.newOld.PositionStorage.SpitOutSampleHM;
+import static pedroPathing.newOld.PositionStorage.SpitOutSampleHM2;
+import static pedroPathing.newOld.PositionStorage.SpitOutSampleHMTimer;
+import static pedroPathing.newOld.PositionStorage.addedTimer;
+import static pedroPathing.newOld.PositionStorage.afterSpecimenOpenTime;
+import static pedroPathing.newOld.PositionStorage.armServoPos;
+import static pedroPathing.newOld.PositionStorage.backLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.backRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.bambuTransferTimer;
+import static pedroPathing.newOld.PositionStorage.colortimer;
+import static pedroPathing.newOld.PositionStorage.doOnceyTransfer;
+import static pedroPathing.newOld.PositionStorage.extendABitAfterRo2Transfer;
+import static pedroPathing.newOld.PositionStorage.extendABitAfterRo2TransferPos;
+import static pedroPathing.newOld.PositionStorage.frontLeftPowerCat;
+import static pedroPathing.newOld.PositionStorage.frontRightPowerCat;
+import static pedroPathing.newOld.PositionStorage.goToPickUp;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.hangTime;
+import static pedroPathing.newOld.PositionStorage.intakeExtraSpinDoOnce;
+import static pedroPathing.newOld.PositionStorage.intakeExtraSpinOUTPUTDoOnce;
+import static pedroPathing.newOld.PositionStorage.intakeExtraSpinOUTPUTTimer;
+import static pedroPathing.newOld.PositionStorage.intakeExtraSpinTimer;
+import static pedroPathing.newOld.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.newOld.PositionStorage.intakeRo2SmashPos;
+import static pedroPathing.newOld.PositionStorage.intakeRotateForWallPickUp;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.intakeShouldRetractAfterTransfer;
+import static pedroPathing.newOld.PositionStorage.intakeShouldRetractAfterTransferTimer;
+import static pedroPathing.newOld.PositionStorage.intakeShouldRetractAfterTransferTimerToggle;
+import static pedroPathing.newOld.PositionStorage.intakeSlidersRo2Transfer;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.intakeTransferSlidersAdder;
+import static pedroPathing.newOld.PositionStorage.isHeldBascket;
+import static pedroPathing.newOld.PositionStorage.isOutputinHM;
+import static pedroPathing.newOld.PositionStorage.isOutputting;
+import static pedroPathing.newOld.PositionStorage.isOuttakeStateStandbyWithSample;
+import static pedroPathing.newOld.PositionStorage.isPressedA1;
+import static pedroPathing.newOld.PositionStorage.isPressedA2;
+import static pedroPathing.newOld.PositionStorage.isPressedB1;
+import static pedroPathing.newOld.PositionStorage.isPressedB2;
+import static pedroPathing.newOld.PositionStorage.isPressedDL1;
+import static pedroPathing.newOld.PositionStorage.isPressedX1;
+import static pedroPathing.newOld.PositionStorage.isPressedY1;
+import static pedroPathing.newOld.PositionStorage.isPressedY2;
+import static pedroPathing.newOld.PositionStorage.noWiglyPls;
+import static pedroPathing.newOld.PositionStorage.noWiglyTransferTimer;
+import static pedroPathing.newOld.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeArmTransferPos;
+import static pedroPathing.newOld.PositionStorage.outakeSampleRetracted;
+import static pedroPathing.newOld.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.outtakeArmServoPosAtRo2v2TransferPickUp;
+import static pedroPathing.newOld.PositionStorage.rememberPosOfServoOut;
+import static pedroPathing.newOld.PositionStorage.servoextended;
+import static pedroPathing.newOld.PositionStorage.shouldTransfer;
+import static pedroPathing.newOld.PositionStorage.someExtraThingDoOnce;
+import static pedroPathing.newOld.PositionStorage.someOtherBollean;
+import static pedroPathing.newOld.PositionStorage.startingTimer2;
+import static pedroPathing.newOld.PositionStorage.startingTimer5;
+import static pedroPathing.newOld.PositionStorage.stateStringIntake;
+import static pedroPathing.newOld.PositionStorage.stateStringOutake;
+import static pedroPathing.newOld.PositionStorage.takeWhileDisabled;
+import static pedroPathing.newOld.PositionStorage.team;
+import static pedroPathing.newOld.PositionStorage.telemetryOhNo;
+import static pedroPathing.newOld.PositionStorage.timerSticlaDeApa;
+import static pedroPathing.newOld.PositionStorage.transferDisabled;
+import static pedroPathing.newOld.PositionStorage.transferTimerInit;
+import static pedroPathing.newOld.PositionStorage.wasBadSample;
+import static pedroPathing.newOld.PositionStorage.wasBambuExtended;
+import static pedroPathing.newOld.PositionStorage.wasIntakeStateExtended;
+import static pedroPathing.newOld.PositionStorage.wasOutputHM;
+import static pedroPathing.newOld.PositionStorage.wasOutputHM2;
+import static pedroPathing.newOld.Toggle.toggle_var;
 
 import android.graphics.Color;
 
@@ -92,14 +92,12 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import pedroPathing.States.IntakeFSM;
-import pedroPathing.States.IntakeReverseTruBotOutput;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateExtendedRo2v2;
 import pedroPathing.States.IntakeStateRetractedForNoTransfer;
 import pedroPathing.States.IntakeStateRetractedRo2;
 import pedroPathing.States.IntakeStateWallPURetraction;
 import pedroPathing.States.IntakeStateWallPURetractionRo2v2;
-import pedroPathing.States.IntakeWaitForOutputTruBot;
 import pedroPathing.States.OutakeHMandWallPU;
 import pedroPathing.States.OuttakeFSM;
 import pedroPathing.States.OuttakeSpecimenHang;
@@ -113,8 +111,8 @@ import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "BBStyleOutput", group = "Linear OpMode")
-public class BBStyleOutput extends LinearOpMode {
+@TeleOp(name = "AutoAimMain", group = "Linear OpMode")
+public class AutoAimMain extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
 
@@ -178,8 +176,8 @@ public class BBStyleOutput extends LinearOpMode {
         // Initialize Intake states
         IntakeStateRetractedRo2 intakeRetractedRo2 = new IntakeStateRetractedRo2();
         IntakeStateExtendedRo2v2 intakeExtendedRo2v2 = new IntakeStateExtendedRo2v2();
-        IntakeWaitForOutputTruBot intakeWaitForOutputTruBot = new IntakeWaitForOutputTruBot();
-        IntakeReverseTruBotOutput intakeReverseTruBotOutput = new IntakeReverseTruBotOutput();
+        IntakeStateExtendedHM intakeExtendedRo2v2HM = new IntakeStateExtendedHM();
+        IntakeStateWallPURetraction intakeStateWallPURetraction = new IntakeStateWallPURetraction();
         IntakeStateWallPURetractionRo2v2 intakeStateWallPURetractionHMRo2v2 = new IntakeStateWallPURetractionRo2v2();
         IntakeStateRetractedForNoTransfer intakeStateRetractedForNoTransfer= new IntakeStateRetractedForNoTransfer();
 
@@ -320,7 +318,7 @@ public class BBStyleOutput extends LinearOpMode {
                     && (colors.red >= 0.0015 || colors.blue >=0.0015)
                     && !transferDisabled
                     || gamepad1.right_trigger>=0.4
-                //&& intakeRotateServo.getPosition()*360<=65
+                    //&& intakeRotateServo.getPosition()*360<=65
             ) {
 
                 //start timer
@@ -587,7 +585,7 @@ public class BBStyleOutput extends LinearOpMode {
             if(isPressedB2 && !gamepad2.b){
                 if(isOutputinHM){ isOutputinHM = false;}
                 else {
-                    intakeFSM.setState(intakeWaitForOutputTruBot);
+                    intakeFSM.setState(intakeExtendedRo2v2HM);
                     intakeFSM.executeCurrentState();
                     SpitOutSampleHMTimer = System.currentTimeMillis();
                     SpitOutSampleHM = true;
@@ -597,17 +595,17 @@ public class BBStyleOutput extends LinearOpMode {
                 isPressedB2 = false;
             }
 
-            if(SpitOutSampleHM2 && intakeFSM.currentStateIntake == intakeWaitForOutputTruBot && SpitOutSampleHMTimer + 450 < System.currentTimeMillis()){
+            if(SpitOutSampleHM2 && intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHMTimer + 450 < System.currentTimeMillis()){
                 //intakeMotorPickUpPower = -0.55;
                 SpitOutSampleHM2 = false;
                 isOutputinHM = true;
             }
 
 
-            if(intakeFSM.currentStateIntake == intakeWaitForOutputTruBot && SpitOutSampleHM && SpitOutSampleHMTimer + 650 < System.currentTimeMillis() && !isOutputinHM){
-                intakeFSM.setState(intakeReverseTruBotOutput);
+            if(intakeFSM.currentStateIntake == intakeExtendedRo2v2HM && SpitOutSampleHM && SpitOutSampleHMTimer + 650 < System.currentTimeMillis() && !isOutputinHM){
+                intakeFSM.setState(intakeStateRetractedForNoTransfer);
                 intakeFSM.executeCurrentState();
-                outtakeFSM.setState(outtakeStandbyUp);
+                outtakeFSM.setState(outtakeStandbyDown);
                 outtakeFSM.executeCurrentState();
                 isOutputting = false;
                 SpitOutSampleHM = false;
@@ -631,12 +629,12 @@ public class BBStyleOutput extends LinearOpMode {
 
 
             //retract for no transfer mode for specimen
-            if(intakeFSM.currentStateIntake != intakeWaitForOutputTruBot && !isOutputting && transferDisabled &&  takeWhileDisabled  &&  (colors.red >= 0.0015 || colors.blue >=0.0015)){
+            if(intakeFSM.currentStateIntake != intakeExtendedRo2v2HM && !isOutputting && transferDisabled &&  takeWhileDisabled  &&  (colors.red >= 0.0015 || colors.blue >=0.0015)){
                 if (color.equals(team) || color.equals("YELLOW")) {
                     wasBadSample = true;
                 }
                 else {
-                    intakeFSM.setState(intakeReverseTruBotOutput);
+                    intakeFSM.setState(intakeStateRetractedForNoTransfer);
                     intakeFSM.executeCurrentState();
                     takeWhileDisabled = false;
                 }

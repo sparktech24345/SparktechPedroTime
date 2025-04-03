@@ -1,27 +1,23 @@
 package pedroPathing.tests;
 
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.resetStuff;
-import static pedroPathing.PositionStorage.servoextended;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.resetStuff;
 
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-import pedroPathing.ControlMotor;
-import pedroPathing.Toggle;
+import pedroPathing.newOld.ControlMotor;
 
 @TeleOp(name = "Motor Testing", group = "Linear OpMode")
 public class MotorTesting extends LinearOpMode {

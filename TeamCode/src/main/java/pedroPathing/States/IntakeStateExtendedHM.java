@@ -1,16 +1,10 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.IntakeServoColectPos;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.isIntakeStateExtended;
-import static pedroPathing.PositionStorage.pickUpAngleRo2V2Adder;
-import static pedroPathing.PositionStorage.stateStringIntake;
-import static pedroPathing.PositionStorage.wasActivePastActiveIntake;
-import static pedroPathing.PositionStorage.wasActiveintake;
-import static pedroPathing.PositionStorage.wasBambuExtended;
-import static pedroPathing.PositionStorage.wasIntakeStateExtended;
+import static pedroPathing.newOld.PositionStorage.IntakeServoColectPos;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.pickUpAngleRo2V2Adder;
+import static pedroPathing.newOld.PositionStorage.stateStringIntake;
 
 public class IntakeStateExtendedHM implements State {
     @Override

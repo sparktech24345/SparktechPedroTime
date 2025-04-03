@@ -1,11 +1,8 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.IntakeServoColectPos;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.intakeOutputTruBotPosition;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.pickUpAngleRo2V2Adder;
-import static pedroPathing.PositionStorage.stateStringIntake;
+import static pedroPathing.newOld.PositionStorage.intakeOutputTruBotPosition;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.stateStringIntake;
 
 public class IntakeWaitForOutputTruBot implements State {
     @Override

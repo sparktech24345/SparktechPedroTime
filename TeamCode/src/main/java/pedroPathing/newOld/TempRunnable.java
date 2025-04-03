@@ -1,8 +1,8 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static pedroPathing.PositionStorage.*;
+import static pedroPathing.newOld.PositionStorage.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;

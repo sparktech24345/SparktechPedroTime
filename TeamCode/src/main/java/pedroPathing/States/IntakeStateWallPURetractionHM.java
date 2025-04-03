@@ -1,16 +1,10 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.IntakeWallPickUpPosition;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.isIntakeStateRectracted;
-import static pedroPathing.PositionStorage.stateStringIntake;
-import static pedroPathing.PositionStorage.wasActivePastActiveIntake;
-
-import pedroPathing.Toggle;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.intakeRotateForWallPickUp;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.isIntakeStateRectracted;
+import static pedroPathing.newOld.PositionStorage.stateStringIntake;
 
 public class IntakeStateWallPURetractionHM implements State {
     @Override

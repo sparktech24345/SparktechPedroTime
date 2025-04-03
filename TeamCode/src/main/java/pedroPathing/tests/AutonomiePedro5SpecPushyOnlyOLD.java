@@ -1,6 +1,6 @@
 package pedroPathing.tests;
 
-import static pedroPathing.PositionStorage.*;
+import static pedroPathing.newOld.PositionStorage.*;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 

@@ -1,16 +1,14 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.IntakeWallPickUpPosition;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.isIntakeStateRectracted;
-import static pedroPathing.PositionStorage.stateStringIntake;
-import static pedroPathing.PositionStorage.wasActivePastActiveIntake;
+import static pedroPathing.newOld.PositionStorage.IntakeWallPickUpPosition;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.isIntakeStateRectracted;
+import static pedroPathing.newOld.PositionStorage.stateStringIntake;
+import static pedroPathing.newOld.PositionStorage.wasActivePastActiveIntake;
 
-import pedroPathing.Toggle;
+import pedroPathing.newOld.Toggle;
 
 public class IntakeStateWallPURetractionRo2v2 implements State {
     @Override

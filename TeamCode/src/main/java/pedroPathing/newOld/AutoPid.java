@@ -1,9 +1,8 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.resetStuff;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.resetStuff;
 
 import android.util.Size;
 

@@ -1,15 +1,15 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.isOuttakeStateSpecimen;
-import static pedroPathing.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outtakeArmSpecimenPut;
-import static pedroPathing.PositionStorage.servoextended;
-import static pedroPathing.PositionStorage.stateStringOutake;
-import static pedroPathing.PositionStorage.wasOuttakeStateSpecimen;
-import static pedroPathing.PositionStorage.wasisOuttakeStateSpecimen;
+import static pedroPathing.newOld.PositionStorage.isOuttakeStateSpecimen;
+import static pedroPathing.newOld.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeSampleRetracted;
+import static pedroPathing.newOld.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outtakeArmSpecimenPut;
+import static pedroPathing.newOld.PositionStorage.servoextended;
+import static pedroPathing.newOld.PositionStorage.stateStringOutake;
+import static pedroPathing.newOld.PositionStorage.wasOuttakeStateSpecimen;
+import static pedroPathing.newOld.PositionStorage.wasisOuttakeStateSpecimen;
 
 // Define Outtake States
 public class OuttakeSpecimenHangAuto implements State {

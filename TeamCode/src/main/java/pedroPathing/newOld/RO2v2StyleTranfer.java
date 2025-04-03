@@ -1,8 +1,8 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 
-import static pedroPathing.PositionStorage.*;
-import static pedroPathing.Toggle.toggle_var;
+import static pedroPathing.newOld.PositionStorage.*;
+import static pedroPathing.newOld.Toggle.toggle_var;
 
 import android.graphics.Color;
 

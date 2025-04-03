@@ -1,7 +1,7 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 
-import static pedroPathing.Toggle.*;
+import static pedroPathing.newOld.Toggle.*;
 
 @com.acmerobotics.dashboard.config.Config
 public class PositionStorage {

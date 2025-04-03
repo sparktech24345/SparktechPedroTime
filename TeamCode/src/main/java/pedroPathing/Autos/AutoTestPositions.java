@@ -1,18 +1,18 @@
 package pedroPathing.Autos;
 
-import static pedroPathing.PositionStorage.PIDincrement;
-import static pedroPathing.PositionStorage.autoTimer;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.intakeTargetPosAdder;
-import static pedroPathing.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.servoextended;
-import static pedroPathing.PositionStorage.stopMulthiread;
+import static pedroPathing.newOld.PositionStorage.PIDincrement;
+import static pedroPathing.newOld.PositionStorage.autoTimer;
+import static pedroPathing.newOld.PositionStorage.intakeMotorPickUpPower;
+import static pedroPathing.newOld.PositionStorage.intakeRotateServoPosition;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.outakeArmServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeSampleRetracted;
+import static pedroPathing.newOld.PositionStorage.outakeSampleServoPosition;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.outakeTargetPosAdder;
+import static pedroPathing.newOld.PositionStorage.servoextended;
+import static pedroPathing.newOld.PositionStorage.stopMulthiread;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.newOld.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateExtendedRo2v2Auto;

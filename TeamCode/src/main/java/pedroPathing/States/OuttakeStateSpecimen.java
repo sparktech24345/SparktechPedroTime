@@ -1,6 +1,6 @@
 package pedroPathing.States;
 
-import static pedroPathing.PositionStorage.*;
+import static pedroPathing.newOld.PositionStorage.*;
 // Define Outtake States
 public class OuttakeStateSpecimen implements State {
     @Override

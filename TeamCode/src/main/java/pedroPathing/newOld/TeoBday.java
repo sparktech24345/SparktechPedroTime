@@ -1,84 +1,8 @@
-package pedroPathing;
+package pedroPathing.newOld;
 
 
-import static pedroPathing.PositionStorage.DontDoTransferBeforeTransfer;
-import static pedroPathing.PositionStorage.HeadUpIntake;
-import static pedroPathing.PositionStorage.PIDincrement;
-import static pedroPathing.PositionStorage.SpitOutSampleHM;
-import static pedroPathing.PositionStorage.SpitOutSampleHM2;
-import static pedroPathing.PositionStorage.SpitOutSampleHMTimer;
-import static pedroPathing.PositionStorage.addedTimer;
-import static pedroPathing.PositionStorage.afterSpecimenOpenTime;
-import static pedroPathing.PositionStorage.armServoPos;
-import static pedroPathing.PositionStorage.backLeftPowerCat;
-import static pedroPathing.PositionStorage.backRightPowerCat;
-import static pedroPathing.PositionStorage.bambuTransferTimer;
-import static pedroPathing.PositionStorage.colortimer;
-import static pedroPathing.PositionStorage.doOnceyTransfer;
-import static pedroPathing.PositionStorage.extendABitAfterRo2Transfer;
-import static pedroPathing.PositionStorage.extendABitAfterRo2TransferPos;
-import static pedroPathing.PositionStorage.frontLeftPowerCat;
-import static pedroPathing.PositionStorage.frontRightPowerCat;
-import static pedroPathing.PositionStorage.goToPickUp;
-import static pedroPathing.PositionStorage.gravityAdder;
-import static pedroPathing.PositionStorage.hangTime;
-import static pedroPathing.PositionStorage.intakeExtraSpinDoOnce;
-import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTDoOnce;
-import static pedroPathing.PositionStorage.intakeExtraSpinOUTPUTTimer;
-import static pedroPathing.PositionStorage.intakeExtraSpinTimer;
-import static pedroPathing.PositionStorage.intakeMotorPickUpPower;
-import static pedroPathing.PositionStorage.intakeRo2SmashPos;
-import static pedroPathing.PositionStorage.intakeRotateForWallPickUp;
-import static pedroPathing.PositionStorage.intakeRotateServoPosition;
-import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransfer;
-import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimer;
-import static pedroPathing.PositionStorage.intakeShouldRetractAfterTransferTimerToggle;
-import static pedroPathing.PositionStorage.intakeSlidersRo2Transfer;
-import static pedroPathing.PositionStorage.intakeTargetPos;
-import static pedroPathing.PositionStorage.intakeTargetPosAdder;
-import static pedroPathing.PositionStorage.intakeTransferSlidersAdder;
-import static pedroPathing.PositionStorage.isHeldBascket;
-import static pedroPathing.PositionStorage.isOutputinHM;
-import static pedroPathing.PositionStorage.isOutputting;
-import static pedroPathing.PositionStorage.isOuttakeStateStandbyWithSample;
-import static pedroPathing.PositionStorage.isPressedA1;
-import static pedroPathing.PositionStorage.isPressedA2;
-import static pedroPathing.PositionStorage.isPressedB1;
-import static pedroPathing.PositionStorage.isPressedB2;
-import static pedroPathing.PositionStorage.isPressedDL1;
-import static pedroPathing.PositionStorage.isPressedX1;
-import static pedroPathing.PositionStorage.isPressedY1;
-import static pedroPathing.PositionStorage.isPressedY2;
-import static pedroPathing.PositionStorage.noWiglyPls;
-import static pedroPathing.PositionStorage.noWiglyTransferTimer;
-import static pedroPathing.PositionStorage.outakeArmServoPosition;
-import static pedroPathing.PositionStorage.outakeArmTransferPos;
-import static pedroPathing.PositionStorage.outakeSampleRetracted;
-import static pedroPathing.PositionStorage.outakeSampleServoPosition;
-import static pedroPathing.PositionStorage.outakeTargetPos;
-import static pedroPathing.PositionStorage.outakeTargetPosAdder;
-import static pedroPathing.PositionStorage.outtakeArmServoPosAtRo2v2TransferPickUp;
-import static pedroPathing.PositionStorage.rememberPosOfServoOut;
-import static pedroPathing.PositionStorage.servoextended;
-import static pedroPathing.PositionStorage.shouldTransfer;
-import static pedroPathing.PositionStorage.someExtraThingDoOnce;
-import static pedroPathing.PositionStorage.someOtherBollean;
-import static pedroPathing.PositionStorage.startingTimer2;
-import static pedroPathing.PositionStorage.startingTimer5;
-import static pedroPathing.PositionStorage.stateStringIntake;
-import static pedroPathing.PositionStorage.stateStringOutake;
-import static pedroPathing.PositionStorage.takeWhileDisabled;
-import static pedroPathing.PositionStorage.team;
-import static pedroPathing.PositionStorage.telemetryOhNo;
-import static pedroPathing.PositionStorage.timerSticlaDeApa;
-import static pedroPathing.PositionStorage.transferDisabled;
-import static pedroPathing.PositionStorage.transferTimerInit;
-import static pedroPathing.PositionStorage.wasBadSample;
-import static pedroPathing.PositionStorage.wasBambuExtended;
-import static pedroPathing.PositionStorage.wasIntakeStateExtended;
-import static pedroPathing.PositionStorage.wasOutputHM;
-import static pedroPathing.PositionStorage.wasOutputHM2;
-import static pedroPathing.Toggle.toggle_var;
+import static pedroPathing.newOld.PositionStorage.*;
+import static pedroPathing.newOld.Toggle.toggle_var;
 
 import android.graphics.Color;
 
@@ -111,8 +35,8 @@ import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "AutoAimMain", group = "Linear OpMode")
-public class AutoAimMain extends LinearOpMode {
+@TeleOp(name = "La multi ani Teo!!", group = "Linear OpMode")
+public class TeoBday extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
 
@@ -189,6 +113,7 @@ public class AutoAimMain extends LinearOpMode {
         IntakeFSM intakeFSM = new IntakeFSM(intakeRetractedRo2);
         intakeFSM.executeCurrentState();
 
+        teoBdayTimer = System.currentTimeMillis();
 
         intakeRotateServo.setPosition(intakeRotateServoPosition / 360);
         outakeArmServo.setPosition(outakeArmServoPosition / 360);
@@ -204,6 +129,17 @@ public class AutoAimMain extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
+
+            //temp
+            if(teoBdayTimer +6000 < System.currentTimeMillis()){
+                teoBdayTimer = System.currentTimeMillis();
+                teoBdayCase++;
+            }
+
+
+
+
+
             ///gamepad1
             double vertical = gamepad1.left_stick_y;
             double horizontal = gamepad1.left_stick_x;
@@ -245,7 +181,7 @@ public class AutoAimMain extends LinearOpMode {
 
 
             //Declare colors and team output
-            telemetry.addData("Curent team:", team);
+            //telemetry.addData("Curent team:", team);
             String color = "";
             if (colors.red > colors.blue && colors.red > colors.green)
                 color = "BLUE"; //ACTUALLY RED BUT NEEDS INVERSION TO SPIT OUT
@@ -386,7 +322,6 @@ public class AutoAimMain extends LinearOpMode {
                 intakeShouldRetractAfterTransferTimerToggle = false;
             }
             //risky
-            telemetry.addData("noWiglyPls", noWiglyPls);
 
 
 
@@ -617,8 +552,6 @@ public class AutoAimMain extends LinearOpMode {
 
 
 
-
-
             //Intake target position
             if (intakeinput < 0)
                 intakeTargetPos += 15;
@@ -642,8 +575,6 @@ public class AutoAimMain extends LinearOpMode {
 
 
 
-
-
             //PID STUFF
             double intakeMotorPower = 0;
             intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
@@ -658,7 +589,6 @@ public class AutoAimMain extends LinearOpMode {
             backRightPowerCat = (pivot - vertical + horizontal);
             frontLeftPowerCat = (pivot + vertical - horizontal);
             backLeftPowerCat = (pivot + vertical + horizontal);
-
 
 
             //TELEMETRY
@@ -678,8 +608,8 @@ public class AutoAimMain extends LinearOpMode {
             telemetry.addData("intakeCurentPOs", intakeMotor.getCurrentPosition());
             telemetry.addData("intakeTargetPos", intakeTargetPos);
             telemetry.addData("intakepower", intakeMotorPower);//*/
-            telemetry.addData("intake rotate", intakeRotateServo.getPosition()*360);
-            telemetry.addData("intake Adder", intakeTargetPosAdder);
+            //telemetry.addData("intake rotate", intakeRotateServo.getPosition()*360);
+            //telemetry.addData("intake Adder", intakeTargetPosAdder);
             //*/
             //telemetry.addData("servo POs", tester.getPosition());
             //telemetry.addData("y", pos.y);
@@ -727,19 +657,76 @@ public class AutoAimMain extends LinearOpMode {
             intakeSpinMotor.setPower(intakeMotorPickUpPower);
 
 
+
             //Set servo Positions
             intakeRotateServo.setPosition((intakeRotateServoPosition+gravityAdder) / 360);
             outakeArmServo.setPosition(outakeArmServoPosition / 360);
             outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
 
-            telemetry.addData("color",color);
-            telemetry.addData("IntakeFsm",stateStringIntake);
-            telemetry.addData("OutakeFsm",stateStringOutake);
+            //telemetry.addData("color",color);
+            //telemetry.addData("IntakeFsm",stateStringIntake);
+            //telemetry.addData("OutakeFsm",stateStringOutake);
+            telemetry.addData("La multi ani Teo!!!","");
+            telemetry.addData(TeoBdayString(teoBdayCase),"");
             if(telemetryOhNo)
                 telemetry.addData("OH NOOOO",true);
             updateTelemetry(telemetry);
         }
         //multiRunnable.stopRunning();
+    }
+
+    public String TeoBdayString(int cas){
+        String outString = "La multi ani Teoooo";
+        switch (cas){
+            case 1:
+                outString = "Buna Teeeoooo, sper ca citesti asta";
+                break;
+
+            case 2:
+                outString = "La multi ani si tot ce iti doresti!";
+                break;
+
+            case 3:
+                outString = "sper sa ai parte de cei mai buni prieteni si experiente acum de ziua ta";
+                break;
+
+            case 4:
+                outString = "iti urez tot ce e ma bun si iti garantez ca";
+                break;
+
+            case 5:
+                outString = "de acum in colo totul va fi din ce in ce mai bine";
+                break;
+
+            case 6:
+                outString = "sper ca am fost un prieten cat mai bun pentru tine";
+                break;
+
+            case 7:
+                outString = "mai ajutat si m-ai facut sa rad la momentele de bine si de rau";
+                break;
+
+            case 8:
+                outString = "ai fost mereu acolo pentru mine si ma bucur ca am avut atunci ncredere sa incep conversatia";
+                break;
+
+            case 9:
+                outString = "esti un prieten foarte bun si iti multumesc pentru tot ce ai facut pentru mine";
+                break;
+
+            case 10:
+                outString = "promit sa raman mereu alaturi de tine si sa te ajut la orice ocazie";
+                break;
+
+            case 11:
+                outString = "dinou, la multi ani Teo!, la multi ani prietenului meu!";
+                break;
+
+            default:
+                outString = "La multi ani Teoooo";
+                break;
+        }
+        return outString;
     }
 
 }
