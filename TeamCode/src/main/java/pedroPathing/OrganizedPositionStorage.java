@@ -46,6 +46,7 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoWallPickupPos = 305;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
+    public static double outtakePivotServoTransferPos = 150; //NOT SET
 
 
     // outtake sliders
@@ -60,6 +61,7 @@ public class OrganizedPositionStorage {
     //intake pivot
     public static double intakePivotServoPickupPos = 92;
     public static double intakePivotServoOutputTruBotPos = 15;
+    public static double intakePivotServoTransferPos = 35; // NOT SET
 
 
 

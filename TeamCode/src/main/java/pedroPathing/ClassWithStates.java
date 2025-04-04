@@ -119,15 +119,22 @@ public class ClassWithStates {
     public static void intakeCabinDownStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
         intakePivotServoPos = intakePivotServoPickupPos;
+        intakeSpinMotorPow = 0;
     }
     public static void intakeCabinTransferPosition(){
         intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
+        intakePivotServoPos = intakePivotServoTransferPos;
+        intakeSpinMotorPow = 0;
     }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
+        intakePivotServoPos = intakePivotServoTransferPos;
+        intakeSpinMotorPow = 0;
     }
     public static void intakeCabinFullInBotOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBotOutputting;
+        intakePivotServoPos = intakePivotServoOutputTruBotPos;
+        intakeSpinMotorPow = -1;
     }
 
 
@@ -139,22 +146,33 @@ public class ClassWithStates {
 
 
     public static void outtakeSpecimenHang(){
-        outtakeState = outtakeStates.outtakeSpecimenHang;
+        outtakeState = outtakeStates.outtakeSpecimenHang; //skipped for now
+        outtakePivotServoPos = outtakePivotServoHighRungHangPos;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
     }
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
+        outtakePivotServoPos = outtakePivotServoBasketPos;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
     }
-    public static void outtakeWallPickUpNormal(){
+    public static void outtakeWallPickUpNormal(){ //old one
         outtakeState = outtakeStates.outtakeWallPickUpNormal;
+        outtakePivotServoPos = 0;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
     }
     public static void outtakeWallPickUpNew(){
         outtakeState = outtakeStates.outtakeWallPickUpNew;
+        outtakePivotServoPos = outtakePivotServoWallPickupPos;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
     }
     public static void outtakeTransfer(){
         outtakeState = outtakeStates.outtakeTransfer;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakePivotServoPos = outtakePivotServoTransferPos;
     }
     public static void outtakeStandBy(){
         outtakeState = outtakeStates.outtakeStandBy;
+        //TO BE MEASURED
     }
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam){
