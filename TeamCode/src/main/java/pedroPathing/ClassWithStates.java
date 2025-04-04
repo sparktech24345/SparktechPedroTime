@@ -80,23 +80,23 @@ public class ClassWithStates {
 
     public static void intakeExtended4out4(){
         intakeState = intakeStates.intakeExtended4out4;
-        intakeTargetPos = 510;
+        intakeExtendMotorTargetPos = 510;
     }
     public static void intakeExtended3out4(){
         intakeState = intakeStates.intakeExtended3out4;
-        intakeTargetPos = 377;
+        intakeExtendMotorTargetPos = 377;
     }
     public static void intakeExtended2out4(){
         intakeState = intakeStates.intakeExtended2out4;
-        intakeTargetPos = 245;
+        intakeExtendMotorTargetPos = 245;
     }
     public static void intakeExtended1out4(){
         intakeState = intakeStates.intakeExtended1out4;
-        intakeTargetPos = 112;
+        intakeExtendMotorTargetPos = 112;
     }
     public static void intakeRetracted(){
         intakeState = intakeStates.intakeRetracted;
-        intakeTargetPos = 112;
+        intakeExtendMotorTargetPos = 0;
     }
 
 
@@ -108,12 +108,17 @@ public class ClassWithStates {
 
     public static void intakeCabinDownCollecting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
+        intakePivotServoPos = intakePivotServoPickupPos;
+        intakeSpinMotorPow = 1;
     }
     public static void intakeCabinDownOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownOutputting;
+        intakePivotServoPos = intakePivotServoPickupPos;
+        intakeSpinMotorPow = -0.5;
     }
     public static void intakeCabinDownStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
+        intakePivotServoPos = intakePivotServoPickupPos;
     }
     public static void intakeCabinTransferPosition(){
         intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
@@ -169,10 +174,6 @@ public class ClassWithStates {
 
 
     }
-
-
-
-
 
 
     //init method cuz why not

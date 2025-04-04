@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.newOld.ControlMotor;
+import pedroPathing.ControlMotor;
 
 @TeleOp(name = "NO BREAKES DRIFT TIME", group = "Linear OpMode")
 @Disabled

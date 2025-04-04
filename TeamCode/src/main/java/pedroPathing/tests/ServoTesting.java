@@ -9,27 +9,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ColorSpace;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
 
 
-import pedroPathing.newOld.ControlMotor;
+import pedroPathing.ControlMotor;
 
 import pedroPathing.newOld.Toggle;
 import static pedroPathing.newOld.PositionStorage.*;
 
 import android.util.Size;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
 public class ServoTesting extends LinearOpMode {
     double intakeRotateServoPosition = 30;
-    double outakeArmServoPosition = 60;
+    double outakeArmServoPosition = 90;
     double outakeSampleServoPosition = servoextended;
     //double outakeRotateServoPosition =161; // new 0
     double intakeServoPower = 0;
@@ -47,6 +39,7 @@ public class ServoTesting extends LinearOpMode {
         DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+        DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
 
         VisionPortal portal = new VisionPortal.Builder()
                 .setCameraResolution(new Size(640, 480))
@@ -108,11 +101,14 @@ public class ServoTesting extends LinearOpMode {
 
 
             //tester.setPosition(0);
-            intakeRotateServo.setPosition(intakeRotateServoPosition / 360);
-            outakeArmServo.setPosition(outakeArmServoPosition / 360);
+            intakeRotateServo.setPosition(intakeRotateServoPosition / 228);
+            outakeArmServo.setPosition(outakeArmServoPosition / 328);
             outakeSampleServo.setPosition(outakeSampleServoPosition / 360);
             //outakeRotateServo.setPosition(outakeRotateServoPosition/360);
 
+
+            if(gamepad1.dpad_down) intakeSpinMotor.setPower(0);
+            if(gamepad1.dpad_up) intakeSpinMotor.setPower(-1);
 
         }
 

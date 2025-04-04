@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-import pedroPathing.newOld.ControlMotor;
+import pedroPathing.ControlMotor;
 
 @Autonomous(group = "drive")
 @Disabled

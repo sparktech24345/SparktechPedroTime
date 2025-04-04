@@ -1,4 +1,4 @@
-package pedroPathing.newOld;
+package pedroPathing;
 import com.qualcomm.robotcore.util.ElapsedTime;
 @com.acmerobotics.dashboard.config.Config
 public class ControlMotor {

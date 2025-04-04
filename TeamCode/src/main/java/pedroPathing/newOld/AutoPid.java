@@ -18,6 +18,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 
+import pedroPathing.ControlMotor;
+
 @TeleOp(name = "AutoPid", group = "Linear OpMode")
 @Disabled
 public class AutoPid extends LinearOpMode {

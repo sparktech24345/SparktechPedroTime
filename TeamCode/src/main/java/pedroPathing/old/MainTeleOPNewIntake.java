@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import pedroPathing.newOld.ControlMotor;
+import pedroPathing.ControlMotor;
 import pedroPathing.newOld.PositionStorage;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtended;

@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import pedroPathing.ControlMotor;
+
 public class RobotState {
     private static RobotState robotState=null;
     public boolean isValid;
