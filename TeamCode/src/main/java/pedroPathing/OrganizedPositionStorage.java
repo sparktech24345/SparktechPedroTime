@@ -65,6 +65,47 @@ public class OrganizedPositionStorage {
 
 
 
+    // BOOLEANS
+
+    //misc
+    public static boolean isYellowSampleNotGood = false;
+
+
+    //is pressed
+    public static boolean isPressedA1 = false;
+    public static boolean isPressedA2 = false;
+    public static boolean isPressedB1 = false;
+    public static boolean isPressedB2 = false;
+    public static boolean isPressedX1 = false;
+    public static boolean isPressedX2 = false;
+    public static boolean isPressedY1 = false;
+    public static boolean isPressedY2 = false;
+    public static boolean isPressedDL1 = false;
+
+
+    //intake stuff
+    public static boolean isAfterIntakeBeenDownColecting = false;
+    public static boolean isIntakeOutputting = false;
+    public static boolean isAfterBotHasBeenOutputting = false;
+
+
+    //outtake stuff
+    public static boolean isAfterOuttakeScoredSpecimen = false;
+    public static boolean isAfterOuttakeScoredBasketSample = false;
+    public static boolean isAfterOuttakeClosedClawAtWallSpecimen = false;
+
+
+
+
+
+    //LONGS / TIMERS
+
+    //outtake stuff
+    public static long outtakeSpecimenAfterScoreTimer;
+    public static long outtakeAfterBasketSampleScoreTimer;
+    public static long outtakeAfterHasClosedClawAtWallSpecimenTimer;
+    public static long intakeOutputtingTimer;
+
 
     public static void resetStuff() {
 

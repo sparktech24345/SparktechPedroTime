@@ -2,6 +2,11 @@ package pedroPathing;
 
 
 import static pedroPathing.OrganizedPositionStorage.*;
+import static pedroPathing.ClassWithStates.*;
+import static pedroPathing.newOld.PositionStorage.addedTimer;
+import static pedroPathing.newOld.PositionStorage.gravityAdder;
+import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
+import static pedroPathing.newOld.PositionStorage.intakeTransferSlidersAdder;
 
 import android.graphics.Color;
 
@@ -73,10 +78,19 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
         intakeControlMotor = new ControlMotor();
         outakeControlMotor = new ControlMotor();
 
+        // Set init position
+        initStates();
+        intakeRotateServo.setPosition((intakePivotServoPos+gravityAdder) / 360);
+        outakeArmServo.setPosition(outtakePivotServoPos / 360);
+        outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+
+
+
+
+
         waitForStart();
 
         if (isStopRequested()){
-            //multiRunnable.stopRunning();
             return;
         }
 
@@ -84,7 +98,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             ///gamepad1
             double vertical = gamepad1.left_stick_y;
             double horizontal = gamepad1.left_stick_x;
-            double pivot = gamepad1.right_stick_x;
+            double pivot = -gamepad1.right_stick_x;
 
             ///gamepad2
             double intakeinput = gamepad2.left_stick_y;
@@ -93,12 +107,159 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             Color.colorToHSV(colors.toColor(), hsvValues);
 
 
+            //Selectare Echipa
+            if ((gamepad2.left_bumper && gamepad2.start) || (gamepad1.left_bumper && gamepad1.start))
+                currentTeam = colorList.blue;
+            if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
+                currentTeam = colorList.red;
+
+
+            currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
+
+
+
+            ///CONTROLS
+
+            //PICK UP
+            if(gamepad1.a) isPressedA1 = true;
+            if(!gamepad1.a && isPressedA1){
+                if(!(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting || intakeCabinState == intakeCabinStates.intakeCabinDownOutputting)) {
+                    intakeCabinDownCollecting();
+                    outtakeTransfer();
+                    isAfterIntakeBeenDownColecting = true;
+                }
+                else{
+                    intakeRetracted();
+                    intakeCabinTransferPosition();
+                    outtakeTransfer();
+                    isAfterIntakeBeenDownColecting = false;
+                }
+            }
 
 
 
 
+            //SPECIMEN
+            if(gamepad1.b) isPressedB1 = true;
+            if(!gamepad1.b && isPressedB1){
+                if(!(outtakeState == outtakeStates.outtakeSpecimenHang)) {
+                    outtakeClawServoPos = outtakeClawServoRetractedPos;
+                    isAfterOuttakeClosedClawAtWallSpecimen = true;
+                    outtakeAfterHasClosedClawAtWallSpecimenTimer = System.currentTimeMillis();
+                }
+                else{
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    outtakeSpecimenAfterScoreTimer = System.currentTimeMillis();
+                    isAfterOuttakeScoredSpecimen = true;
+                }
+            }
+            if(isAfterOuttakeClosedClawAtWallSpecimen && outtakeAfterHasClosedClawAtWallSpecimenTimer + 50 < System.currentTimeMillis()){
+                intakeRetracted();
+                intakeCabinFullInBot();
+                outtakeSpecimenHang();
+            }
+            if(isAfterOuttakeScoredSpecimen && outtakeSpecimenAfterScoreTimer + 50 < System.currentTimeMillis()){
+                outtakeWallPickUpNew();
+                isAfterOuttakeScoredSpecimen = false;
+            }
 
 
+
+            //BASKET SCORING
+            if(gamepad1.x) isPressedX1 = true;
+            if(!gamepad1.x && isPressedX1){
+                if(!(outtakeState == outtakeStates.outtakeBasket)){
+                    intakeRetracted();
+                    intakeCabinFullInBot();
+                    outtakeBasket();
+                }
+                else{
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
+                    isAfterOuttakeScoredBasketSample = true;
+                }
+            }
+            if(isAfterOuttakeScoredBasketSample && outtakeAfterBasketSampleScoreTimer + 50 < System.currentTimeMillis()) {
+                outtakePivotServoPos = outtakePivotServoTransferPos;
+                if(outtakeAfterBasketSampleScoreTimer + 300 < System.currentTimeMillis()) {
+                    outtakeTransfer();
+                    isAfterOuttakeScoredBasketSample = false;
+                }
+            }
+
+
+
+            //WALL PICK UP
+            if(gamepad1.y) isPressedY1 = true;
+            if(!gamepad1.y && isPressedY1){
+                intakeRetracted();
+                intakeCabinFullInBot();
+                outtakeWallPickUpNew();
+            }
+
+
+            //weird stuff for hm outputting
+            if(     gamepad2.b &&
+                    (intakeCabinState == intakeCabinStates.intakeCabinFullInBot ||
+                    intakeCabinState == intakeCabinStates.intakeCabinTransferPosition ||
+                    intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting)
+            ){
+                intakeCabinFullInBotOutputting();
+                isAfterBotHasBeenOutputting = true;
+            }
+            else if(isAfterBotHasBeenOutputting){
+                intakeCabinFullInBot();
+                isAfterBotHasBeenOutputting = false;
+            }
+
+
+
+
+            ///SOME STUFF
+
+
+            //auto retract
+            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting){
+                intakeRetracted();
+                intakeCabinTransferPosition();
+                outtakeTransfer();
+                isAfterIntakeBeenDownColecting = false;
+            }
+
+            //auto eject
+            if(currentStateOfSampleInIntake == colorSensorOutty.wrongSample){
+                intakeCabinDownOutputting();
+                isIntakeOutputting = true;
+                intakeOutputtingTimer = System.currentTimeMillis();
+            }
+            if(isIntakeOutputting && intakeOutputtingTimer + 150 < System.currentTimeMillis()){
+                intakeCabinDownCollecting();
+                isIntakeOutputting = false;
+            }
+
+
+
+            //manual eject
+            if(gamepad1.left_bumper){
+                intakeSpinMotorPow = -0.55;
+                isIntakeOutputting = true;
+                intakeOutputtingTimer = System.currentTimeMillis();
+            }
+            if(isIntakeOutputting && intakeOutputtingTimer + 150 < System.currentTimeMillis()){
+                if(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting) intakeSpinMotorPow = 1;
+                else if(intakeCabinState == intakeCabinStates.intakeCabinDownOutputting) intakeSpinMotorPow = -0.55;
+                else intakeSpinMotorPow = 0;
+                isIntakeOutputting = false;
+            }
+
+
+            //chosing intake positions
+            //Intake positions
+            if (gamepad2.dpad_left)  intakeExtended4out4();
+            if (gamepad2.dpad_down)  intakeExtended3out4();
+            if (gamepad2.dpad_right) intakeExtended2out4();
+            if(gamepad2.dpad_up)     intakeExtended1out4();
+            if(gamepad2.left_bumper) intakeRetracted();
 
 
 
@@ -123,14 +284,29 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             chassisBackLeftPow = (pivot + vertical + horizontal);
 
 
-            //manual slowdown
+            //slowdown
             double slowyDownyManal = 2.5;
+            double slowyDownyAuto = 1.75;
+
+            //manual slowdown
             if(gamepad1.left_bumper){
                 chassisFrontLeftPow /= slowyDownyManal;
                 chassisBackRightPow /= slowyDownyManal;
                 chassisFrontRightPow /= slowyDownyManal;
                 chassisBackLeftPow /= slowyDownyManal;
             }
+            //auto slowdown
+            else if(outtakeState == outtakeStates.outtakeBasket ||
+                    outtakeState == outtakeStates.outtakeWallPickUpNew ||
+                    outtakeState == outtakeStates.outtakeSpecimenHang){
+                chassisFrontLeftPow /= slowyDownyAuto;
+                chassisBackRightPow /= slowyDownyAuto;
+                chassisFrontRightPow /= slowyDownyAuto;
+                chassisBackLeftPow /= slowyDownyAuto;
+            }
+
+
+
 
 
             // set motor power

@@ -149,33 +149,40 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeSpecimenHang; //skipped for now
         outtakePivotServoPos = outtakePivotServoHighRungHangPos;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakeExtendMotorTargetPos = 99;
     }
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
         outtakePivotServoPos = outtakePivotServoBasketPos;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
     }
     public static void outtakeWallPickUpNormal(){ //old one
         outtakeState = outtakeStates.outtakeWallPickUpNormal;
         outtakePivotServoPos = 0;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
     }
     public static void outtakeWallPickUpNew(){
         outtakeState = outtakeStates.outtakeWallPickUpNew;
         outtakePivotServoPos = outtakePivotServoWallPickupPos;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeExtendMotorTargetPos = 99;
     }
     public static void outtakeTransfer(){
         outtakeState = outtakeStates.outtakeTransfer;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
         outtakePivotServoPos = outtakePivotServoTransferPos;
+        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
     }
     public static void outtakeStandBy(){
         outtakeState = outtakeStates.outtakeStandBy;
+        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
         //TO BE MEASURED
     }
 
-    public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam){
+    public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
+
         if(!(colors.red >= 0.0015 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
@@ -186,11 +193,15 @@ public class ClassWithStates {
         if (colors.green > colors.blue && colors.green > colors.red)
             color = colorList.yellow;
 
-        if(color == currentTeam) return colorSensorOutty.correctSample;
-        else return colorSensorOutty.wrongSample;
 
+        //reversing team
+        colorList wrongSampleType = colorList.teamNotSet;
+        if(currentTeam == colorList.blue) wrongSampleType = colorList.red;
+        if(currentTeam == colorList.red) wrongSampleType = colorList.blue;
 
-
+        if(color == wrongSampleType) return colorSensorOutty.wrongSample;
+        if(isYellowSampleNotGood && color == colorList.yellow) return colorSensorOutty.wrongSample;
+        else return colorSensorOutty.correctSample;
     }
 
 
