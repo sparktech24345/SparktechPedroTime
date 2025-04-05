@@ -3,10 +3,7 @@ package pedroPathing;
 
 import static pedroPathing.OrganizedPositionStorage.*;
 import static pedroPathing.ClassWithStates.*;
-import static pedroPathing.newOld.PositionStorage.addedTimer;
-import static pedroPathing.newOld.PositionStorage.gravityAdder;
-import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
-import static pedroPathing.newOld.PositionStorage.intakeTransferSlidersAdder;
+
 
 import android.graphics.Color;
 
@@ -168,16 +165,22 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //BASKET SCORING
             if(gamepad1.x) isPressedX1 = true;
             if(!gamepad1.x && isPressedX1){
-                if(!(outtakeState == outtakeStates.outtakeBasket)){
-                    intakeRetracted();
-                    intakeCabinFullInBot();
-                    outtakeBasket();
+                if(!(outtakeState == outtakeStates.outtakeBasket) && intakeMotor.getCurrentPosition()<20){
+                    isAfterOuttakeClawClosedAfterTransfer = true;
+                    intakeAfterTransferClosedClawTimer = System.currentTimeMillis();
                 }
-                else{
+                else if(intakeMotor.getCurrentPosition()<20){
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
                     isAfterOuttakeScoredBasketSample = true;
                 }
+                else intakeRetracted();
+            }
+            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 50 < System.currentTimeMillis()){
+                intakeRetracted();
+                intakeCabinFullInBot();
+                outtakeBasket();
+                isAfterOuttakeClawClosedAfterTransfer = false;
             }
             if(isAfterOuttakeScoredBasketSample && outtakeAfterBasketSampleScoreTimer + 50 < System.currentTimeMillis()) {
                 outtakePivotServoPos = outtakePivotServoTransferPos;
