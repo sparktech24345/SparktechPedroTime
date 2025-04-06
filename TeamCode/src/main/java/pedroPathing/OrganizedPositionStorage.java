@@ -51,7 +51,7 @@ public class OrganizedPositionStorage {
     // outtake sliders
 
     public static double outtakeMotorMaxPos = 2038;
-    public static double outtakeSliderSpecimenHangPos = 1070;
+    public static double outtakeSliderSpecimenHangPos = 1100;
     public static double outtakeSlidersWallPickPos = 680;
     public static double outtakeMotorActualZeroPos = 0;
 
@@ -62,7 +62,7 @@ public class OrganizedPositionStorage {
     //intake pivot
     public static double intakePivotServoPickupPos = 210;
     public static double intakePivotServoOutputTruBotPos = 15;
-    public static double intakePivotServoTransferPos = 150;
+    public static double intakePivotServoTransferPos = 140;
 
 
 
@@ -90,6 +90,7 @@ public class OrganizedPositionStorage {
     public static boolean isAfterBotHasBeenOutputting = false;
     public static boolean isAfterOuttakeClawClosedAfterTransfer = false;
     public static boolean isIntakeOutputtingManual = false;
+    public static boolean isIntakeSpinMOtorAfterJustTaking = false;
 
 
     //outtake stuff
@@ -97,6 +98,7 @@ public class OrganizedPositionStorage {
     public static boolean isAfterOuttakeScoredBasketSample = false;
     public static boolean isAfterOuttakeClosedClawAtWallSpecimen = false;
     public static boolean isAtStateOfLettingBasketSampleGo = false;
+    public static boolean isInNeedToGoToSpecimenTransferPos = false;
 
 
 
@@ -109,6 +111,7 @@ public class OrganizedPositionStorage {
     public static long intakeOutputtingTimer;
     public static long intakeAfterTransferClosedClawTimer;
     public static long intakeOutputtingTimerManual;
+    public static long intakeSpinMotorMorePowerAfterTakingTimer;
 
 
 

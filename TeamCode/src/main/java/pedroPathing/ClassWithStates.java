@@ -146,7 +146,7 @@ public class ClassWithStates {
 
 
     public static void outtakeSpecimenHang(){
-        outtakeState = outtakeStates.outtakeSpecimenHang; //skipped for now
+        outtakeState = outtakeStates.outtakeSpecimenHang;
         outtakePivotServoPos = outtakePivotServoHighRungHangPos;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
@@ -165,7 +165,8 @@ public class ClassWithStates {
     }
     public static void outtakeWallPickUpNew(){
         outtakeState = outtakeStates.outtakeWallPickUpNew;
-        outtakePivotServoPos = outtakePivotServoWallPickupPos;
+        //outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
+        isInNeedToGoToSpecimenTransferPos = true;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
