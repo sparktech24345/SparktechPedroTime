@@ -131,19 +131,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeCabinTransferPosition();
                     outtakeTransfer();
                     isAfterIntakeBeenDownColecting = false;
-                    /*
-                    timeAtTransfer = System.currentTimeMillis();
-                    isYetToGrab = true;
-                    */
                 }
                 isPressedA1 = false;
             }
-            /*
-            if(isYetToGrab && System.currentTimeMillis() > timeAtTransfer + 50){
-                outtakeClawServoPos = outtakeClawServoRetractedPos;
-                isYetToGrab = false;
-            }
-            */
+
 
 
             //SPECIMEN
@@ -159,14 +150,15 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     outtakeSpecimenAfterScoreTimer = System.currentTimeMillis();
                     isAfterOuttakeScoredSpecimen = true;
                 }
+                isPressedB1 = false;
             }
-            if(isAfterOuttakeClosedClawAtWallSpecimen && outtakeAfterHasClosedClawAtWallSpecimenTimer + 50 < System.currentTimeMillis()){
+            if(isAfterOuttakeClosedClawAtWallSpecimen && outtakeAfterHasClosedClawAtWallSpecimenTimer + 300 < System.currentTimeMillis()){
                 intakeRetracted();
                 intakeCabinFullInBot();
                 outtakeSpecimenHang();
                 isAfterOuttakeClosedClawAtWallSpecimen = false;
             }
-            if(isAfterOuttakeScoredSpecimen && outtakeSpecimenAfterScoreTimer + 50 < System.currentTimeMillis()){
+            if(isAfterOuttakeScoredSpecimen && outtakeSpecimenAfterScoreTimer + 300 < System.currentTimeMillis()){
                 outtakeWallPickUpNew();
                 isAfterOuttakeScoredSpecimen = false;
             }
@@ -177,23 +169,28 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             if(gamepad1.x) isPressedX1 = true;
             if(!gamepad1.x && isPressedX1){
                 if(!(outtakeState == outtakeStates.outtakeBasket) && intakeMotor.getCurrentPosition()<20){
+                    outtakeClawServoPos = outtakeClawServoRetractedPos;
                     isAfterOuttakeClawClosedAfterTransfer = true;
                     intakeAfterTransferClosedClawTimer = System.currentTimeMillis();
-                }
-                else if(intakeMotor.getCurrentPosition()<20){
-                    outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
-                    isAfterOuttakeScoredBasketSample = true;
+                    isAtStateOfLettingBasketSampleGo = true;
                 }
                 else intakeRetracted();
+                isPressedX1 = false;
             }
-            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 50 < System.currentTimeMillis()){
+            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis()){
                 intakeRetracted();
                 intakeCabinFullInBot();
                 outtakeBasket();
                 isAfterOuttakeClawClosedAfterTransfer = false;
             }
-            if(isAfterOuttakeScoredBasketSample && outtakeAfterBasketSampleScoreTimer + 50 < System.currentTimeMillis()) {
+            //going down after, quite complicated cuz holding to let sample go
+            if(isAtStateOfLettingBasketSampleGo && gamepad1.x){
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                isAfterOuttakeScoredBasketSample = true;
+                isAtStateOfLettingBasketSampleGo = false;
+                outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
+            }
+            if(!gamepad1.x && isAfterOuttakeScoredBasketSample) {
                 outtakePivotServoPos = outtakePivotServoTransferPos;
                 if(outtakeAfterBasketSampleScoreTimer + 300 < System.currentTimeMillis()) {
                     outtakeTransfer();
@@ -209,6 +206,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 intakeRetracted();
                 intakeCabinFullInBot();
                 outtakeWallPickUpNew();
+                isPressedY1 = false;
             }
 
 
@@ -246,7 +244,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 isIntakeOutputting = true;
                 intakeOutputtingTimer = System.currentTimeMillis();
             }
-            if(isIntakeOutputting && intakeOutputtingTimer + 150 < System.currentTimeMillis()){
+            if(isIntakeOutputting && intakeOutputtingTimer + 300 < System.currentTimeMillis()){
                 intakeCabinDownCollecting();
                 isIntakeOutputting = false;
             }
@@ -255,13 +253,13 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //manual eject
             if(gamepad1.left_bumper){
-                intakeSpinMotorPow = -0.55;
-                isIntakeOutputting = true;
-                intakeOutputtingTimer = System.currentTimeMillis();
+                intakeSpinMotorPow = -0.75;
+                isIntakeOutputtingManual = true;
+                intakeOutputtingTimerManual = System.currentTimeMillis();
             }
-            if(isIntakeOutputting && intakeOutputtingTimer + 150 < System.currentTimeMillis()){
+            if(isIntakeOutputting && intakeOutputtingTimer + 300 < System.currentTimeMillis()){
                 if(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting) intakeSpinMotorPow = 1;
-                else if(intakeCabinState == intakeCabinStates.intakeCabinDownOutputting) intakeSpinMotorPow = -0.55;
+                else if(intakeCabinState == intakeCabinStates.intakeCabinDownOutputting) intakeSpinMotorPow = -0.75;
                 else intakeSpinMotorPow = 0;
                 isIntakeOutputting = false;
             }
@@ -269,10 +267,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //chosing intake positions
             //Intake positions
-            if (gamepad2.dpad_left)  intakeExtended4out4();
-            if (gamepad2.dpad_down)  intakeExtended3out4();
-            if (gamepad2.dpad_right) intakeExtended2out4();
-            if(gamepad2.dpad_up)     intakeExtended1out4();
+            if (gamepad1.dpad_left)  intakeExtended4out4();
+            if (gamepad1.dpad_down)  intakeExtended3out4();
+            if (gamepad1.dpad_right) intakeExtended2out4();
+            if(gamepad1.dpad_up)     intakeExtended1out4();
             if(gamepad2.left_bumper) intakeRetracted();
 
 

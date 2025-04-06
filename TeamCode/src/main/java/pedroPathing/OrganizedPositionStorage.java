@@ -89,12 +89,14 @@ public class OrganizedPositionStorage {
     public static boolean isIntakeOutputting = false;
     public static boolean isAfterBotHasBeenOutputting = false;
     public static boolean isAfterOuttakeClawClosedAfterTransfer = false;
+    public static boolean isIntakeOutputtingManual = false;
 
 
     //outtake stuff
     public static boolean isAfterOuttakeScoredSpecimen = false;
     public static boolean isAfterOuttakeScoredBasketSample = false;
     public static boolean isAfterOuttakeClosedClawAtWallSpecimen = false;
+    public static boolean isAtStateOfLettingBasketSampleGo = false;
 
 
 
@@ -102,12 +104,19 @@ public class OrganizedPositionStorage {
 
     //LONGS / TIMERS
 
+    //intake stuff
+
+    public static long intakeOutputtingTimer;
+    public static long intakeAfterTransferClosedClawTimer;
+    public static long intakeOutputtingTimerManual;
+
+
+
     //outtake stuff
     public static long outtakeSpecimenAfterScoreTimer;
     public static long outtakeAfterBasketSampleScoreTimer;
     public static long outtakeAfterHasClosedClawAtWallSpecimenTimer;
-    public static long intakeOutputtingTimer;
-    public static long intakeAfterTransferClosedClawTimer;
+
 
 
     public static void resetStuff() {
@@ -145,11 +154,13 @@ public class OrganizedPositionStorage {
         isIntakeOutputting = false;
         isAfterBotHasBeenOutputting = false;
         isAfterOuttakeClawClosedAfterTransfer = false;
+        isIntakeOutputtingManual = false;
 
         // outtake stuff
         isAfterOuttakeScoredSpecimen = false;
         isAfterOuttakeScoredBasketSample = false;
         isAfterOuttakeClosedClawAtWallSpecimen = false;
+        isAtStateOfLettingBasketSampleGo = false;
 
         // LONGS / TIMERS
         outtakeSpecimenAfterScoreTimer = 0;
