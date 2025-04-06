@@ -15,16 +15,14 @@ public class OrganizedPositionStorage {
     // intake
     public static double intakePivotServoPos;
     public static double intakeSpinMotorPow;
-    public static double intakeExtendMotorTargetPos;
-    public static double intakeExtendMotorPow;
+    public static double intakeExtendMotorTargetPos=0;
 
     public static double intakeTargetPosAdder;
 
     // outtake
     public static double outtakePivotServoPos;
     public static double outtakeClawServoPos;
-    public static double outtakeExtendMotorTargetPos;
-    public static double outtakeExtendMotorPow;
+    public static double outtakeExtendMotorTargetPos=0;
 
     public static double outtakeTargetPosAdder;
 
@@ -47,11 +45,14 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
     public static double outtakePivotServoTransferPos = 210;
+    public static double outtakePivotServoStandByPos = 170;
 
 
     // outtake sliders
 
     public static double outtakeMotorMaxPos = 2038;
+    public static double outtakeSliderSpecimenHangPos = 1070;
+    public static double outtakeSlidersWallPickPos = 680;
     public static double outtakeMotorActualZeroPos = 0;
 
 
@@ -59,7 +60,7 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 92;
+    public static double intakePivotServoPickupPos = 210;
     public static double intakePivotServoOutputTruBotPos = 15;
     public static double intakePivotServoTransferPos = 150;
 
@@ -110,6 +111,51 @@ public class OrganizedPositionStorage {
 
 
     public static void resetStuff() {
+        // MISC
+        PIDincrement = 0;
+        gravityAdder = 0;
 
+        // intake
+        intakePivotServoPos = intakePivotServoTransferPos;
+        intakeExtendMotorTargetPos = 0;
+        intakeTargetPosAdder = 0;
+
+        // outtake
+        outtakePivotServoPos = outtakePivotServoTransferPos;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeExtendMotorTargetPos = 0;
+        outtakeTargetPosAdder = 0;
+
+        // BOOLEANS
+        isYellowSampleNotGood = false;
+
+        // is pressed
+        isPressedA1 = false;
+        isPressedA2 = false;
+        isPressedB1 = false;
+        isPressedB2 = false;
+        isPressedX1 = false;
+        isPressedX2 = false;
+        isPressedY1 = false;
+        isPressedY2 = false;
+        isPressedDL1 = false;
+
+        // intake stuff
+        isAfterIntakeBeenDownColecting = false;
+        isIntakeOutputting = false;
+        isAfterBotHasBeenOutputting = false;
+        isAfterOuttakeClawClosedAfterTransfer = false;
+
+        // outtake stuff
+        isAfterOuttakeScoredSpecimen = false;
+        isAfterOuttakeScoredBasketSample = false;
+        isAfterOuttakeClosedClawAtWallSpecimen = false;
+
+        // LONGS / TIMERS
+        outtakeSpecimenAfterScoreTimer = 0;
+        outtakeAfterBasketSampleScoreTimer = 0;
+        outtakeAfterHasClosedClawAtWallSpecimenTimer = 0;
+        intakeOutputtingTimer = 0;
+        intakeAfterTransferClosedClawTimer = 0;
     }
 }

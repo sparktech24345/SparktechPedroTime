@@ -149,7 +149,7 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeSpecimenHang; //skipped for now
         outtakePivotServoPos = outtakePivotServoHighRungHangPos;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
-        outtakeExtendMotorTargetPos = 99;
+        outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
     }
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
@@ -167,7 +167,7 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeWallPickUpNew;
         outtakePivotServoPos = outtakePivotServoWallPickupPos;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
-        outtakeExtendMotorTargetPos = 99;
+        outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
     public static void outtakeTransfer(){
         outtakeState = outtakeStates.outtakeTransfer;
@@ -177,6 +177,7 @@ public class ClassWithStates {
     }
     public static void outtakeStandBy(){
         outtakeState = outtakeStates.outtakeStandBy;
+        outtakePivotServoPos = outtakePivotServoStandByPos;
         outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
         //TO BE MEASURED
     }
@@ -206,7 +207,6 @@ public class ClassWithStates {
 
 
     //init method cuz why not
-
     public static void initStates() {
         outtakeStandBy();
         intakeCabinFullInBot();

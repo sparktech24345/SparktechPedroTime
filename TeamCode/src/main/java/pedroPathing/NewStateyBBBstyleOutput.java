@@ -16,7 +16,6 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import pedroPathing.newOld.PositionStorage;
 import pedroPathing.tests.Config;
 
 
@@ -35,7 +34,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        PositionStorage.resetStuff();
+        OrganizedPositionStorage.resetStuff();
 
         // Declare our motors
         // Make sure your ID's match your configuration
@@ -77,11 +76,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
         // Set init position
         initStates();
-        intakeRotateServo.setPosition((intakePivotServoPos+gravityAdder) / 360);
-        outakeArmServo.setPosition(outtakePivotServoPos / 360);
+        intakeRotateServo.setPosition(intakePivotServoPos / 228);
+        outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
-
-
 
 
 
@@ -118,9 +115,13 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             ///CONTROLS
 
             //PICK UP
+            /*
+            double timeAtTransfer = 0;
+            boolean isYetToGrab = false;
+            */
             if(gamepad1.a) isPressedA1 = true;
             if(!gamepad1.a && isPressedA1){
-                if(!(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting || intakeCabinState == intakeCabinStates.intakeCabinDownOutputting)) {
+                if(!(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting) && !(intakeCabinState == intakeCabinStates.intakeCabinDownOutputting)) {
                     intakeCabinDownCollecting();
                     outtakeTransfer();
                     isAfterIntakeBeenDownColecting = true;
@@ -130,10 +131,19 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeCabinTransferPosition();
                     outtakeTransfer();
                     isAfterIntakeBeenDownColecting = false;
+                    /*
+                    timeAtTransfer = System.currentTimeMillis();
+                    isYetToGrab = true;
+                    */
                 }
+                isPressedA1 = false;
             }
-
-
+            /*
+            if(isYetToGrab && System.currentTimeMillis() > timeAtTransfer + 50){
+                outtakeClawServoPos = outtakeClawServoRetractedPos;
+                isYetToGrab = false;
+            }
+            */
 
 
             //SPECIMEN
@@ -154,6 +164,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 intakeRetracted();
                 intakeCabinFullInBot();
                 outtakeSpecimenHang();
+                isAfterOuttakeClosedClawAtWallSpecimen = false;
             }
             if(isAfterOuttakeScoredSpecimen && outtakeSpecimenAfterScoreTimer + 50 < System.currentTimeMillis()){
                 outtakeWallPickUpNew();
@@ -272,11 +283,12 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //PIDs
-            double intakeMotorPower = 0;
-            intakeMotorPower = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-            double outakeMotorPower;
-            outakeMotorPower = outakeControlMotor.PIDControlUppy(outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
-            outakeMotorPower *= PIDincrement;
+            PIDincrement=1;
+            double intakeExtendMotorPow;
+            intakeExtendMotorPow = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            double outtakeExtendMotorPow;
+            outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
+            outtakeExtendMotorPow *= PIDincrement;
 
 
 
@@ -324,11 +336,21 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //Set servo Positions
-            intakeRotateServo.setPosition((intakePivotServoPos+gravityAdder) / 360);
-            outakeArmServo.setPosition(outtakePivotServoPos / 360);
+            intakeRotateServo.setPosition(intakePivotServoPos / 228);
+            outakeArmServo.setPosition(outtakePivotServoPos / 328);
             outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
+            telemetry.addData("intakeSliderState",intakeState);
+            telemetry.addData("intakeCabinState",intakeCabinState);
+            telemetry.addData("outtakeState",outtakeState);
+            telemetry.addData("color stuff",currentStateOfSampleInIntake);
+            telemetry.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
+            telemetry.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
+            telemetry.addData("intakeRotateServoPosition", intakePivotServoPos);
+            telemetry.addData("intakeExtendMotorPow",intakeExtendMotorPow);
+            telemetry.addData("outakeMotorPow",outtakeExtendMotorPow);
+            telemetry.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
             updateTelemetry(telemetry);
         }
 
