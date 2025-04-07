@@ -44,7 +44,7 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoWallPickupPos = 305;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
-    public static double outtakePivotServoTransferPos = 210;
+    public static double outtakePivotServoTransferPos = 215;
     public static double outtakePivotServoStandByPos = 170;
 
 
@@ -62,7 +62,7 @@ public class OrganizedPositionStorage {
     //intake pivot
     public static double intakePivotServoPickupPos = 210;
     public static double intakePivotServoOutputTruBotPos = 15;
-    public static double intakePivotServoTransferPos = 140;
+    public static double intakePivotServoTransferPos = 135;
 
 
 
@@ -91,6 +91,8 @@ public class OrganizedPositionStorage {
     public static boolean isAfterOuttakeClawClosedAfterTransfer = false;
     public static boolean isIntakeOutputtingManual = false;
     public static boolean isIntakeSpinMOtorAfterJustTaking = false;
+    public static boolean isInCaseOfNotIntakeInBot = false;
+    public static boolean isInSpecimenState = false;
 
 
     //outtake stuff
@@ -99,6 +101,7 @@ public class OrganizedPositionStorage {
     public static boolean isAfterOuttakeClosedClawAtWallSpecimen = false;
     public static boolean isAtStateOfLettingBasketSampleGo = false;
     public static boolean isInNeedToGoToSpecimenTransferPos = false;
+    public static boolean isOuttakeInPositionToGoDown = false;
 
 
 
@@ -112,6 +115,7 @@ public class OrganizedPositionStorage {
     public static long intakeAfterTransferClosedClawTimer;
     public static long intakeOutputtingTimerManual;
     public static long intakeSpinMotorMorePowerAfterTakingTimer;
+    public static long isIntakeInBotTimer;
 
 
 
@@ -119,6 +123,7 @@ public class OrganizedPositionStorage {
     public static long outtakeSpecimenAfterScoreTimer;
     public static long outtakeAfterBasketSampleScoreTimer;
     public static long outtakeAfterHasClosedClawAtWallSpecimenTimer;
+    public static long beforeOuttakeGoDownTimer;
 
 
 
@@ -158,6 +163,7 @@ public class OrganizedPositionStorage {
         isAfterBotHasBeenOutputting = false;
         isAfterOuttakeClawClosedAfterTransfer = false;
         isIntakeOutputtingManual = false;
+        isInSpecimenState = false;
 
         // outtake stuff
         isAfterOuttakeScoredSpecimen = false;

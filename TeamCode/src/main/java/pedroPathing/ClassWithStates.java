@@ -153,8 +153,8 @@ public class ClassWithStates {
     }
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
-        outtakePivotServoPos = outtakePivotServoBasketPos;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakePivotServoPos = outtakePivotServoBasketPos;
         outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
     }
     public static void outtakeWallPickUpNormal(){ //old one
@@ -174,7 +174,9 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeTransfer;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
         outtakePivotServoPos = outtakePivotServoTransferPos;
-        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+        //outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+        isOuttakeInPositionToGoDown = true;
+        beforeOuttakeGoDownTimer = System.currentTimeMillis();
     }
     public static void outtakeStandBy(){
         outtakeState = outtakeStates.outtakeStandBy;
