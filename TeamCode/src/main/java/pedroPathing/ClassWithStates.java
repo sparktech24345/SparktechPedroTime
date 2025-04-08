@@ -178,7 +178,7 @@ public class ClassWithStates {
         isOuttakeInPositionToGoDown = true;
         beforeOuttakeGoDownTimer = System.currentTimeMillis();
     }
-    public static void outtakeStandBy(){
+    public static void outtakeStandByBasket(){
         outtakeState = outtakeStates.outtakeStandBy;
         outtakePivotServoPos = outtakePivotServoStandByPos;
         outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
@@ -211,7 +211,7 @@ public class ClassWithStates {
 
     //init method cuz why not
     public static void initStates() {
-        outtakeStandBy();
+        outtakeStandByBasket();
         intakeCabinFullInBot();
         intakeRetracted();
     }

@@ -171,7 +171,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             if(gamepad1.x) isPressedX1 = true;
             if(!gamepad1.x && isPressedX1){
                 if(!(outtakeState == outtakeStates.outtakeBasket) && intakeMotor.getCurrentPosition()<20){
-                    outtakeClawServoPos = outtakeClawServoRetractedPos;
+
                     isAfterOuttakeClawClosedAfterTransfer = true;
                     intakeAfterTransferClosedClawTimer = System.currentTimeMillis();
                     isAtStateOfLettingBasketSampleGo = true;
@@ -242,22 +242,40 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             ///SOME STUFF
 
-
             //auto retract
             if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting){
                 //makins sure sample enetered the intake fully with a small timer
                 intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
                 isIntakeSpinMOtorAfterJustTaking = true;
                 isAfterIntakeBeenDownColecting = false;
-            }
-            if(isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
-                intakeRetracted();
-                intakeCabinTransferPosition();
-                if(!isInSpecimenState)
-                    outtakeTransfer();
-                isIntakeSpinMOtorAfterJustTaking = false;
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
             }
 
+
+            if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
+                intakeRetracted();
+                intakeCabinTransferPosition();
+                if(!isInSpecimenState) {
+                    outtakeTransfer();
+                }
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                basketStandbyState++;
+            }
+            if(basketStandbyState == 1 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 500 < System.currentTimeMillis()) {
+                outtakeClawServoPos = outtakeClawServoRetractedPos;
+                basketStandbyState++;
+            }
+            if(basketStandbyState == 2 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 1000 < System.currentTimeMillis()){
+                outtakeClawServoPos = outtakeClawServoRetractedPos;
+                basketStandbyState++;
+                outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos + 500;
+
+            }
+            if(basketStandbyState == 3 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 1500 < System.currentTimeMillis()){
+                outtakeStandByBasket();
+                isIntakeSpinMOtorAfterJustTaking = false;
+                basketStandbyState = 0;
+            }
 
 
 
@@ -393,6 +411,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             telemetry.addData("outakeMotorPow",outtakeExtendMotorPow);
             telemetry.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
             telemetry.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
+
             updateTelemetry(telemetry);
         }
 

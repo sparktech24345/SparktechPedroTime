@@ -38,14 +38,14 @@ public class OrganizedPositionStorage {
 
     //outtake claw
     public static double outtakeClawServoExtendedPos = 150;
-    public static double outtakeClawServoRetractedPos = 12;
+    public static double outtakeClawServoRetractedPos = 5;
 
     // outtake pivot
     public static double outtakePivotServoWallPickupPos = 305;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
     public static double outtakePivotServoTransferPos = 215;
-    public static double outtakePivotServoStandByPos = 170;
+    public static double outtakePivotServoStandByPos = 50;
 
 
     // outtake sliders
@@ -93,7 +93,7 @@ public class OrganizedPositionStorage {
     public static boolean isIntakeSpinMOtorAfterJustTaking = false;
     public static boolean isInCaseOfNotIntakeInBot = false;
     public static boolean isInSpecimenState = false;
-
+    public static int basketStandbyState = 0;
 
     //outtake stuff
     public static boolean isAfterOuttakeScoredSpecimen = false;
