@@ -339,14 +339,11 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //PIDs
-            // NU ACTIVA PIDNEW!!!! PERICOL!!!!
             PIDincrement=1;
             double intakeExtendMotorPow;
             intakeExtendMotorPow = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-            //intakeExtendMotorPow = intakeControlMotor.PIDNew(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
             double outtakeExtendMotorPow;
             outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
-            //outtakeExtendMotorPow = outakeControlMotor.PIDNew(outtakeExtendMotorTargetPos, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;
 
 
