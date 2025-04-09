@@ -94,6 +94,7 @@ public class OrganizedPositionStorage {
     public static boolean isIntakeSpinMOtorAfterJustTaking = false;
     public static boolean isInCaseOfNotIntakeInBot = false;
     public static boolean isInSpecimenState = false;
+    public static boolean isTimeToRefreshOutptingTime = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff

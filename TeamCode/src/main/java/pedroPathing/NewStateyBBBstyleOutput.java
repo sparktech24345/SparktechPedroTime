@@ -326,26 +326,24 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
 
-            if(gamepad2.b){
-                if(!(intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting)) {
-                    intakeCabinFullInBotOutputting();
-                    outtakeSpecimenHang();
+            /*if(gamepad2.b){
+                if(isTimeToRefreshOutptingTime){
                     timeSinceStartedMovingForTruBotOutput = System.currentTimeMillis();
-                } else {
-                    if (timeSinceStartedMovingForTruBotOutput - System.currentTimeMillis() > 1000){
+                    isTimeToRefreshOutptingTime = false;
+                }
+                if(!(intakeCabinState == intakeCabinStates.intakeCabinFullInBot)) {
+                    intakeCabinFullInBot();
+                    outtakeSpecimenHang();
+                } else if (timeSinceStartedMovingForTruBotOutput + 1000 < System.currentTimeMillis() ){
                         intakeSpinMotorPow = -1;
                     }
-                }
-
-
-
-            } else {
-                if (intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting){
+            }
+            else if (intakeCabinState == intakeCabinStates.intakeCabinFullInBot){
+                    isTimeToRefreshOutptingTime = true;
                     intakeCabinFullInBot();
                     outtakeTransfer();
                     intakeSpinMotorPow = 0;
-                }
-            }
+                }//*/
 
             if(gamepad2.a) isPressedA2 = true;
             if(!gamepad2.a && isPressedA2){
