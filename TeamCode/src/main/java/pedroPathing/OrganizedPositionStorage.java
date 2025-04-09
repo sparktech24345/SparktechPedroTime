@@ -16,7 +16,6 @@ public class OrganizedPositionStorage {
     public static double intakePivotServoPos;
     public static double intakeSpinMotorPow;
     public static double intakeExtendMotorTargetPos=0;
-
     public static double intakeTargetPosAdder;
 
     // outtake
@@ -118,6 +117,8 @@ public class OrganizedPositionStorage {
     public static long intakeOutputtingTimerManual;
     public static long intakeSpinMotorMorePowerAfterTakingTimer;
     public static long isIntakeInBotTimer;
+
+    public static long timeSinceStartedMovingForTruBotOutput;
 
 
 
