@@ -181,7 +181,7 @@ public class ClassWithStates {
     public static void outtakeStandByBasket(){
         outtakeState = outtakeStates.outtakeStandBy;
         outtakePivotServoPos = outtakePivotServoStandByPos;
-        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+        outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
         //TO BE MEASURED
     }
 
@@ -211,7 +211,7 @@ public class ClassWithStates {
 
     //init method cuz why not
     public static void initStates() {
-        outtakeStandByBasket();
+        //outtakeStandByBasket();
         intakeCabinFullInBot();
         intakeRetracted();
     }

@@ -218,17 +218,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeCabinState == intakeCabinStates.intakeCabinTransferPosition ||
                     intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting)
             ){
-                if(isIntakeInBotTimer + 600 < System.currentTimeMillis())
-                intakeCabinFullInBotOutputting();
-                else intakeCabinFullInBot();
-                isAfterBotHasBeenOutputting = true;
+                if(isAfterBotHasBeenOutputting) {
+                    tempIntakeTargetPastPosDifrence = intakePivotServoPos-15;
+                    isIntakeInBotTimer = System.currentTimeMillis();
+                    isAfterBotHasBeenOutputting = false;
+                }
+                if(isIntakeInBotTimer  + tempIntakeTargetPastPosDifrence * 3 < System.currentTimeMillis()){continue;}
             }
-            else if(gamepad2.b){
-                //isInCaseOfNotIntakeInBot = true;
-                isIntakeInBotTimer = System.currentTimeMillis();
-            }
-            else if(isAfterBotHasBeenOutputting){
-                intakeCabinFullInBot();
+            if(!gamepad2.b){
                 isAfterBotHasBeenOutputting = false;
             }
 
@@ -266,13 +263,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 basketStandbyState++;
             }
             if(basketStandbyState == 2 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 1000 < System.currentTimeMillis()){
-                outtakeClawServoPos = outtakeClawServoRetractedPos;
+                //outtakeClawServoPos = outtakeClawServoRetractedPos;
                 basketStandbyState++;
-                outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos + 500;
+                outtakeSpecimenHang();
+                //outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
 
             }
             if(basketStandbyState == 3 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 1500 < System.currentTimeMillis()){
-                outtakeStandByBasket();
+                //outtakeStandByBasket();
                 isIntakeSpinMOtorAfterJustTaking = false;
                 basketStandbyState = 0;
             }
