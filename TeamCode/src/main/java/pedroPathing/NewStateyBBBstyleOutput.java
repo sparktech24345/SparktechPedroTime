@@ -121,7 +121,12 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             */
             if(gamepad1.a) isPressedA1 = true;
             if(!gamepad1.a && isPressedA1){
-                if(!(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting) && !(intakeCabinState == intakeCabinStates.intakeCabinDownOutputting)) {
+                if(intakeCabinState == intakeCabinStates.intakeCabinFullInBot && (intakeState==intakeStates.intakeRetracted || intakeState == intakeStates.intakeExtended1out4)){
+                    isInPositionToRaiseOuttakeInOrderToEvadeIntake = true;
+                    waitingForOuttakeToEvadeIntakeTimer = System.currentTimeMillis();
+                    outtakeSpecimenHang();
+                }
+                else if(!(intakeCabinState == intakeCabinStates.intakeCabinDownCollecting) && !(intakeCabinState == intakeCabinStates.intakeCabinDownOutputting)) {
                     intakeCabinDownCollecting();
                     if(!isInSpecimenState)
                         outtakeTransfer();
@@ -130,8 +135,11 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 else{
                     intakeRetracted();
                     intakeCabinTransferPosition();
-                    if(!isInSpecimenState)
+                    if(!isInSpecimenState) {
+                        isIntakeSpinMOtorAfterJustTaking = true;
+                        intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
                         outtakeTransfer();
+                    }
                     isAfterIntakeBeenDownColecting = false;
                 }
                 isPressedA1 = false;
@@ -181,7 +189,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             }
             if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis()){
                 intakeRetracted();
-                intakeCabinFullInBot();
+                intakeCabinTransferPosition();
                 outtakeBasket();
                 isAfterOuttakeClawClosedAfterTransfer = false;
             }
@@ -220,9 +228,12 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //auto retract
             if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting){
                 //makins sure sample enetered the intake fully with a small timer
-                intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
-                isIntakeSpinMOtorAfterJustTaking = true;
-                isAfterIntakeBeenDownColecting = false;
+                if(outakeLeftMotor.getCurrentPosition() > -20){
+                    isAfterIntakeBeenDownColecting = false;
+                    isIntakeSpinMOtorAfterJustTaking = true;
+                    intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
+                }
+
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
             }
 
@@ -306,40 +317,36 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 }
             }
 
+            if(isInPositionToRaiseOuttakeInOrderToEvadeIntake && waitingForOuttakeToEvadeIntakeTimer + 150 < System.currentTimeMillis()){
+                intakeCabinDownCollecting();
+                if(!isInSpecimenState)
+                    outtakeTransfer();
+                isAfterIntakeBeenDownColecting = true;
+                isInPositionToRaiseOuttakeInOrderToEvadeIntake = false;
+            }
 
-            //weird stuff for hm outputting
-//            if(     gamepad2.b &&
-//                    (intakeCabinState == intakeCabinStates.intakeCabinFullInBot ||
-//                    intakeCabinState == intakeCabinStates.intakeCabinTransferPosition ||
-//                    intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting)
-//            ){
-//                if(isAfterBotHasBeenOutputting) {
-//                    tempIntakeTargetPastPosDifrence = intakePivotServoPos-15;
-//                    isIntakeInBotTimer = System.currentTimeMillis();
-//                    isAfterBotHasBeenOutputting = false;
-//                }
-//                if(isIntakeInBotTimer  + tempIntakeTargetPastPosDifrence * 3 < System.currentTimeMillis()){continue;}
-//            }
-//            if(!gamepad2.b){
-//                isAfterBotHasBeenOutputting = false;
-//            }
+
+
 
 
             if(!gamepad2.b){
                 isTimeToRefreshOutptingTime = true;
-                if(intakeState == intakeStates.intakeCabinFullInBotOutputting){
+                if(intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting){
                     intakeCabinFullInBot();
+                    outtakeSpecimenHang();
                 }
 
             } else {
-                if(isTimeToRefreshOutptingTime){
+                if (isTimeToRefreshOutptingTime) {
                     isTimeToRefreshOutptingTime = false;
-                    timeSinceStartedMovingForTruBotOutput = (intakePivotServoPos - 15) * 4 + System.currentTimeMillis();
+                    timeSinceStartedMovingForTruBotOutput = (long) (intakePivotServoPos - 15) * 4 + System.currentTimeMillis();
                     intakeCabinFullInBot();
-                } else if(System.currentTimeMillis() > timeSinceStartedMovingForTruBotOutput)
+                    outtakeSpecimenHang();
+                } else if (System.currentTimeMillis() > timeSinceStartedMovingForTruBotOutput) {
                     intakeCabinFullInBotOutputting();
-                } 
-            }
+                    outtakeSpecimenHang();
+                }
+            }//*/
 
             /*if(gamepad2.b){
                 if(isTimeToRefreshOutptingTime){

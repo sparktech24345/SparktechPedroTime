@@ -48,6 +48,7 @@ public class ClassWithStates {
         outtakeWallPickUpNew,
         outtakeTransfer,
         outtakeStandBy,
+        outtakeStandByWithoutExtensions,
     }
     public static outtakeStates outtakeState = outtakeStates.noStateSet;
 
@@ -128,7 +129,7 @@ public class ClassWithStates {
     }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
-        intakePivotServoPos = intakePivotServoTransferPos;
+        intakePivotServoPos = intakePivotServoOutputTruBotPos;
         intakeSpinMotorPow = 0;
     }
     public static void intakeCabinFullInBotOutputting(){
@@ -185,6 +186,12 @@ public class ClassWithStates {
         //TO BE MEASURED
     }
 
+    public static void outtakeStandByWithoutExtensions(){
+        outtakeState = outtakeStates.outtakeStandByWithoutExtensions;
+        outtakePivotServoPos = outtakePivotServoStandByPos;
+        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+    }
+
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
         if(!(colors.red >= 0.0015 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
@@ -211,7 +218,7 @@ public class ClassWithStates {
 
     //init method cuz why not
     public static void initStates() {
-        //outtakeStandByBasket();
+        outtakeStandByWithoutExtensions();
         intakeCabinFullInBot();
         intakeRetracted();
     }

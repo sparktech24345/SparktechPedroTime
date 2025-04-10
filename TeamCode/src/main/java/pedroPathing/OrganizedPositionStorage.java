@@ -44,7 +44,7 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
     public static double outtakePivotServoTransferPos = 210;
-    public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos + 20;
+    public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
 
 
     // outtake sliders
@@ -95,6 +95,7 @@ public class OrganizedPositionStorage {
     public static boolean isInCaseOfNotIntakeInBot = false;
     public static boolean isInSpecimenState = false;
     public static boolean isTimeToRefreshOutptingTime = false;
+    public static boolean isInPositionToRaiseOuttakeInOrderToEvadeIntake = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff
@@ -120,6 +121,7 @@ public class OrganizedPositionStorage {
     public static long isIntakeInBotTimer;
 
     public static long timeSinceStartedMovingForTruBotOutput;
+    public static long waitingForOuttakeToEvadeIntakeTimer;
 
 
 
