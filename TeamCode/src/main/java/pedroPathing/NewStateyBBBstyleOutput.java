@@ -325,6 +325,21 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 //            }
 
 
+            if(!gamepad2.b){
+                isTimeToRefreshOutptingTime = true;
+                if(intakeState == intakeStates.intakeCabinFullInBotOutputting){
+                    intakeCabinFullInBot();
+                }
+
+            } else {
+                if(isTimeToRefreshOutptingTime){
+                    isTimeToRefreshOutptingTime = false;
+                    timeSinceStartedMovingForTruBotOutput = (intakePivotServoPos - 15) * 4 + System.currentTimeMillis();
+                    intakeCabinFullInBot();
+                } else if(System.currentTimeMillis() > timeSinceStartedMovingForTruBotOutput)
+                    intakeCabinFullInBotOutputting();
+                } 
+            }
 
             /*if(gamepad2.b){
                 if(isTimeToRefreshOutptingTime){
