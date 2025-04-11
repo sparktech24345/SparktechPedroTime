@@ -194,7 +194,7 @@ public class ClassWithStates {
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
-        if(!(colors.red >= 0.0015 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
+        if(!(colors.red >= 0.0011 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
         if (colors.red > colors.blue && colors.red > colors.green)

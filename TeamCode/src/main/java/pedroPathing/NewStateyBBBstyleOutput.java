@@ -413,7 +413,19 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 chassisBackLeftPow /= slowyDownyAuto;
             }
 
+            // Toggle Claw on Y2
 
+            if(gamepad2.y){
+                isPressedY2 = true;
+            }
+            if(!gamepad2.y && isPressedY2){
+                if(outtakeClawServoPos == outtakeClawServoRetractedPos){
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                } else {
+                    outtakeClawServoPos = outtakeClawServoRetractedPos;
+                }
+                isPressedY2 = false;
+            }
 
 
 
