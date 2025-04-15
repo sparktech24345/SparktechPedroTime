@@ -24,6 +24,7 @@ package pedroPathing.tests;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -65,6 +66,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 @TeleOp(name = "Vision Color-Locator Teleop Testing", group = "Concept")
+@Disabled
 public class ConceptVisionColorLocatorTeleopTesting extends LinearOpMode
 {
     public static final ColorRange FTC_YELLOW = new ColorRange(

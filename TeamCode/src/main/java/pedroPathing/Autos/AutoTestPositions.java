@@ -56,7 +56,6 @@ import pedroPathing.constants.LConstants;
 
 
 @Autonomous(name = "AutoTestPositions", group = "Examples")
-@Disabled
 public class AutoTestPositions extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;

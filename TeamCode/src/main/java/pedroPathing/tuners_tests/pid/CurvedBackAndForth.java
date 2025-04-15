@@ -32,7 +32,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous (name = "Curved Back And Forth", group = "PIDF Testing")
-@Disabled
+//@Disabled
 public class CurvedBackAndForth extends OpMode {
     private Telemetry telemetryA;
 

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "ServoSet0", group = "Linear OpMode")
-
+@Disabled
 public class ServoSet0 extends LinearOpMode {
     private int pos=0;
 

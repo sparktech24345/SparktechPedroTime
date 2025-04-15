@@ -11,6 +11,7 @@ import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,6 +25,7 @@ import pedroPathing.ControlMotor;
 import pedroPathing.newOld.Toggle;
 
 @TeleOp(name = "ServoTestingAndDriveTrain", group = "Linear OpMode")
+@Disabled
 public class ServoTestingAndDriveTrain extends LinearOpMode {
     double intakeRotateServoPosition = 30;
     double outakeArmServoPosition = 90;

@@ -83,6 +83,7 @@ import static pedroPathing.newOld.Toggle.toggle_var;
 import android.graphics.Color;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -113,6 +114,7 @@ import pedroPathing.tests.Config;
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "BBStyleOutput", group = "Linear OpMode")
+@Disabled
 public class BBStyleOutput extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
