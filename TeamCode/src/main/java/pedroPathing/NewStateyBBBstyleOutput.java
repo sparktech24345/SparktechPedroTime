@@ -174,7 +174,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             }
 
 
-
             //BASKET SCORING
             if(gamepad1.x) isPressedX1 = true;
             if(!gamepad1.x && isPressedX1){
@@ -208,8 +207,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 }
             }
 
-
-
             //WALL PICK UP
             if(gamepad1.y) isPressedY1 = true;
             if(!gamepad1.y && isPressedY1){
@@ -219,16 +216,13 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 isPressedY1 = false;
             }
 
-
-
-
-
             ///SOME STUFF
 
             //auto retract
             if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting){
+                intakeRetracted();
                 //makins sure sample enetered the intake fully with a small timer
-                if(outakeLeftMotor.getCurrentPosition() > -20){
+                if(outakeLeftMotor.getCurrentPosition() > -50){
                     isAfterIntakeBeenDownColecting = false;
                     isIntakeSpinMOtorAfterJustTaking = true;
                     intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
@@ -239,7 +233,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
-                intakeRetracted();
+
                 intakeCabinTransferPosition();
                 if(!isInSpecimenState) {
                     outtakeTransfer();

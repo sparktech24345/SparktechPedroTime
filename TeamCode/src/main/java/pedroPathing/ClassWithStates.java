@@ -215,7 +215,6 @@ public class ClassWithStates {
         else return colorSensorOutty.correctSample;
     }
 
-
     //init method cuz why not
     public static void initStates() {
         outtakeStandByWithoutExtensions();
