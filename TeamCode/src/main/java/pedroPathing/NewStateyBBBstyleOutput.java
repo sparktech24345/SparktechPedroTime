@@ -30,7 +30,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
     SparkFunOTOS myOtos;
     NormalizedColorSensor colorSensor;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -144,6 +143,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 }
                 isPressedA1 = false;
             }
+
 
 
 
