@@ -145,6 +145,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             }
 
 
+            if(gamepad2.x) isPressedX2 = true;
+            if(!gamepad2.x && isPressedX2){
+                outtakeStandByWithoutExtensions();
+                isInPositionToRaiseOuttakeInOrderToEvadeIntake = false;
+                intakeRetracted();
+                intakeCabinTransferPosition();
+                isPressedX2 = false;
+            }
 
 
             //SPECIMEN
