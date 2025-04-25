@@ -22,7 +22,7 @@ import android.util.Size;
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
 @Disabled
 public class ServoTesting extends LinearOpMode {
-    double intakeRotateServoPosition = 30;
+    double intakeRotateServoPosition = 90;
     double outakeArmServoPosition = 90;
     double outakeSampleServoPosition = servoextended;
     //double outakeRotateServoPosition =161; // new 0

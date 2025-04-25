@@ -152,6 +152,12 @@ public class ClassWithStates {
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
     }
+    public static void autoOuttakeSpecimenHang(){
+        outtakeState = outtakeStates.outtakeSpecimenHang;
+        outtakePivotServoPos = outtakePivotServoHighRungHangPos;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakeExtendMotorTargetPos = autoOuttakeSliderSpecimenHangPos;
+    }
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
@@ -220,5 +226,12 @@ public class ClassWithStates {
         outtakeStandByWithoutExtensions();
         intakeCabinFullInBot();
         intakeRetracted();
+    }
+
+    //wait method cuz why not
+
+    public static void waitWhile(int timeToWait) {
+        long iniTime = System.currentTimeMillis();
+        while(iniTime + timeToWait < System.currentTimeMillis()){}
     }
 }
