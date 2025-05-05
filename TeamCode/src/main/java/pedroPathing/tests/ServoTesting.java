@@ -20,7 +20,7 @@ import static pedroPathing.newOld.PositionStorage.*;
 import android.util.Size;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
-@Disabled
+
 public class ServoTesting extends LinearOpMode {
     double intakeRotateServoPosition = 90;
     double outakeArmServoPosition = 90;

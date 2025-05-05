@@ -37,10 +37,11 @@ public class OrganizedPositionStorage {
 
     //outtake claw
     public static double outtakeClawServoExtendedPos = 80;
+    public static double outtakeClawServoExtraExtendedPos = 200;
     public static double outtakeClawServoRetractedPos = 12;
 
     // outtake pivot
-    public static double outtakePivotServoWallPickupPos = 305;
+    public static double outtakePivotServoWallPickupPos = 300;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
     public static double outtakePivotServoTransferPos = 210;
@@ -52,7 +53,7 @@ public class OrganizedPositionStorage {
     public static double outtakeMotorMaxPos = 2038;
     public static double outtakeSliderSpecimenHangPos = 1100;
     public static double autoOuttakeSliderSpecimenHangPos = 950;
-    public static double outtakeSlidersWallPickPos = 680;
+    public static double outtakeSlidersWallPickPos = 690;
     public static double outtakeMotorActualZeroPos = 0;
     public static double outtakeMotorStandByPos = 1000;
 
@@ -106,6 +107,7 @@ public class OrganizedPositionStorage {
     public static boolean isAtStateOfLettingBasketSampleGo = false;
     public static boolean isInNeedToGoToSpecimenTransferPos = false;
     public static boolean isOuttakeInPositionToGoDown = false;
+    public static boolean outtakeIsInNeedToExtraExtendClaw = false;
 
 
 
@@ -135,6 +137,7 @@ public class OrganizedPositionStorage {
     public static long outtakeAfterBasketSampleScoreTimer;
     public static long outtakeAfterHasClosedClawAtWallSpecimenTimer;
     public static long beforeOuttakeGoDownTimer;
+    public static long outtakeIsInNeedToExtraExtendClawTimer;
 
 
 
@@ -181,6 +184,7 @@ public class OrganizedPositionStorage {
         isAfterOuttakeScoredBasketSample = false;
         isAfterOuttakeClosedClawAtWallSpecimen = false;
         isAtStateOfLettingBasketSampleGo = false;
+        outtakeIsInNeedToExtraExtendClaw = false;
 
         // LONGS / TIMERS
         outtakeSpecimenAfterScoreTimer = 0;

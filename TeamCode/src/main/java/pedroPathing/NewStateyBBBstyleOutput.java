@@ -180,6 +180,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 outtakeWallPickUpNew();
                 isAfterOuttakeScoredSpecimen = false;
             }
+            if(outtakeIsInNeedToExtraExtendClaw && outtakeIsInNeedToExtraExtendClawTimer + 650 < System.currentTimeMillis()){
+                outtakeIsInNeedToExtraExtendClaw = false;
+                outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
+            }
 
 
             //BASKET SCORING
@@ -396,7 +400,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //slowdown
             double slowyDownyManal = 2.5;
-            double slowyDownyAuto = 1.75;
+            double slowyDownyAuto = 1.4;
 
             //manual slowdown
             if(gamepad1.right_bumper){

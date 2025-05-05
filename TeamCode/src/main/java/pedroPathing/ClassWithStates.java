@@ -175,6 +175,8 @@ public class ClassWithStates {
         //outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
         isInNeedToGoToSpecimenTransferPos = true;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeIsInNeedToExtraExtendClaw = true;
+        outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
     public static void outtakeTransfer(){
