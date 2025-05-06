@@ -236,18 +236,26 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 //makins sure sample enetered the intake fully with a small timer
                 if(outakeLeftMotor.getCurrentPosition() > -50){
                     isAfterIntakeBeenDownColecting = false;
-                    isIntakeSpinMOtorAfterJustTaking = true;
+                    isIntakeSpinMOtorAfterJustTakingExtraExtra = true;
                     intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
                 }
 
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
             }
-
+            if(isIntakeSpinMOtorAfterJustTakingExtraExtra){
+                intakeCabinTransferPosition();
+                intakeSpinMotorPow = 1;
+            }
+            if(isIntakeSpinMOtorAfterJustTakingExtraExtra && intakeSpinMotorMorePowerAfterTakingTimer + 600 < System.currentTimeMillis()){
+                isIntakeSpinMOtorAfterJustTakingExtraExtra = false;
+                isIntakeSpinMOtorAfterJustTaking = true;
+                intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
+            }
 
             if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
 
                 intakeCabinTransferPosition();
-                if(!isInSpecimenState) {
+                if((!isInSpecimenState && currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
                     outtakeTransfer();
                     basketStandbyState++;
                 }
@@ -258,7 +266,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 outtakeClawServoPos = outtakeClawServoRetractedPos;
                 basketStandbyState++;
             }
-            if(basketStandbyState == 2 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 1000 < System.currentTimeMillis()) {
+            if(basketStandbyState == 2 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 500 < System.currentTimeMillis()) {
                 //outtakeClawServoPos = outtakeClawServoRetractedPos;
                 basketStandbyState++;
                 outtakeSpecimenHang();
