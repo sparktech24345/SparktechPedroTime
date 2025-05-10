@@ -32,7 +32,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous (name = "Straight Back And Forth", group = "PIDF Tuning")
-@Disabled
+//@Disabled
 public class StraightBackAndForth extends OpMode {
     private Telemetry telemetryA;
 

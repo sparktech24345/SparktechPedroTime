@@ -31,7 +31,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Forward Localizer Tuner", group = ".Localization")
-@Disabled
+//@Disabled
 public class ForwardTuner extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;

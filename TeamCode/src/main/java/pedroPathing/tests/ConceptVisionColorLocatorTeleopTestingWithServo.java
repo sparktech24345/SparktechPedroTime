@@ -27,6 +27,7 @@ import static pedroPathing.newOld.PositionStorage.intakeTargetPosAdder;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -73,6 +74,7 @@ import pedroPathing.ControlMotor;
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Vision Color-Locator Teleop TestingWITHSERVO", group = "Concept")
+@Disabled
 public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMode
 {
     public static final ColorRange FTC_YELLOW = new ColorRange(

@@ -36,11 +36,6 @@ public class ControlMotor {
         //return ((error*kp)+(derivative*kd)+(integralSum *ki)+(targetPosition*kf));
     }
 
-    public double PIDNew(double targetPosition, double currentPosition){
-        double remainingDistance = targetPosition - currentPosition;
-        double ratioOfDist = remainingDistance / (targetPosition - currentPosition);
-        return ratioOfDist;
-    }
 
     public double PIDControlUppy(double targetPosition, double curentPosition){
         double error= targetPosition - curentPosition;

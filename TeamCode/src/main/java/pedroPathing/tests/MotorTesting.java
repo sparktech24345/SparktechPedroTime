@@ -8,6 +8,7 @@ import static pedroPathing.newOld.PositionStorage.resetStuff;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import pedroPathing.ControlMotor;
 
 @TeleOp(name = "Motor Testing", group = "Linear OpMode")
+@Disabled
 public class MotorTesting extends LinearOpMode {
 
     @Override

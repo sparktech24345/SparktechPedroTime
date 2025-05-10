@@ -1,6 +1,8 @@
 package pedroPathing.tests;
 
 
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,7 +26,7 @@ public class ServoSet0 extends LinearOpMode {
             if(gamepad1.b) pos--;
             outakeArmServo.setPosition(pos);
             intakeRotateServo.setPosition(0);
-            outakeSampleServo.setPosition(0);
+            outakeSampleServo.setPosition((double) 20 / 360);
             telemetry.addData("position outakeArmServo", outakeArmServo.getPosition());
             telemetry.addData("position intakeRotateServo", intakeRotateServo.getPosition());
             telemetry.addData("position outakeSampleServo", outakeSampleServo.getPosition());

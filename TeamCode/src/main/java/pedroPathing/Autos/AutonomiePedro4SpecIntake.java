@@ -24,6 +24,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -56,6 +57,7 @@ import pedroPathing.constants.LConstants;
 
 
 @Autonomous(name = "AutonomiePedroFOURSpecIntake", group = "Examples")
+@Disabled
 public class AutonomiePedro4SpecIntake extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;

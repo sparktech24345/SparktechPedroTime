@@ -48,6 +48,7 @@ public class ClassWithStates {
         outtakeWallPickUpNew,
         outtakeTransfer,
         outtakeStandBy,
+        outtakeStandByWithoutExtensions,
     }
     public static outtakeStates outtakeState = outtakeStates.noStateSet;
 
@@ -128,7 +129,7 @@ public class ClassWithStates {
     }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
-        intakePivotServoPos = intakePivotServoTransferPos;
+        intakePivotServoPos = intakePivotServoOutputTruBotPos;
         intakeSpinMotorPow = 0;
     }
     public static void intakeCabinFullInBotOutputting(){
@@ -151,6 +152,12 @@ public class ClassWithStates {
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
     }
+    public static void autoOuttakeSpecimenHang(){
+        outtakeState = outtakeStates.outtakeSpecimenHang;
+        outtakePivotServoPos = outtakePivotServoHighRungHangPos;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakeExtendMotorTargetPos = autoOuttakeSliderSpecimenHangPos;
+    }
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
@@ -168,6 +175,8 @@ public class ClassWithStates {
         //outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
         isInNeedToGoToSpecimenTransferPos = true;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeIsInNeedToExtraExtendClaw = true;
+        outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
     public static void outtakeTransfer(){
@@ -178,16 +187,22 @@ public class ClassWithStates {
         isOuttakeInPositionToGoDown = true;
         beforeOuttakeGoDownTimer = System.currentTimeMillis();
     }
-    public static void outtakeStandBy(){
+    public static void outtakeStandByBasket(){
         outtakeState = outtakeStates.outtakeStandBy;
         outtakePivotServoPos = outtakePivotServoStandByPos;
-        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+        outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
         //TO BE MEASURED
+    }
+
+    public static void outtakeStandByWithoutExtensions(){
+        outtakeState = outtakeStates.outtakeStandByWithoutExtensions;
+        outtakePivotServoPos = outtakePivotServoStandByPos;
+        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
     }
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
-        if(!(colors.red >= 0.0015 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
+        if(!(colors.red >= 0.0011 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
         if (colors.red > colors.blue && colors.red > colors.green)
@@ -208,11 +223,17 @@ public class ClassWithStates {
         else return colorSensorOutty.correctSample;
     }
 
-
     //init method cuz why not
     public static void initStates() {
-        outtakeStandBy();
+        outtakeStandByWithoutExtensions();
         intakeCabinFullInBot();
         intakeRetracted();
+    }
+
+    //wait method cuz why not
+
+    public static void waitWhile(int timeToWait) {
+        long iniTime = System.currentTimeMillis();
+        while(iniTime + timeToWait < System.currentTimeMillis()){}
     }
 }

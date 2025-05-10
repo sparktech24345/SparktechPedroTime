@@ -14,6 +14,9 @@ import static pedroPathing.newOld.PositionStorage.outakeTargetPosAdder;
 import static pedroPathing.newOld.PositionStorage.servoextended;
 import static pedroPathing.newOld.PositionStorage.stopMulthiread;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
@@ -21,6 +24,7 @@ import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
+import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -30,6 +34,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,12 +60,12 @@ import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
-
+@Config
 @Autonomous(name = "AutoTestPositions", group = "Examples")
-@Disabled
 public class AutoTestPositions extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
+    private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
     // Initialize Outtake states
@@ -102,7 +108,7 @@ public class AutoTestPositions extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(1, 70, Math.toRadians(90)); //start
+    private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     private final Pose FirstSampleScorePose = new Pose(1, 85, Math.toRadians(90)); //line 1
     private final Pose SecondSamplePickUP=new Pose(1,87,Math.toRadians(180)); //line 2 //old 124
     private final Pose SecondSampleScore=new Pose(5,78,Math.toRadians(145)); //line 3
@@ -251,22 +257,6 @@ public class AutoTestPositions extends OpMode {
         pathTimer.resetTimer();
     }
 
-    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
-    @Override
-    public void loop() {
-
-        // These loop the movements of the robot
-        follower.update();
-        autonomousPathUpdate();
-
-        // Feedback to Driver Hub
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.addData("intakerotate",intakeRotateServoPosition);
-        telemetry.update();
-    }
 
     /** This method is called once at the init of the OpMode. **/
     @Override
@@ -276,17 +266,10 @@ public class AutoTestPositions extends OpMode {
         opmodeTimer.resetTimer();
 
 
-
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
         buildPaths();
-
-        intakeFSM.setState(outakeHMandWallPU);
-        intakeFSM.executeCurrentState();
-        outtakeFSM.setState(outtakeStateStandbyWithSampleUp);
-        outtakeFSM.executeCurrentState();
-        intakeRotateServoPosition = 128;
 
 
         // our stuff
@@ -326,7 +309,7 @@ public class AutoTestPositions extends OpMode {
                     intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
                     outakeMotorPower = outakeControlMotor.PIDControlUppy(outakeTargetPos-outakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
                     outakeMotorPower *= PIDincrement;
-
+                    /*
                     intakeMotor.setPower(intakeMotorPower);
                     outakeRightMotor.setPower(outakeMotorPower);
                     outakeLeftMotor.setPower(outakeMotorPower);
@@ -352,6 +335,29 @@ public class AutoTestPositions extends OpMode {
         //*/
         //end of our stuff
     }
+
+
+    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
+    @Override
+    public void loop() {
+
+        // These loop the movements of the robot
+        follower.update();
+        autonomousPathUpdate();
+        //tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+        //follower.telemetryDebug(tel);
+        Drawing.drawDebug(follower);
+
+        // Feedback to Driver Hub
+        tel.addData("path state", pathState);
+        tel.addData("x", follower.getPose().getX());
+        tel.addData("y", follower.getPose().getY());
+        tel.addData("heading", follower.getPose().getHeading());
+        tel.addData("intakerotate",intakeRotateServoPosition);
+        tel.update();
+    }
+
+
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override

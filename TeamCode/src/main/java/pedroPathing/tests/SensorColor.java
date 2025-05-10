@@ -43,6 +43,12 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+import static pedroPathing.ClassWithStates.ColorCompare;
+import static pedroPathing.ClassWithStates.colorSensorOutty;
+import static pedroPathing.ClassWithStates.colorList;
+
+import pedroPathing.ClassWithStates;
+
 /*
  * This OpMode shows how to use a color sensor in a generic
  * way, regardless of which particular make or model of color sensor is used. The OpMode
@@ -67,7 +73,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @TeleOp(name = "Sensor: Color", group = "Sensor")
-@Disabled
 public class SensorColor extends LinearOpMode {
 
   /** The colorSensor field will contain a reference to our color sensor hardware object */
@@ -184,6 +189,7 @@ public class SensorColor extends LinearOpMode {
 
       // Get the normalized colors from the sensor
       NormalizedRGBA colors = colorSensor.getNormalizedColors();
+      colorSensorOutty sampleStatus = ColorCompare(colors, colorList.teamNotSet, false);
 
       /* Use telemetry to display feedback on the driver station. We show the red, green, and blue
        * normalized values from the sensor (in the range of 0 to 1), as well as the equivalent
@@ -202,6 +208,7 @@ public class SensorColor extends LinearOpMode {
               .addData("Saturation", "%.3f", hsvValues[1])
               .addData("Value", "%.3f", hsvValues[2]);
       telemetry.addData("Alpha", "%.3f", colors.alpha);
+      telemetry.addLine().addData("Sample Status: ", sampleStatus);
 
       /* If this color sensor also has a distance sensor, display the measured distance.
        * Note that the reported distance is only useful at very close range, and is impacted by

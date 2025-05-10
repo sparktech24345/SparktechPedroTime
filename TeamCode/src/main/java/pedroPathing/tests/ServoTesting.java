@@ -2,6 +2,7 @@ package pedroPathing.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,8 +20,9 @@ import static pedroPathing.newOld.PositionStorage.*;
 import android.util.Size;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
+
 public class ServoTesting extends LinearOpMode {
-    double intakeRotateServoPosition = 30;
+    double intakeRotateServoPosition = 90;
     double outakeArmServoPosition = 90;
     double outakeSampleServoPosition = servoextended;
     //double outakeRotateServoPosition =161; // new 0

@@ -31,7 +31,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Turn Localizer Tuner", group = ".Localization")
-@Disabled
+//@Disabled
 public class TurnTuner extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;
