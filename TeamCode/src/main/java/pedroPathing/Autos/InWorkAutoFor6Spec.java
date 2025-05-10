@@ -48,7 +48,7 @@ public class InWorkAutoFor6Spec extends OpMode {
     private int pathState;
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
-    private final Pose scoringBarPose = new Pose(-5.4, 37, Math.toRadians(90)); //start
+    private final Pose scoringBarPose = new Pose(-5.4, 41, Math.toRadians(90)); //start
     private final Pose specimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
     private final Pose firstSamplePickUpPos = new Pose(-50, 49, Math.toRadians(90)); //start
     private final Pose secondSamplePickUpPos = new Pose(-61, 49, Math.toRadians(90)); //start
@@ -186,6 +186,9 @@ public class InWorkAutoFor6Spec extends OpMode {
             case 3:
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
+                    intakeCabinDownCollecting();
+                    intakeExtended2out4();
+                    //if()
                     follower.followPath(goToPickUpSecondSample,true);
                     setPathState(4);
                 }

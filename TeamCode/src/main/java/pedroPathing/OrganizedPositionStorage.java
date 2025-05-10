@@ -1,4 +1,5 @@
 package pedroPathing;
+import pedroPathing.newOld.Toggle;
 
 @com.acmerobotics.dashboard.config.Config
 public class OrganizedPositionStorage {
@@ -17,6 +18,7 @@ public class OrganizedPositionStorage {
     public static double intakeSpinMotorPow;
     public static double intakeExtendMotorTargetPos=0;
     public static double intakeTargetPosAdder;
+    public static double intakeGravitySubtractor=0;
 
     // outtake
     public static double outtakePivotServoPos;
@@ -44,7 +46,7 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoWallPickupPos = 300;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
-    public static double outtakePivotServoTransferPos = 210;
+    public static double outtakePivotServoTransferPos = 215;
     public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
 
 
@@ -62,7 +64,7 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 210;
+    public static double intakePivotServoPickupPos = 207;
     public static double intakePivotServoOutputTruBotPos = 15;
     public static double intakePivotServoTransferPos = 135;
     public static double tempIntakeTargetPastPosDifrence = 135;
@@ -147,6 +149,9 @@ public class OrganizedPositionStorage {
 
 
     public static void resetStuff() {
+        //toggles
+        Toggle.toggled = false;
+        Toggle.toggle_var = false;
         // MISC
         PIDincrement = 0;
         gravityAdder = 0;
@@ -155,6 +160,7 @@ public class OrganizedPositionStorage {
         intakePivotServoPos = intakePivotServoTransferPos;
         intakeExtendMotorTargetPos = 0;
         intakeTargetPosAdder = 0;
+        intakeGravitySubtractor = 0;
 
         // outtake
         outtakePivotServoPos = outtakePivotServoTransferPos;

@@ -82,22 +82,27 @@ public class ClassWithStates {
     public static void intakeExtended4out4(){
         intakeState = intakeStates.intakeExtended4out4;
         intakeExtendMotorTargetPos = 510;
+        intakeGravitySubtractor =8;
     }
     public static void intakeExtended3out4(){
         intakeState = intakeStates.intakeExtended3out4;
         intakeExtendMotorTargetPos = 377;
+        intakeGravitySubtractor =6;
     }
     public static void intakeExtended2out4(){
         intakeState = intakeStates.intakeExtended2out4;
         intakeExtendMotorTargetPos = 245;
+        intakeGravitySubtractor =4;
     }
     public static void intakeExtended1out4(){
         intakeState = intakeStates.intakeExtended1out4;
         intakeExtendMotorTargetPos = 112;
+        intakeGravitySubtractor =2;
     }
     public static void intakeRetracted(){
         intakeState = intakeStates.intakeRetracted;
         intakeExtendMotorTargetPos = 0;
+        intakeGravitySubtractor =0;
     }
 
 
