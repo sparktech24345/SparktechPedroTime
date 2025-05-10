@@ -29,6 +29,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
     ControlMotor outakeControlMotor;
     SparkFunOTOS myOtos;
     NormalizedColorSensor colorSensor;
+    Queuer queuer = new Queuer();
 
 
     @Override
