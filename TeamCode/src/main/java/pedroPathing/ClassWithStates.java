@@ -127,6 +127,11 @@ public class ClassWithStates {
         intakePivotServoPos = intakePivotServoTransferPos;
         intakeSpinMotorPow = 0;
     }
+    public static void intakeCabinTransferPositionWithPower(){
+        intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
+        intakePivotServoPos = intakePivotServoTransferPos;
+        intakeSpinMotorPow = 1;
+    }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
         intakePivotServoPos = intakePivotServoOutputTruBotPos;

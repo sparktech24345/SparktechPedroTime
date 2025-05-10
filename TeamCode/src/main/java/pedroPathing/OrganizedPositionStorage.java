@@ -73,6 +73,7 @@ public class OrganizedPositionStorage {
 
     //misc
     public static boolean isYellowSampleNotGood = false;
+    public static boolean reverseGamepad2 = false;
 
 
     //is pressed
@@ -108,6 +109,8 @@ public class OrganizedPositionStorage {
     public static boolean isInNeedToGoToSpecimenTransferPos = false;
     public static boolean isOuttakeInPositionToGoDown = false;
     public static boolean outtakeIsInNeedToExtraExtendClaw = false;
+    public static boolean isOuttakeInPositionToCloseClawForTransfer = false;
+    public static boolean isOuttakeInPositionToGoToStandBy = false;
 
 
 
@@ -138,6 +141,8 @@ public class OrganizedPositionStorage {
     public static long outtakeAfterHasClosedClawAtWallSpecimenTimer;
     public static long beforeOuttakeGoDownTimer;
     public static long outtakeIsInNeedToExtraExtendClawTimer;
+    public static long outtakeCloseClawInTransferTimer;
+    public static long outtakeGoToStandByTimer;
 
 
 
@@ -159,6 +164,7 @@ public class OrganizedPositionStorage {
 
         // BOOLEANS
         isYellowSampleNotGood = false;
+        reverseGamepad2 = false;
 
         // is pressed
         isPressedA1 = false;
@@ -185,6 +191,8 @@ public class OrganizedPositionStorage {
         isAfterOuttakeClosedClawAtWallSpecimen = false;
         isAtStateOfLettingBasketSampleGo = false;
         outtakeIsInNeedToExtraExtendClaw = false;
+        isOuttakeInPositionToCloseClawForTransfer = false;
+        isOuttakeInPositionToGoToStandBy = false;
 
         // LONGS / TIMERS
         outtakeSpecimenAfterScoreTimer = 0;

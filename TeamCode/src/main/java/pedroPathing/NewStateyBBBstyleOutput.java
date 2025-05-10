@@ -3,10 +3,13 @@ package pedroPathing;
 
 import static pedroPathing.OrganizedPositionStorage.*;
 import static pedroPathing.ClassWithStates.*;
+import pedroPathing.newOld.Toggle;
 
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -15,6 +18,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.tests.Config;
 
@@ -30,6 +35,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
     SparkFunOTOS myOtos;
     NormalizedColorSensor colorSensor;
     Queuer queuer = new Queuer();
+    private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,7 +74,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        Config.configureOtos(telemetry, myOtos);
+        Config.configureOtos(tel, myOtos);
 
 
         intakeControlMotor = new ControlMotor();
@@ -108,6 +114,24 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 currentTeam = colorList.red;
 
 
+            //problem with dashboard stick
+            if(gamepad2.right_trigger >= 0.4 && gamepad2.left_trigger >= 0.4) reverseGamepad2=true;
+
+            if(reverseGamepad2) pivot = -gamepad1.right_stick_y;
+
+
+
+            //selectare mod de control, reversing bot
+            if(Toggle.FirsToggle(gamepad1.right_trigger >= 0.4 && gamepad1.left_trigger >= 0.4)){
+                vertical = -vertical;
+                horizontal = -horizontal;
+                pivot = -pivot;
+            }
+
+
+
+
+            //color compare for intake
             currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
 
@@ -115,10 +139,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             ///CONTROLS
 
             //PICK UP
-            /*
-            double timeAtTransfer = 0;
-            boolean isYetToGrab = false;
-            */
             if(gamepad1.a) isPressedA1 = true;
             if(!gamepad1.a && isPressedA1){
                 if(intakeCabinState == intakeCabinStates.intakeCabinFullInBot && (intakeState==intakeStates.intakeRetracted || intakeState == intakeStates.intakeExtended1out4)){
@@ -136,8 +156,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeRetracted();
                     intakeCabinTransferPosition();
                     if(!isInSpecimenState) {
-                        isIntakeSpinMOtorAfterJustTaking = true;
-                        intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
                         outtakeTransfer();
                     }
                     isAfterIntakeBeenDownColecting = false;
@@ -233,18 +251,46 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //auto retract
             if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting){
+                //retracting the thing WITH POWER
                 intakeRetracted();
-                //makins sure sample enetered the intake fully with a small timer
-                if(outakeLeftMotor.getCurrentPosition() > -50){
-                    isAfterIntakeBeenDownColecting = false;
-                    isIntakeSpinMOtorAfterJustTaking = true;
-                    intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
-                }
-
-                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                intakeCabinTransferPositionWithPower();
+                if(!isInSpecimenState) outtakeTransfer();
+                isAfterIntakeBeenDownColecting= false;
+                intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
+                isIntakeSpinMOtorAfterJustTaking  = true;
             }
 
+            //stopping the moving intake
+            if(isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 600 < System.currentTimeMillis()){
+                //if needs transfer
+                if(!isInSpecimenState){
+                    intakeCabinTransferPosition();
+                    outtakeCloseClawInTransferTimer = System.currentTimeMillis();
+                    isOuttakeInPositionToCloseClawForTransfer = true;
+                }
 
+                //if in specimen mode
+                else intakeCabinFullInBot();
+
+                //false
+                isIntakeSpinMOtorAfterJustTaking = false;
+            }
+
+            //closing the claw
+            if(isOuttakeInPositionToCloseClawForTransfer && outtakeCloseClawInTransferTimer + 150 < System.currentTimeMillis()){
+                outtakeClawServoPos = outtakeClawServoRetractedPos;
+                isOuttakeInPositionToCloseClawForTransfer = false;
+                outtakeGoToStandByTimer = System.currentTimeMillis();
+                isOuttakeInPositionToGoToStandBy = true;
+            }
+
+            //wait for the claw to close, then go to standBy
+            if(isOuttakeInPositionToGoToStandBy && outtakeGoToStandByTimer + 175 < System.currentTimeMillis()){
+                outtakeSpecimenHang();
+                isOuttakeInPositionToGoToStandBy = false;
+            }
+
+            /*
             if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
 
                 intakeCabinTransferPosition();
@@ -267,7 +313,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 basketStandbyState = 0;
                 //outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
 
-            }
+            }//*/
 
 
             //auto eject
@@ -353,27 +399,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeCabinFullInBotOutputting();
                     outtakeSpecimenHang();
                 }
-            }//*/
-
-            /*if(gamepad2.b){
-                if(isTimeToRefreshOutptingTime){
-                    timeSinceStartedMovingForTruBotOutput = System.currentTimeMillis();
-                    isTimeToRefreshOutptingTime = false;
-                }
-                if(!(intakeCabinState == intakeCabinStates.intakeCabinFullInBot)) {
-                    intakeCabinFullInBot();
-                    outtakeSpecimenHang();
-                } else if (timeSinceStartedMovingForTruBotOutput + 1000 < System.currentTimeMillis() ){
-                        intakeSpinMotorPow = -1;
-                    }
             }
-            else if (intakeCabinState == intakeCabinStates.intakeCabinFullInBot){
-                    isTimeToRefreshOutptingTime = true;
-                    intakeCabinFullInBot();
-                    outtakeTransfer();
-                    intakeSpinMotorPow = 0;
-                }//*/
 
+
+            //selecting specimen state or not
             if(gamepad2.a) isPressedA2 = true;
             if(!gamepad2.a && isPressedA2){
                 isInSpecimenState = !isInSpecimenState;
@@ -411,9 +440,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 chassisBackLeftPow /= slowyDownyManal;
             }
             //auto slowdown
-            else if(outtakeState == outtakeStates.outtakeBasket ||
-                    outtakeState == outtakeStates.outtakeWallPickUpNew ||
-                    outtakeState == outtakeStates.outtakeSpecimenHang){
+            else if(outtakeState == outtakeStates.outtakeBasket
+                    || outtakeState == outtakeStates.outtakeWallPickUpNew
+                    //|| outtakeState == outtakeStates.outtakeSpecimenHang
+            ){
                 chassisFrontLeftPow /= slowyDownyAuto;
                 chassisBackRightPow /= slowyDownyAuto;
                 chassisFrontRightPow /= slowyDownyAuto;
@@ -453,19 +483,19 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
-            telemetry.addData("intakeSliderState",intakeState);
-            telemetry.addData("intakeCabinState",intakeCabinState);
-            telemetry.addData("outtakeState",outtakeState);
-            telemetry.addData("color stuff",currentStateOfSampleInIntake);
-            telemetry.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
-            telemetry.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
-            telemetry.addData("intakeRotateServoPosition", intakePivotServoPos);
-            telemetry.addData("intakeExtendMotorPow",intakeExtendMotorPow);
-            telemetry.addData("outakeMotorPow",outtakeExtendMotorPow);
-            telemetry.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-            telemetry.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
+            tel.addData("intakeSliderState",intakeState);
+            tel.addData("intakeCabinState",intakeCabinState);
+            tel.addData("outtakeState",outtakeState);
+            tel.addData("color stuff",currentStateOfSampleInIntake);
+            tel.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
+            tel.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
+            tel.addData("intakeRotateServoPosition", intakePivotServoPos);
+            tel.addData("intakeExtendMotorPow",intakeExtendMotorPow);
+            tel.addData("outakeMotorPow",outtakeExtendMotorPow);
+            tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+            tel.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
 
-            updateTelemetry(telemetry);
+            tel.update();
         }
 
     }
