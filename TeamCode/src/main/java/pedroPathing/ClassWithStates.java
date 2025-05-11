@@ -242,8 +242,8 @@ public class ClassWithStates {
 
     //wait method cuz why not
 
-    public static void waitWhile(int timeToWait) {
+    /*public void waitWhile(int timeToWait) {
         long iniTime = System.currentTimeMillis();
         while(iniTime + timeToWait < System.currentTimeMillis()){}
-    }
+    }*/
 }

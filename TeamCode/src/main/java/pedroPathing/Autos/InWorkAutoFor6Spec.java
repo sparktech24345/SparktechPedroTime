@@ -3,6 +3,8 @@ package pedroPathing.Autos;
 import static pedroPathing.ClassWithStates.*;
 import static pedroPathing.OrganizedPositionStorage.*;
 
+import android.graphics.Color;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -21,6 +23,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -35,6 +38,7 @@ public class InWorkAutoFor6Spec extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+    final float[] hsvValues = new float[3];
     private DcMotor intakeMotor;
     private DcMotor outakeLeftMotor;
     private DcMotor outakeRightMotor;
@@ -188,9 +192,17 @@ public class InWorkAutoFor6Spec extends OpMode {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
                     intakeExtended2out4();
-                    //if()
-                    follower.followPath(goToPickUpSecondSample,true);
-                    setPathState(4);
+                    if(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)){
+                        intakeCabinDownOutputting();
+                        waitWhile(150);
+                        intakeCabinDownCollecting();
+                    }
+                    else{
+                        intakeRetracted();
+                        waitWhile(100);
+                        follower.followPath(goToPickUpSecondSample,true);
+                        setPathState(4);
+                    }
                 }
                 break;
 
@@ -330,6 +342,8 @@ public class InWorkAutoFor6Spec extends OpMode {
     /** This method is called once at the init of the OpMode. **/
     @Override
     public void init() {
+        resetStuff();
+
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
@@ -357,6 +371,8 @@ public class InWorkAutoFor6Spec extends OpMode {
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
+        isYellowSampleNotGood = true;
+
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -369,7 +385,7 @@ public class InWorkAutoFor6Spec extends OpMode {
 
         // Set init position
         initStates();
-        intakeRotateServo.setPosition(intakePivotServoPos / 228);
+        intakeRotateServo.setPosition(intakePivotServoPos-intakeGravitySubtractor / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
         //end of our stuff
@@ -377,6 +393,11 @@ public class InWorkAutoFor6Spec extends OpMode {
 
 
     public void robotDoStuff(){
+
+        //color stuff
+        NormalizedRGBA colors = colorSensor.getNormalizedColors();
+        Color.colorToHSV(colors.toColor(), hsvValues);
+        currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
         //PID Stuff
         intakeMotorPower = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
@@ -392,6 +413,14 @@ public class InWorkAutoFor6Spec extends OpMode {
         intakeRotateServo.setPosition((intakePivotServoPos) / 360);
         outakeArmServo.setPosition(outtakePivotServoPos / 360);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+    }
+
+
+    public void waitWhile(int timeToWait) {
+        long iniTime = System.currentTimeMillis();
+        while(iniTime + timeToWait < System.currentTimeMillis()){
+            robotDoStuff();
+        }
     }
 
 
@@ -423,7 +452,12 @@ public class InWorkAutoFor6Spec extends OpMode {
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
-    public void init_loop() {}
+    public void init_loop() {
+        if ((gamepad2.left_bumper && gamepad2.start) || (gamepad1.left_bumper && gamepad1.start))
+            currentTeam = colorList.blue;
+        if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
+            currentTeam = colorList.red;
+    }
 
     /** This method is called once at the start of the OpMode.
      * It runs all the setup actions, including building paths and starting the path system **/
