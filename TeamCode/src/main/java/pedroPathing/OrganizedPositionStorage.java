@@ -1,4 +1,5 @@
 package pedroPathing;
+
 import pedroPathing.newOld.Toggle;
 
 @com.acmerobotics.dashboard.config.Config
@@ -18,7 +19,7 @@ public class OrganizedPositionStorage {
     public static double intakeSpinMotorPow;
     public static double intakeExtendMotorTargetPos=0;
     public static double intakeTargetPosAdder;
-    public static double intakeGravitySubtractor=0;
+    public static double intakeGravitySubtractor;
 
     // outtake
     public static double outtakePivotServoPos;
@@ -39,14 +40,14 @@ public class OrganizedPositionStorage {
 
     //outtake claw
     public static double outtakeClawServoExtendedPos = 80;
-    public static double outtakeClawServoExtraExtendedPos = 200;
+    public static double outtakeClawServoExtraExtendedPos = 150;
     public static double outtakeClawServoRetractedPos = 12;
 
     // outtake pivot
-    public static double outtakePivotServoWallPickupPos = 300;
+    public static double outtakePivotServoWallPickupPos = 305;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
-    public static double outtakePivotServoTransferPos = 215;
+    public static double outtakePivotServoTransferPos = 210;
     public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
 
 
@@ -55,7 +56,7 @@ public class OrganizedPositionStorage {
     public static double outtakeMotorMaxPos = 2038;
     public static double outtakeSliderSpecimenHangPos = 1100;
     public static double autoOuttakeSliderSpecimenHangPos = 950;
-    public static double outtakeSlidersWallPickPos = 690;
+    public static double outtakeSlidersWallPickPos = 680;
     public static double outtakeMotorActualZeroPos = 0;
     public static double outtakeMotorStandByPos = 1000;
 
@@ -64,7 +65,7 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 207;
+    public static double intakePivotServoPickupPos = 200;
     public static double intakePivotServoOutputTruBotPos = 15;
     public static double intakePivotServoTransferPos = 135;
     public static double tempIntakeTargetPastPosDifrence = 135;
@@ -75,7 +76,6 @@ public class OrganizedPositionStorage {
 
     //misc
     public static boolean isYellowSampleNotGood = false;
-    public static boolean reverseGamepad2 = false;
 
 
     //is pressed
@@ -110,9 +110,7 @@ public class OrganizedPositionStorage {
     public static boolean isAtStateOfLettingBasketSampleGo = false;
     public static boolean isInNeedToGoToSpecimenTransferPos = false;
     public static boolean isOuttakeInPositionToGoDown = false;
-    public static boolean outtakeIsInNeedToExtraExtendClaw = false;
-    public static boolean isOuttakeInPositionToCloseClawForTransfer = false;
-    public static boolean isOuttakeInPositionToGoToStandBy = false;
+    public static boolean needsToExtraExtend = false;
 
 
 
@@ -143,24 +141,21 @@ public class OrganizedPositionStorage {
     public static long outtakeAfterHasClosedClawAtWallSpecimenTimer;
     public static long beforeOuttakeGoDownTimer;
     public static long outtakeIsInNeedToExtraExtendClawTimer;
-    public static long outtakeCloseClawInTransferTimer;
-    public static long outtakeGoToStandByTimer;
 
 
 
     public static void resetStuff() {
-        //toggles
-        Toggle.toggled = false;
-        Toggle.toggle_var = false;
         // MISC
         PIDincrement = 0;
         gravityAdder = 0;
+
+        Toggle.toggle_var = false;
+        Toggle.toggled = false;
 
         // intake
         intakePivotServoPos = intakePivotServoTransferPos;
         intakeExtendMotorTargetPos = 0;
         intakeTargetPosAdder = 0;
-        intakeGravitySubtractor = 0;
 
         // outtake
         outtakePivotServoPos = outtakePivotServoTransferPos;
@@ -170,7 +165,6 @@ public class OrganizedPositionStorage {
 
         // BOOLEANS
         isYellowSampleNotGood = false;
-        reverseGamepad2 = false;
 
         // is pressed
         isPressedA1 = false;
@@ -196,9 +190,6 @@ public class OrganizedPositionStorage {
         isAfterOuttakeScoredBasketSample = false;
         isAfterOuttakeClosedClawAtWallSpecimen = false;
         isAtStateOfLettingBasketSampleGo = false;
-        outtakeIsInNeedToExtraExtendClaw = false;
-        isOuttakeInPositionToCloseClawForTransfer = false;
-        isOuttakeInPositionToGoToStandBy = false;
 
         // LONGS / TIMERS
         outtakeSpecimenAfterScoreTimer = 0;

@@ -184,8 +184,9 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeWallPickUpNew;
         //outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
         isInNeedToGoToSpecimenTransferPos = true;
+        needsToExtraExtend = true;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
-        outtakeIsInNeedToExtraExtendClaw = true;
+        //outtakeIsInNeedToExtraExtendClaw = true;
         outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
@@ -212,7 +213,7 @@ public class ClassWithStates {
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
-        if(!(colors.red >= 0.0011 || colors.blue >= 0.0015)) return colorSensorOutty.noSample;
+        if(colors.red < 0.0030 && colors.blue < 0.0035) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
         if (colors.red > colors.blue && colors.red > colors.green)

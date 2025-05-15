@@ -385,7 +385,7 @@ public class InWorkAutoFor6Spec extends OpMode {
 
         // Set init position
         initStates();
-        intakeRotateServo.setPosition(intakePivotServoPos-intakeGravitySubtractor / 228);
+        intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
         //end of our stuff
@@ -393,6 +393,11 @@ public class InWorkAutoFor6Spec extends OpMode {
 
 
     public void robotDoStuff(){
+
+        if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 200 < System.currentTimeMillis()){
+            needsToExtraExtend = false;
+            outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
+        }
 
         //color stuff
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
@@ -410,7 +415,7 @@ public class InWorkAutoFor6Spec extends OpMode {
         intakeSpinMotor.setPower(intakeSpinMotorPow);
 
         //Set servo Positions
-        intakeRotateServo.setPosition((intakePivotServoPos) / 360);
+        intakeRotateServo.setPosition((intakePivotServoPos - intakeGravitySubtractor) / 360);
         outakeArmServo.setPosition(outtakePivotServoPos / 360);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
     }

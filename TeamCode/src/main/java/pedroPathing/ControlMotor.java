@@ -30,6 +30,8 @@ public class ControlMotor {
         /*if(pid<0 && curentPosition<40) pid = -0.3;
         if(pid<0 && curentPosition<10) pid = -0.25;
         if(pid<0 && curentPosition<=3) pid = 0;//*/
+        if(pid<0 && curentPosition<40) pid = pid*1.3;
+        if(pid<0 && curentPosition<5) pid = 0;
         return pid;
 
         //return (error*kp+derivative*kd) * (((lastError < 0 && lastError > -50) || (lastError  < -415 && lastError > -450))  ? 2 : 1);
