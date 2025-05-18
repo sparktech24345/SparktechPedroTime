@@ -101,6 +101,8 @@ public class OrganizedPositionStorage {
     public static boolean isInSpecimenState = false;
     public static boolean isTimeToRefreshOutptingTime = false;
     public static boolean isInPositionToRaiseOuttakeInOrderToEvadeIntake = false;
+    public static boolean shouldTransfer = false;
+    public static boolean shouldSpecimenTransfer = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff

@@ -32,7 +32,7 @@ public class ClassWithStates {
         intakeCabinDownStandStill,
         intakeCabinTransferPosition,
         intakeCabinFullInBot,
-        intakeCabinFullInBotOutputting,
+        intakeCabinFullInBotOutputting, isInTransferToIntakeCabinDownCollecting,
     }
     public static intakeCabinStates intakeCabinState = intakeCabinStates.noStateSet;
 
