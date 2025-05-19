@@ -137,7 +137,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                         outtakeTransfer();
                     isAfterIntakeBeenDownColecting = true;
                 }
-                else{
+                else {
+                    /*
                     intakeRetracted();
                     intakeCabinTransferPosition();
                     if(!isInSpecimenState) {
@@ -146,6 +147,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                         outtakeTransfer();
                     }
                     isAfterIntakeBeenDownColecting = false;
+                }
+                     */
+                    shouldAutoCollect = true;
                 }
                 isPressedA1 = false;
             }
@@ -187,7 +191,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 isAfterOuttakeScoredSpecimen = false;
                 outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
             }
-            if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 200 < System.currentTimeMillis()){
+            if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis()){
                 needsToExtraExtend = false;
                 outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
             }
@@ -226,6 +230,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 }
             }
 
+            /*
             //WALL PICK UP
             if(gamepad1.y) isPressedY1 = true;
             if(!gamepad1.y && isPressedY1){
@@ -233,19 +238,21 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 intakeCabinFullInBot();
                 outtakeWallPickUpNew();
                 isPressedY1 = false;
-            }
+            }*/
 
             ///SOME STUFF
 
             //auto retract
-            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting){
+            if(//currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting
+                    shouldAutoCollect
+            ){
+                shouldAutoCollect = false;
                 intakeRetracted();
                 //makins sure sample enetered the intake fully with a small timer
-                if(outakeLeftMotor.getCurrentPosition() > -50){
-                    isAfterIntakeBeenDownColecting = false;
-                    isIntakeSpinMOtorAfterJustTaking = true;
-                    intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
-                }
+                isAfterIntakeBeenDownColecting = false;
+                isIntakeSpinMOtorAfterJustTaking = true;
+                intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
+
 
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
             }
@@ -254,6 +261,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
 
                 intakeCabinTransferPosition();
+                if(isInSpecimenState) intakeCabinFullInBot();
+
                 if(!isInSpecimenState) {
                     outtakeTransfer();
                     basketStandbyState++;
@@ -342,7 +351,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
 
-            if(!gamepad2.b){
+            if(!(gamepad2.b || gamepad1.y)){
                 isTimeToRefreshOutptingTime = true;
                 if(intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting){
                     intakeCabinFullInBot();
@@ -417,14 +426,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 chassisBackLeftPow /= slowyDownyManal;
             }
             //auto slowdown
-            else if(outtakeState == outtakeStates.outtakeBasket ||
+            /*else if(outtakeState == outtakeStates.outtakeBasket ||
                     outtakeState == outtakeStates.outtakeWallPickUpNew ||
                     outtakeState == outtakeStates.outtakeSpecimenHang){
                 chassisFrontLeftPow /= slowyDownyAuto;
                 chassisBackRightPow /= slowyDownyAuto;
                 chassisFrontRightPow /= slowyDownyAuto;
                 chassisBackLeftPow /= slowyDownyAuto;
-            }
+            }*/
 
             // Toggle Claw on Y2
 

@@ -420,11 +420,26 @@ public class InWorkAutoFor6Spec extends OpMode {
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
     }
 
+    public void robotDoTelemetryStuff(){
+        // Feedback to Driver Hub
+        tel.addData("path state", pathState);
+        tel.addData("x", follower.getPose().getX());
+        tel.addData("y", follower.getPose().getY());
+        tel.addData("heading", follower.getPose().getHeading());
+        tel.addData("intakePivotServoPos",intakePivotServoPos);
+        tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+        tel.addData("outtakeDirection",outakeMotorPower);
+        tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
+        Drawing.drawDebug(follower);
+        tel.update();
+    }
+
 
     public void waitWhile(int timeToWait) {
         long iniTime = System.currentTimeMillis();
         while(iniTime + timeToWait < System.currentTimeMillis()){
             robotDoStuff();
+            robotDoTelemetryStuff();
         }
     }
 
@@ -438,19 +453,7 @@ public class InWorkAutoFor6Spec extends OpMode {
         autonomousPathUpdate();
 
         robotDoStuff();
-
-
-        // Feedback to Driver Hub
-        tel.addData("path state", pathState);
-        tel.addData("x", follower.getPose().getX());
-        tel.addData("y", follower.getPose().getY());
-        tel.addData("heading", follower.getPose().getHeading());
-        tel.addData("intakePivotServoPos",intakePivotServoPos);
-        tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-        tel.addData("outtakeDirection",outakeMotorPower);
-        tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
-        Drawing.drawDebug(follower);
-        tel.update();
+        robotDoTelemetryStuff();
     }
 
 

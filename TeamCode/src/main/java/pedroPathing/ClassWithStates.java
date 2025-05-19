@@ -120,7 +120,7 @@ public class ClassWithStates {
     public static void intakeCabinDownOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownOutputting;
         intakePivotServoPos = intakePivotServoPickupPos;
-        intakeSpinMotorPow = -0.5;
+        intakeSpinMotorPow = -1;
     }
     public static void intakeCabinDownStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
