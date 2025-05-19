@@ -138,7 +138,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     isAfterIntakeBeenDownColecting = true;
                 }
                 else {
-                    /*
+
                     intakeRetracted();
                     intakeCabinTransferPosition();
                     if(!isInSpecimenState) {
@@ -148,9 +148,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     }
                     isAfterIntakeBeenDownColecting = false;
                 }
-                     */
-                    shouldAutoCollect = true;
-                }
+                     //*/
+                    //shouldAutoCollect = true; }
+
                 isPressedA1 = false;
             }
 
@@ -243,8 +243,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             ///SOME STUFF
 
             //auto retract
-            if(//currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting
-                    shouldAutoCollect
+            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting
+               //     shouldAutoCollect
             ){
                 shouldAutoCollect = false;
                 intakeRetracted();
@@ -260,10 +260,15 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
 
-                intakeCabinTransferPosition();
+                if(isAfterTakingTakeySpiny) {
+                    intakeCabinTransferPositionWithPower();
+                    isAfterTakingTakeySpiny = false;
+                }
+
+
                 if(isInSpecimenState) intakeCabinFullInBot();
 
-                if(!isInSpecimenState) {
+                if(!isInSpecimenState && outakeLeftMotor.getCurrentPosition()> -20) {
                     outtakeTransfer();
                     basketStandbyState++;
                 }
@@ -283,6 +288,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 //outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
 
             }
+
+
+            if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()){
+                intakeCabinTransferPosition();
+                shouldStopIntakeCabinSpinningAfterTakig = false;
+            }
+
+
 
 
             //auto eject

@@ -7,6 +7,7 @@ import static pedroPathing.OrganizedPositionStorage.*;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -27,7 +28,7 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-
+        tel =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         OrganizedPositionStorage.resetStuff();
         OurRobot robot = new OurRobot(hardwareMap,tel,gamepad1,gamepad2);
         robot.initRobot();
@@ -100,15 +101,17 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
 
 
             //Intake positions
-            if (gamepad1.dpad_left)  intakeExtended4out4();
-            if (gamepad1.dpad_down)  intakeExtended3out4();
-            if (gamepad1.dpad_right) intakeExtended2out4();
-            if(gamepad1.dpad_up)     intakeExtended1out4();
-            if(gamepad2.left_bumper) intakeRetracted();
+            if (gamepad1.dpad_left)  intakeExtended4out4Queue();
+            if (gamepad1.dpad_down)  intakeExtended3out4Queue();
+            if (gamepad1.dpad_right) intakeExtended2out4Queue();
+            if(gamepad1.dpad_up)     intakeExtended1out4Queue();
+            if(gamepad2.left_bumper) intakeRetractedQueue();
 
 
 
-
+            intakeCabinQueue.updateSteps(tel);
+            intakeSlidersQueue.updateSteps(tel);
+            outtakeQueue.updateSteps(tel);
             robot.robotSetPower();
 
 

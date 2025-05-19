@@ -38,9 +38,9 @@ public class OurRobot {
     public NormalizedRGBA colors = new NormalizedRGBA();
     public SparkFunOTOS.Pose2D pos;
 
-    public OurRobot(HardwareMap maps, MultipleTelemetry telly, Gamepad gamepady,Gamepad gamenoty){
+    public OurRobot(HardwareMap maps, MultipleTelemetry teller, Gamepad gamepady,Gamepad gamenoty){
         this.mapy = maps;
-        this.teller = telly;
+        this.teller = teller;
         this.gamepad1 = gamepady;
         this.gamepad2 = gamenoty;
 
@@ -60,7 +60,7 @@ public class OurRobot {
     }
 
     public void initRobot(){
-        Config.configureOtos(teller, myOtos);
+        Config.configureOtosMultipleTel(teller, myOtos);
         initStates();
         robotSetOnlyServoPosition();
     }

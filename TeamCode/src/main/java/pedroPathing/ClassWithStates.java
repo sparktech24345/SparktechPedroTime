@@ -115,6 +115,7 @@ public class ClassWithStates {
     public static void intakeCabinDownCollecting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
         intakePivotServoPos = intakePivotServoPickupPos;
+        isAfterTakingTakeySpiny = true;
         intakeSpinMotorPow = 1;
     }
     public static void intakeCabinDownOutputting(){
@@ -135,6 +136,8 @@ public class ClassWithStates {
     public static void intakeCabinTransferPositionWithPower(){
         intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
         intakePivotServoPos = intakePivotServoTransferPos;
+        shouldStopIntakeCabinSpinningAfterTakig = true;
+        shouldStopIntakeCabinSpinningAfterTakigTimer = System.currentTimeMillis();
         intakeSpinMotorPow = 1;
     }
     public static void intakeCabinFullInBot(){
@@ -190,6 +193,15 @@ public class ClassWithStates {
         outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
+    public static void outtakeWallPickUpNewNoWireProtection(){
+        outtakeState = outtakeStates.outtakeWallPickUpNew;
+        outtakePivotServoPos = outtakePivotServoWallPickupPos; //wire interfereance
+        isInNeedToGoToSpecimenTransferPos = true;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeIsInNeedToExtraExtendClaw = true;
+        outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
+        outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
+    }
     public static void outtakeTransfer(){
         outtakeState = outtakeStates.outtakeTransfer;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
@@ -213,7 +225,7 @@ public class ClassWithStates {
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
-        if(colors.red < 0.0030 && colors.blue < 0.0035) return colorSensorOutty.noSample;
+        if(colors.red < 0.010 && colors.blue < 0.0033) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
         if (colors.red > colors.blue && colors.red > colors.green)
