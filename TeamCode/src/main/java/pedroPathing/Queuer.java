@@ -1,5 +1,7 @@
 package pedroPathing;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -42,10 +44,16 @@ public class Queuer {
         steps.offer(step);
     }
 
+    //clear list
+    // remove all steps from the queue
+    public void clearSteps() {
+        steps.clear();
+    }
+
 
 
     //try executing step
-    public void updateSteps(Telemetry telemetry) {
+    public void updateSteps(MultipleTelemetry telemetry) {
         if(!steps.isEmpty()) {
             Step firstStep = steps.peek();// go to first step
 

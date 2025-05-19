@@ -40,11 +40,11 @@ public class OrganizedPositionStorage {
 
     //outtake claw
     public static double outtakeClawServoExtendedPos = 80;
-    public static double outtakeClawServoExtraExtendedPos = 200;
+    public static double outtakeClawServoExtraExtendedPos = 150;
     public static double outtakeClawServoRetractedPos = 12;
 
     // outtake pivot
-    public static double outtakePivotServoWallPickupPos = 300;
+    public static double outtakePivotServoWallPickupPos = 305;
     public static double outtakePivotServoHighRungHangPos = 183;
     public static double outtakePivotServoBasketPos = 50;
     public static double outtakePivotServoTransferPos = 210;
@@ -65,7 +65,7 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 203;
+    public static double intakePivotServoPickupPos = 200;
     public static double intakePivotServoOutputTruBotPos = 15;
     public static double intakePivotServoTransferPos = 135;
     public static double tempIntakeTargetPastPosDifrence = 135;
@@ -101,7 +101,6 @@ public class OrganizedPositionStorage {
     public static boolean isInSpecimenState = false;
     public static boolean isTimeToRefreshOutptingTime = false;
     public static boolean isInPositionToRaiseOuttakeInOrderToEvadeIntake = false;
-    public static boolean shouldAutoCollect = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff
