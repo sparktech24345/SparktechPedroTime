@@ -343,6 +343,7 @@ public class InWorkAutoFor6Spec extends OpMode {
     @Override
     public void init() {
         resetStuff();
+        isRobotInAuto = true;
 
         pathTimer = new Timer();
         opmodeTimer = new Timer();

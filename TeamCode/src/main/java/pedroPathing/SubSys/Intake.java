@@ -39,6 +39,7 @@ public class Intake {
         intakeSpinMotor.setPower(intakeSpinMotorPow);
 
         intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
-    }
 
+        tempIntakeAPosition = intakeMotor.getCurrentPosition();
+    }
 }

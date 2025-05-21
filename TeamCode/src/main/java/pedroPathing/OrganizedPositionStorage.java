@@ -58,6 +58,7 @@ public class OrganizedPositionStorage {
     public static double outtakeSlidersWallPickPos = 690;
     public static double outtakeMotorActualZeroPos = 0;
     public static double outtakeMotorStandByPos = 1000;
+    public static double tempOuttakeAPosition = 0;
 
 
 
@@ -68,6 +69,7 @@ public class OrganizedPositionStorage {
     public static double intakePivotServoOutputTruBotPos = 15;
     public static double intakePivotServoTransferPos = 135;
     public static double tempIntakeTargetPastPosDifrence = 135;
+    public static double tempIntakeAPosition = 0;
 
 
 
@@ -76,6 +78,7 @@ public class OrganizedPositionStorage {
     //misc
     public static boolean isYellowSampleNotGood = false;
     public static boolean reverseGamepad2 = false;
+    public static boolean isRobotInAuto = false;
 
 
     //is pressed
@@ -84,6 +87,7 @@ public class OrganizedPositionStorage {
     public static boolean isPressedB1 = false;
     public static boolean isPressedB2 = false;
     public static boolean isPressedX1 = false;
+    public static boolean isPressedX1v2 = false;
     public static boolean isPressedX2 = false;
     public static boolean isPressedY1 = false;
     public static boolean isPressedY2 = false;
@@ -161,6 +165,9 @@ public class OrganizedPositionStorage {
         //toggles
         Toggle.toggled = false;
         Toggle.toggle_var = false;
+        Toggle.toggledButton2 = false;
+        Toggle.toggledVarButton2 = false;
+        isRobotInAuto = false;
         // MISC
         PIDincrement = 0;
         gravityAdder = 0;
@@ -170,12 +177,14 @@ public class OrganizedPositionStorage {
         intakeExtendMotorTargetPos = 0;
         intakeTargetPosAdder = 0;
         intakeGravitySubtractor = 0;
+        tempIntakeAPosition = 0;
 
         // outtake
         outtakePivotServoPos = outtakePivotServoTransferPos;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
         outtakeExtendMotorTargetPos = 0;
         outtakeTargetPosAdder = 0;
+        tempOuttakeAPosition = 0;
 
         // BOOLEANS
         isYellowSampleNotGood = false;

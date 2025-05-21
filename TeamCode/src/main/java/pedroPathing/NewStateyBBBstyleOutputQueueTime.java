@@ -67,7 +67,7 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
             if(shouldTransfer){
                 intakeCabinTransferQueue();
                 intakeRetracted();
-                outtakeTransferQueue();
+                outtakeTransferQueue(); //includes going down
                 shouldTransfer = false;
             }
             if(shouldSpecimenTransfer){
@@ -77,14 +77,17 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
                 shouldSpecimenTransfer = false;
             }
 
-
+            isPressedX1v2 = gamepad1.x;
 
             //Basket
             if(gamepad1.x) isPressedX1 = true;
-            if(!gamepad1.x && isPressedX1){
+            if(gamepad1.x && outtakeState == outtakeStates.outtakeBasket){
+                outtakeGetDownFromBasket();
+                isPressedX1 = false;
+            }
+            if(!gamepad1.x && isPressedX1 && !(outtakeState == outtakeStates.outtakeBasket)){
 
                 if(outtakeState == outtakeStates.outtakeSpecimenHang || outtakeState == outtakeStates.outtakeTransfer) outtakeBasketQueue();
-                else if(outtakeState == outtakeStates.outtakeBasket) outtakeTransfer();
                 else{ /*if(gamepad2.b)*/ outtakeBasketQueue();}
 
                 isPressedX1 = false;
@@ -119,7 +122,12 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
                 intakeCabinFullInBot();
             }
 
-
+            if(gamepad1.right_bumper){
+                for(int i=0; i<10;i++){
+                    outtakeExtended4out4Queue();
+                    outtakeExtended1out4Queue();
+                }
+            }
 
 
             //Intake positions
@@ -130,32 +138,41 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
             if(gamepad2.left_bumper) intakeRetractedQueue();
 
 
+            //if (gamepad1.dpad_left)  outtakeExtended4out4Queue();
+            //if (gamepad1.dpad_down)  outtakeExtended3out4Queue();
+            //if (gamepad1.dpad_right) outtakeExtended2out4Queue();
+            //if(gamepad1.dpad_up)     outtakeExtended1out4Queue();
+
+
+
+
             //do it 5 times cuz im dumb and we must do checking stuff for every new step even thoough we checked before
-            for(int i=0; i<5 && opModeIsActive(); i++) {
-                tel.update();
-                intakeCabinQueue.updateSteps(tel);
-                intakeSlidersQueue.updateSteps(tel);
-                outtakeQueue.updateSteps(tel);
-            }
+            //for(int i=0; i<5 && opModeIsActive(); i++) {
+            //    updateTelemetry(tel);
+            intakeCabinQueue.updateSteps(tel);
+            intakeSlidersQueue.updateSteps(tel);
+            outtakeQueue.updateSteps(tel);
+            //}
 
             robot.robotSetPower();
 
 
-            telemetry.addData("intakeSliderState",intakeState);
-            telemetry.addData("intakeCabinState",intakeCabinState);
-            telemetry.addData("outtakeState",outtakeState);
-            telemetry.addData("color stuff",currentStateOfSampleInIntake);
-            telemetry.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
-            telemetry.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
-            telemetry.addData("intakeRotateServoPosition", intakePivotServoPos);
-            telemetry.addData("intakeExtendMotorPow",robot.intake.intakeMotor.getPowerFloat());
-            telemetry.addData("outakeMotorPow",robot.outtake.outakeLeftMotor.getPowerFloat());
-            telemetry.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-            telemetry.addData("outtake current pos",robot.outtake.outakeLeftMotor.getCurrentPosition());
-            telemetry.addData("blue color",robot.colors.blue);
-            telemetry.addData("red color",robot.colors.red);
+            tel.addData("intakeSliderState",intakeState);
+            tel.addData("intakeCabinState",intakeCabinState);
+            tel.addData("outtakeState",outtakeState);
+            tel.addData("color stuff",currentStateOfSampleInIntake);
+            tel.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
+            tel.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
+            tel.addData("intakeRotateServoPosition", intakePivotServoPos);
+            tel.addData("intakeExtendMotorPow",robot.intake.intakeMotor.getPower());
+            tel.addData("outakeMotorPow",robot.outtake.outakeLeftMotor.getPower());
+            tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+            tel.addData("intake current pos",tempIntakeAPosition);
+            tel.addData("outtake current pos",tempOuttakeAPosition);
+            tel.addData("blue color",robot.colors.blue);
+            tel.addData("red color",robot.colors.red);
 
-            tel.update();
+            updateTelemetry(tel);
         }
 
     }

@@ -4,6 +4,7 @@ import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
 import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
 import static pedroPathing.OrganizedPositionStorage.outtakeTargetPosAdder;
+import static pedroPathing.OrganizedPositionStorage.tempOuttakeAPosition;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,13 +39,15 @@ public class Outtake {
     }
 
     public void outtakeGivePower(){
-    double outtakeExtendMotorPow = -outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
+        double outtakeExtendMotorPow = -outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, -outakeLeftMotor.getCurrentPosition());
 
         outakeRightMotor.setPower(outtakeExtendMotorPow);
         outakeLeftMotor.setPower(outtakeExtendMotorPow);
 
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+
+        tempOuttakeAPosition = outakeLeftMotor.getCurrentPosition();
     }
 
 }

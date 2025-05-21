@@ -1,5 +1,4 @@
 package pedroPathing;
-
 import static pedroPathing.OrganizedPositionStorage.*;
 import static pedroPathing.ClassWithStates.*;
 import pedroPathing.Queuer.*;
@@ -109,14 +108,52 @@ public class ClassWithQueuerStates {
     //intake cabin states
 
     public static void intakeCabinDownCollectingQueue(){
-        intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
-        intakePivotServoPos = intakePivotServoPickupPos;
-        intakeSpinMotorPow = 1;
+        intakeCabinQueue.clearSteps();
+
+
+        if(!(tempOuttakeAPosition > 400) && (intakeCabinState == intakeCabinStates.intakeCabinFullInBot && (intakeState==intakeStates.intakeRetracted || intakeState == intakeStates.intakeExtended1out4))){
+
+            Step getOutOfWay = new Step(true, new Runnable() {
+                public void run() {
+                    outtakeExtended1out4Queue();
+                }
+            });
+
+
+            Step intakeDownWithPower = new Step(tempOuttakeAPosition > 400, new Runnable() {
+                public void run() {
+                    intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
+                    intakePivotServoPos = intakePivotServoPickupPos;
+                    intakeSpinMotorPow = 1;
+                    outtakeRetractedQueue();
+                }
+            });
+
+
+
+            intakeCabinQueue.addStep(getOutOfWay);
+            intakeCabinQueue.addStep(intakeDownWithPower);
+        }
+        else {
+            Step intakeDownWithPower = new Step(true, new Runnable() {
+                public void run() {
+                    intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
+                    intakePivotServoPos = intakePivotServoPickupPos;
+                    intakeSpinMotorPow = 1;
+                }
+            });
+
+
+
+            intakeCabinQueue.addStep(intakeDownWithPower);
+        }
+
+
     }
     public static void intakeCabinDownOutputtingQueue(){
         intakeCabinState = intakeCabinStates.intakeCabinDownOutputting;
         intakePivotServoPos = intakePivotServoPickupPos;
-        intakeSpinMotorPow = -0.5;
+        intakeSpinMotorPow = -1;
     }
     public static void intakeCabinDownStandStillQueue(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
@@ -204,58 +241,221 @@ public class ClassWithQueuerStates {
 
 
     public static void outtakeSpecimenHangQueue(){
-        outtakeState = outtakeStates.outtakeSpecimenHang;
-        outtakePivotServoPos = outtakePivotServoHighRungHangPos;
-        outtakeClawServoPos = outtakeClawServoRetractedPos;
-        outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
+        outtakeQueue.clearSteps();
+
+        Step closeClaw = new Step(true, new Runnable() {
+            public void run() {
+                outtakePivotServoPos = outtakeClawServoRetractedPos;
+                outtakeCloseClawInTransferTimer = System.currentTimeMillis();
+            }
+        });
+
+        Step goUp = new Step(outtakeCloseClawInTransferTimer + 200 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                if(isRobotInAuto) outtakeExtendMotorTargetPos = autoOuttakeSliderSpecimenHangPos;
+                else outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
+            }
+        });
+
+        Step doRestOfActions = new Step(/*tempOuttakeAPosition > 500*/true, new Runnable() {
+            public void run() {
+                outtakeState = outtakeStates.outtakeSpecimenHang;
+                outtakePivotServoPos = outtakePivotServoHighRungHangPos;
+            }
+        });
+
+        outtakeQueue.addStep(closeClaw);
+        outtakeQueue.addStep(goUp);
+        outtakeQueue.addStep(doRestOfActions);
     }
-    public static void autoOuttakeSpecimenHangQueue(){
-        outtakeState = outtakeStates.outtakeSpecimenHang;
-        outtakePivotServoPos = outtakePivotServoHighRungHangPos;
-        outtakeClawServoPos = outtakeClawServoRetractedPos;
-        outtakeExtendMotorTargetPos = autoOuttakeSliderSpecimenHangPos;
-    }
+
+
+
+
     public static void outtakeBasketQueue(){
+        outtakeQueue.clearSteps();
         outtakeState = outtakeStates.outtakeBasket;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakePivotServoPos = outtakePivotServoBasketPos;
         outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
     }
-    public static void outtakeWallPickUpNormalQueue(){ //old one
-        outtakeState = outtakeStates.outtakeWallPickUpNormal;
-        outtakePivotServoPos = 0;
-        outtakeClawServoPos = outtakeClawServoExtendedPos;
-        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
-    }
+
+
+
     public static void outtakeWallPickUpNewQueue(){
-        outtakeState = outtakeStates.outtakeWallPickUpNew;
-        //outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
-        isInNeedToGoToSpecimenTransferPos = true;
-        needsToExtraExtend = true;
-        outtakeClawServoPos = outtakeClawServoExtendedPos;
-        //outtakeIsInNeedToExtraExtendClaw = true;
-        outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
-        outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
-    }
-    public static void outtakeTransferQueue(){
-        outtakeState = outtakeStates.outtakeTransfer;
-        outtakeClawServoPos = outtakeClawServoExtendedPos;
-        outtakePivotServoPos = outtakePivotServoTransferPos;
-        //outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
-        isOuttakeInPositionToGoDown = true;
-        beforeOuttakeGoDownTimer = System.currentTimeMillis();
-    }
-    public static void outtakeStandByBasketQueue(){
-        outtakeState = outtakeStates.outtakeStandBy;
-        outtakePivotServoPos = outtakePivotServoStandByPos;
-        outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
+        outtakeQueue.clearSteps();
+
+
+        Step goUp = new Step(true, new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+            }
+        });
+
+        Step doRestOfActions = new Step(/*tempOuttakeAPosition > 500*/true, new Runnable() {
+            public void run() {
+                outtakeState = outtakeStates.outtakeWallPickUpNew;
+                outtakePivotServoPos = outtakePivotServoWallPickupPos;
+                outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
+            }
+        });
+
+        Step extraOpenClaw = new Step(outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                outtakePivotServoPos = outtakeClawServoExtraExtendedPos;
+            }
+        });
+
+        outtakeQueue.addStep(goUp);
+        outtakeQueue.addStep(doRestOfActions);
+        outtakeQueue.addStep(extraOpenClaw);
     }
 
-    public static void outtakeStandByWithoutExtensionsQueue(){
-        outtakeState = outtakeStates.outtakeStandByWithoutExtensions;
-        outtakePivotServoPos = outtakePivotServoStandByPos;
-        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+
+
+
+    public static void outtakeTransferQueue(){
+        outtakeQueue.clearSteps();
+
+        Step PrepareServoForTransfer = new Step(true, new Runnable() {
+            public void run() {
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                outtakePivotServoPos = outtakePivotServoTransferPos;
+                beforeOuttakeGoDownTimer = System.currentTimeMillis();
+            }
+        });
+
+        Step PrepareSlidersForTransfer = new Step((!(outtakeState == outtakeStates.outtakeWallPickUpNew)) || beforeOuttakeGoDownTimer + 400 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+            }
+        });
+
+        Step closeClaw = new Step(tempIntakeAPosition < 8 && shouldStopIntakeCabinSpinningAfterTakigTimer + 600 < System.currentTimeMillis()  && tempOuttakeAPosition < 25, new Runnable() {
+            public void run() {
+                outtakePivotServoPos = outtakeClawServoRetractedPos;
+                outtakeCloseClawInTransferTimer = System.currentTimeMillis();
+            }
+        });
+
+        Step doRestOfActions = new Step(outtakeCloseClawInTransferTimer + 200 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                outtakeState = outtakeStates.outtakeSpecimenHang;
+                outtakePivotServoPos = outtakePivotServoHighRungHangPos;
+                //outtakeClawServoPos = outtakeClawServoRetractedPos;
+                outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
+            }
+        });
+
+        outtakeQueue.addStep(PrepareServoForTransfer);
+        outtakeQueue.addStep(PrepareSlidersForTransfer);
+        outtakeQueue.addStep(closeClaw);
+        outtakeQueue.addStep(doRestOfActions);
     }
+
+
+
+
+    public static void outtakeGetDownFromBasket(){
+        outtakeQueue.clearSteps();
+
+        Step openServo = new Step(true, new Runnable() {
+            public void run() {
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
+            }
+        });
+
+        Step goDown = new Step(!isPressedX1v2 && outtakeAfterBasketSampleScoreTimer + 300 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                outtakeState = outtakeStates.outtakeTransfer;
+                outtakePivotServoPos = outtakePivotServoTransferPos;
+                outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+            }
+        });
+
+        outtakeQueue.addStep(openServo);
+        outtakeQueue.addStep(goDown);
+    }
+
+
+
+
+    public static void outtakeExtended4out4Queue(){
+        outtakeQueue.clearSteps();
+
+        Step extendIntake4out4 = new Step(true, new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = 2000;
+            }
+        });
+
+        outtakeQueue.addStep(extendIntake4out4);
+    }
+
+
+    public static void outtakeExtended3out4Queue(){
+        outtakeQueue.clearSteps();
+
+        Step extendIntake3out4 = new Step(true, new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = 1500;
+            }
+        });
+
+        outtakeQueue.addStep(extendIntake3out4);
+    }
+
+
+    public static void outtakeExtended2out4Queue(){
+        outtakeQueue.clearSteps();
+
+        Step extendIntake2out4 = new Step(true, new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = 1000;
+            }
+        });
+
+        outtakeQueue.addStep(extendIntake2out4);
+    }
+
+
+    public static void outtakeExtended1out4Queue(){
+        outtakeQueue.clearSteps();
+
+        Step extendIntake1out4 = new Step(true, new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = 500;
+            }
+        });
+
+        outtakeQueue.addStep(extendIntake1out4);
+    }
+    public static void outtakeRetractedQueue(){
+        outtakeQueue.clearSteps();
+
+        Step extendIntake1out4 = new Step(true, new Runnable() {
+            public void run() {
+                outtakeExtendMotorTargetPos = 0;
+            }
+        });
+
+        outtakeQueue.addStep(extendIntake1out4);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

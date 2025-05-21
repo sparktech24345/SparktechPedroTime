@@ -10,6 +10,7 @@ import pedroPathing.newOld.Toggle;
 @com.acmerobotics.dashboard.config.Config
 public class DriveTrain {
     public static double driveTrainMuliplier = 0.8;
+    public static double manualSlowDownMultiplier = 1.5;
 
     Gamepad gamepad;
     HardwareMap mapy;
@@ -58,6 +59,13 @@ public class DriveTrain {
         double FLP = (pivot + vertical - horizontal);
         double BLP = (pivot + vertical + horizontal);
 
+
+        if(Toggle.toggleButton2(gamepad.right_bumper) == 1) {
+            FRP = FRP / manualSlowDownMultiplier;
+            BRP = BRP / manualSlowDownMultiplier;
+            FLP = FLP / manualSlowDownMultiplier;
+            BLP = BLP / manualSlowDownMultiplier;
+        }
 
         frontLeftMotor.setPower(FRP*driveTrainMuliplier);
         backLeftMotor.setPower(BRP*driveTrainMuliplier);
