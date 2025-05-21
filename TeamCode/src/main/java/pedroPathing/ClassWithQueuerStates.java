@@ -165,7 +165,7 @@ public class ClassWithQueuerStates {
             }
         });
 
-        intakeCabinQueue.addStep(intakeUpWithPower);
+        if(intakeCabinState == intakeCabinStates.isInTransferToIntakeCabinDownCollecting) intakeCabinQueue.addStep(intakeUpWithPower);
         intakeCabinQueue.addStep(intakeTransferPosWithoutPower);
     }
 
@@ -194,7 +194,6 @@ public class ClassWithQueuerStates {
         if(intakeCabinState == intakeCabinStates.isInTransferToIntakeCabinDownCollecting) intakeCabinQueue.addStep(intakeUpWithPower);
         intakeCabinQueue.addStep(intakeTransferPosWithoutPower);
     }
-
 
 
 
