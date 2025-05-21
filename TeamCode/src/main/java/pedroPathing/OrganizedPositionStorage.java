@@ -103,6 +103,8 @@ public class OrganizedPositionStorage {
     public static boolean isInPositionToRaiseOuttakeInOrderToEvadeIntake = false;
     public static boolean shouldStopIntakeCabinSpinningAfterTakig = false;
     public static boolean isAfterTakingTakeySpiny = false;
+    public static boolean wasIntakeCabinTruBotOutputting = false;
+    public static boolean isIntakeInPositionToOutputTruBot = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff
@@ -199,6 +201,8 @@ public class OrganizedPositionStorage {
         isInSpecimenState = false;
         shouldStopIntakeCabinSpinningAfterTakig = false;
         isAfterTakingTakeySpiny = false;
+        wasIntakeCabinTruBotOutputting = false;
+        isIntakeInPositionToOutputTruBot = false;
 
         // outtake stuff
         isAfterOuttakeScoredSpecimen = false;

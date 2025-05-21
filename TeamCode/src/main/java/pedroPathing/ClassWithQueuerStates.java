@@ -144,6 +144,57 @@ public class ClassWithQueuerStates {
         intakeSpinMotorPow = -1;
     }
 
+    public static void intakeCabinTransferQueue() {
+        intakeCabinQueue.clearSteps();
+
+        Step intakeUpWithPower = new Step(true, new Runnable() {
+            public void run() {
+                intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
+                intakePivotServoPos = intakePivotServoTransferPos;
+                //shouldStopIntakeCabinSpinningAfterTakig = true;
+                shouldStopIntakeCabinSpinningAfterTakigTimer = System.currentTimeMillis();
+                intakeSpinMotorPow = 1;
+            }
+        });
+
+        Step intakeTransferPosWithoutPower = new Step(shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
+                intakePivotServoPos = intakePivotServoTransferPos;
+                intakeSpinMotorPow = 0;
+            }
+        });
+
+        intakeCabinQueue.addStep(intakeUpWithPower);
+        intakeCabinQueue.addStep(intakeTransferPosWithoutPower);
+    }
+
+
+    public static void intakeCabinSpecimenTransferQueue() {
+        intakeCabinQueue.clearSteps();
+
+        Step intakeUpWithPower = new Step(true, new Runnable() {
+            public void run() {
+                intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
+                intakePivotServoPos = intakePivotServoTransferPos;
+                //shouldStopIntakeCabinSpinningAfterTakig = true;
+                shouldStopIntakeCabinSpinningAfterTakigTimer = System.currentTimeMillis();
+                intakeSpinMotorPow = 1;
+            }
+        });
+
+        Step intakeTransferPosWithoutPower = new Step(shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis(), new Runnable() {
+            public void run() {
+                intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
+                intakePivotServoPos = intakePivotServoOutputTruBotPos;
+                intakeSpinMotorPow = 0;
+            }
+        });
+
+        if(intakeCabinState == intakeCabinStates.isInTransferToIntakeCabinDownCollecting) intakeCabinQueue.addStep(intakeUpWithPower);
+        intakeCabinQueue.addStep(intakeTransferPosWithoutPower);
+    }
+
 
 
 

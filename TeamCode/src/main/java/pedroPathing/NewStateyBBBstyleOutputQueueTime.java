@@ -84,8 +84,8 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
             if(!gamepad1.x && isPressedX1){
 
                 if(outtakeState == outtakeStates.outtakeSpecimenHang || outtakeState == outtakeStates.outtakeTransfer) outtakeBasketQueue();
-                if(outtakeState == outtakeStates.outtakeBasket) outtakeTransfer();
-                if(gamepad2.b) outtakeBasketQueue();
+                else if(outtakeState == outtakeStates.outtakeBasket) outtakeTransfer();
+                else{ /*if(gamepad2.b)*/ outtakeBasketQueue();}
 
                 isPressedX1 = false;
             }
@@ -95,8 +95,30 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
             if(gamepad1.b) isPressedB1 = true;
             if(!gamepad1.b && isPressedB1){
 
+                if(outtakeState == outtakeStates.outtakeSpecimenHang) outtakeWallPickUpNewQueue();
+                else if(outtakeState == outtakeStates.outtakeWallPickUpNew) outtakeSpecimenHangQueue();
+                else outtakeSpecimenHangQueue();
+
                 isPressedB1 = false;
             }
+
+            if(gamepad1.y){
+                if(intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting){wasIntakeCabinTruBotOutputting = true;}
+                else if(isIntakeInPositionToOutputTruBot && robot.intake.intakeMotor.getCurrentPosition() < 10 && outtakeState == outtakeStates.outtakeSpecimenHang){
+                    isIntakeInPositionToOutputTruBot = false;
+                    intakeCabinFullInBotOutputting();
+                }
+                else{
+                    intakeRetractedQueue();
+                    intakeCabinFullInBotQueue();
+                    outtakeSpecimenHangQueue();
+                }
+            }
+            else if(wasIntakeCabinTruBotOutputting){
+                wasIntakeCabinTruBotOutputting = false;
+                intakeCabinFullInBot();
+            }
+
 
 
 
@@ -108,10 +130,14 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
             if(gamepad2.left_bumper) intakeRetractedQueue();
 
 
+            //do it 5 times cuz im dumb and we must do checking stuff for every new step even thoough we checked before
+            for(int i=0; i<5 && opModeIsActive(); i++) {
+                tel.update();
+                intakeCabinQueue.updateSteps(tel);
+                intakeSlidersQueue.updateSteps(tel);
+                outtakeQueue.updateSteps(tel);
+            }
 
-            intakeCabinQueue.updateSteps(tel);
-            intakeSlidersQueue.updateSteps(tel);
-            outtakeQueue.updateSteps(tel);
             robot.robotSetPower();
 
 
@@ -129,15 +155,10 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
             telemetry.addData("blue color",robot.colors.blue);
             telemetry.addData("red color",robot.colors.red);
 
-            updateTelemetry(telemetry);
+            tel.update();
         }
 
     }
 
-    private void intakeCabinSpecimenTransferQueue() {
-    }
-
-    private void intakeCabinTransferQueue() {
-    }
 
 }
