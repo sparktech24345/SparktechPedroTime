@@ -52,9 +52,9 @@ public class InWorkAutoFor6Spec extends OpMode {
     private int pathState;
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
-    private final Pose scoringBarPose = new Pose(-5.4, 41, Math.toRadians(90)); //start
+    private final Pose scoringBarPose = new Pose(-5.4, 38, Math.toRadians(90)); //start
     private final Pose specimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose firstSamplePickUpPos = new Pose(-50, 49, Math.toRadians(90)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-48.5, 49, Math.toRadians(90)); //start
     private final Pose secondSamplePickUpPos = new Pose(-61, 49, Math.toRadians(90)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-60.5, 49, Math.toRadians(125)); //start
     private final Pose parkingPose=new Pose(27,82,Math.toRadians(180)); //parking
@@ -170,7 +170,7 @@ public class InWorkAutoFor6Spec extends OpMode {
         switch (pathState) {
             case 0:
                 if(!follower.isBusy()) {
-                    autoOuttakeSpecimenHang();
+                    outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(startPath,true);
                     setPathState(2);
@@ -191,6 +191,7 @@ public class InWorkAutoFor6Spec extends OpMode {
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
+                    waitWhile(250);
                     intakeExtended2out4();
                     if(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)){
                         intakeCabinDownOutputting();
@@ -386,7 +387,7 @@ public class InWorkAutoFor6Spec extends OpMode {
 
         // Set init position
         initStates();
-        intakeRotateServo.setPosition(intakePivotServoPos-intakeGravitySubtractor / 228);
+        intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
         //end of our stuff
@@ -411,8 +412,8 @@ public class InWorkAutoFor6Spec extends OpMode {
         intakeSpinMotor.setPower(intakeSpinMotorPow);
 
         //Set servo Positions
-        intakeRotateServo.setPosition((intakePivotServoPos) / 360);
-        outakeArmServo.setPosition(outtakePivotServoPos / 360);
+        intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
+        outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
     }
 

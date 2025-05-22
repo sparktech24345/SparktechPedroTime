@@ -7,6 +7,8 @@ import static pedroPathing.ClassWithStates.*;
 
 import android.graphics.Color;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -30,6 +32,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
     ControlMotor outakeControlMotor;
     SparkFunOTOS myOtos;
     NormalizedColorSensor colorSensor;
+    MultipleTelemetry tel;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,7 +71,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        Config.configureOtos(telemetry, myOtos);
+        tel =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        Config.configureOtos(tel, myOtos);
 
 
         intakeControlMotor = new ControlMotor();
@@ -135,21 +140,22 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeCabinDownCollecting();
                     if(!isInSpecimenState)
                         outtakeTransfer();
+                    else outtakeWallPickUpNew();
                     isAfterIntakeBeenDownColecting = true;
                 }
                 else {
-
+                    /*
                     intakeRetracted();
-                    intakeCabinTransferPosition();
+                    intakeCabinTransferPositionWithPower();
                     if(!isInSpecimenState) {
                         isIntakeSpinMOtorAfterJustTaking = true;
                         intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
                         outtakeTransfer();
                     }
                     isAfterIntakeBeenDownColecting = false;
+                    //*/
+                    shouldAutoCollect = true;
                 }
-                     //*/
-                    //shouldAutoCollect = true; }
 
                 isPressedA1 = false;
             }
@@ -169,7 +175,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             if(gamepad1.b) isPressedB1 = true;
             if(!gamepad1.b && isPressedB1){
                 if(!(outtakeState == outtakeStates.outtakeSpecimenHang)) {
-                    outtakeClawServoPos = 12;
+                    outtakeClawServoPos = outtakeClawServoRetractedPos;
                     isAfterOuttakeClosedClawAtWallSpecimen = true;
                     outtakeAfterHasClosedClawAtWallSpecimenTimer = System.currentTimeMillis();
                 }
@@ -229,6 +235,15 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     isAfterOuttakeScoredBasketSample = false;
                 }
             }
+            //some weird bug that can be easy fix
+            if(outtakeExtendMotorTargetPos == 0 && outtakeState == outtakeStates.outtakeBasket){
+                outtakeBasket();
+            }
+
+
+
+
+
 
             /*
             //WALL PICK UP
@@ -243,8 +258,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             ///SOME STUFF
 
             //auto retract
-            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting
-               //     shouldAutoCollect
+            if((currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting) ||
+                shouldAutoCollect
             ){
                 shouldAutoCollect = false;
                 intakeRetracted();
@@ -259,14 +274,13 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             if(basketStandbyState == 0 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 100 < System.currentTimeMillis()){
-
+                isIntakeSpinMOtorAfterJustTaking = false;
                 if(isAfterTakingTakeySpiny) {
                     intakeCabinTransferPositionWithPower();
                     isAfterTakingTakeySpiny = false;
                 }
 
 
-                if(isInSpecimenState) intakeCabinFullInBot();
 
                 if(!isInSpecimenState && outakeLeftMotor.getCurrentPosition()> -20) {
                     outtakeTransfer();
@@ -275,15 +289,15 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
 
             }
-            if(basketStandbyState == 1 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 500 < System.currentTimeMillis()) {
+            if(basketStandbyState == 1 && intakeSpinMotorMorePowerAfterTakingTimer + 500 < System.currentTimeMillis()) {
                 outtakeClawServoPos = outtakeClawServoRetractedPos;
                 basketStandbyState++;
             }
-            if(basketStandbyState == 2 && isIntakeSpinMOtorAfterJustTaking && intakeSpinMotorMorePowerAfterTakingTimer + 1000 < System.currentTimeMillis()) {
+            if(basketStandbyState == 2 && intakeSpinMotorMorePowerAfterTakingTimer + 1000 < System.currentTimeMillis()) {
                 //outtakeClawServoPos = outtakeClawServoRetractedPos;
                 basketStandbyState++;
                 outtakeSpecimenHang();
-                isIntakeSpinMOtorAfterJustTaking = false;
+
                 basketStandbyState = 0;
                 //outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
 
@@ -292,6 +306,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()){
                 intakeCabinTransferPosition();
+                if(isInSpecimenState){
+                    intakeCabinFullInBot();
+                }
                 shouldStopIntakeCabinSpinningAfterTakig = false;
             }
 
@@ -369,6 +386,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 if(intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting){
                     intakeCabinFullInBot();
                     outtakeSpecimenHang();
+                    outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
                 }
 
             } else {
@@ -377,11 +395,28 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     timeSinceStartedMovingForTruBotOutput = (long) (intakePivotServoPos - 15) * 4 + System.currentTimeMillis();
                     intakeCabinFullInBot();
                     outtakeSpecimenHang();
+                    outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
                 } else if (System.currentTimeMillis() > timeSinceStartedMovingForTruBotOutput) {
                     intakeCabinFullInBotOutputting();
                     outtakeSpecimenHang();
+                    outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
+                    hasIntakeOutputedTruBot = true;
                 }
-            }//*/
+            }
+            if(hasIntakeOutputedTruBot && intakeCabinState==intakeCabinStates.intakeCabinFullInBot && currentStateOfSampleInIntake == colorSensorOutty.noSample){
+                hasIntakeOutputedTruBot = false;
+                isOuttakeAfterOutputedTruBot = true;
+                isOuttakeAfterOutputedTruBotTimer = System.currentTimeMillis();
+            }
+            if(isOuttakeAfterOutputedTruBot && isOuttakeAfterOutputedTruBotTimer + 300 < System.currentTimeMillis()){
+                isOuttakeAfterOutputedTruBot = false;
+                outtakeWallPickUpNew();
+            }
+
+
+
+
+            //*/
 
             /*if(gamepad2.b){
                 if(isTimeToRefreshOutptingTime){
@@ -481,21 +516,21 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
-            telemetry.addData("intakeSliderState",intakeState);
-            telemetry.addData("intakeCabinState",intakeCabinState);
-            telemetry.addData("outtakeState",outtakeState);
-            telemetry.addData("color stuff",currentStateOfSampleInIntake);
-            telemetry.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
-            telemetry.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
-            telemetry.addData("intakeRotateServoPosition", intakePivotServoPos);
-            telemetry.addData("intakeExtendMotorPow",intakeExtendMotorPow);
-            telemetry.addData("outakeMotorPow",outtakeExtendMotorPow);
-            telemetry.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-            telemetry.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
-            telemetry.addData("blue color",colors.blue);
-            telemetry.addData("red color",colors.red);
+            tel.addData("intakeSliderState",intakeState);
+            tel.addData("intakeCabinState",intakeCabinState);
+            tel.addData("outtakeState",outtakeState);
+            tel.addData("color stuff",currentStateOfSampleInIntake);
+            tel.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
+            tel.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
+            tel.addData("intakeRotateServoPosition", intakePivotServoPos);
+            tel.addData("intakeExtendMotorPow",intakeExtendMotorPow);
+            tel.addData("outakeMotorPow",outtakeExtendMotorPow);
+            tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+            tel.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
+            tel.addData("blue color",colors.blue);
+            tel.addData("red color",colors.red);
 
-            updateTelemetry(telemetry);
+            updateTelemetry(tel);
         }
 
     }

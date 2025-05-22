@@ -221,11 +221,12 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeStandByWithoutExtensions;
         outtakePivotServoPos = outtakePivotServoStandByPos;
         outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
     }
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
-        if(colors.red < 0.010 && colors.blue < 0.0033) return colorSensorOutty.noSample;
+        if(colors.red < 0.002 && colors.blue < 0.001) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
         if (colors.red > colors.blue && colors.red > colors.green)

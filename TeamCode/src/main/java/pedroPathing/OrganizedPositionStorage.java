@@ -66,7 +66,7 @@ public class OrganizedPositionStorage {
 
     //intake pivot
     public static double intakePivotServoPickupPos = 207;
-    public static double intakePivotServoOutputTruBotPos = 15;
+    public static double intakePivotServoOutputTruBotPos = 0;
     public static double intakePivotServoTransferPos = 135;
     public static double tempIntakeTargetPastPosDifrence = 135;
     public static double tempIntakeAPosition = 0;
@@ -109,6 +109,7 @@ public class OrganizedPositionStorage {
     public static boolean isAfterTakingTakeySpiny = false;
     public static boolean wasIntakeCabinTruBotOutputting = false;
     public static boolean isIntakeInPositionToOutputTruBot = false;
+    public static boolean hasIntakeOutputedTruBot = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff
@@ -125,6 +126,7 @@ public class OrganizedPositionStorage {
     public static boolean shouldAutoCollect = false;
     public static boolean shouldTransfer = false;
     public static boolean shouldSpecimenTransfer = false;
+    public static boolean isOuttakeAfterOutputedTruBot = false;
 
 
 
@@ -158,6 +160,7 @@ public class OrganizedPositionStorage {
     public static long outtakeIsInNeedToExtraExtendClawTimer;
     public static long outtakeCloseClawInTransferTimer;
     public static long outtakeGoToStandByTimer;
+    public static long isOuttakeAfterOutputedTruBotTimer;
 
 
 
@@ -212,6 +215,7 @@ public class OrganizedPositionStorage {
         isAfterTakingTakeySpiny = false;
         wasIntakeCabinTruBotOutputting = false;
         isIntakeInPositionToOutputTruBot = false;
+        hasIntakeOutputedTruBot = false;
 
         // outtake stuff
         isAfterOuttakeScoredSpecimen = false;
@@ -221,6 +225,7 @@ public class OrganizedPositionStorage {
         outtakeIsInNeedToExtraExtendClaw = false;
         isOuttakeInPositionToCloseClawForTransfer = false;
         isOuttakeInPositionToGoToStandBy = false;
+        isOuttakeAfterOutputedTruBot = false;
 
         // LONGS / TIMERS
         outtakeSpecimenAfterScoreTimer = 0;

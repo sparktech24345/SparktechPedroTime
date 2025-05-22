@@ -57,7 +57,7 @@ public class ControlMotor {
             }
         }//*/
 
-        if(targetPosition==0 && curentPosition >= -350) pid *=0.8;
+        if(targetPosition==0 && curentPosition >= -350) pid *=1.1;
         if(targetPosition > -900 && curentPosition >= -800) pid*=1.6;
         if(curentPosition > -20 && targetPosition==0) pid = 0;
         if(curentPosition > -200 && targetPosition==0) pid *= 2;
