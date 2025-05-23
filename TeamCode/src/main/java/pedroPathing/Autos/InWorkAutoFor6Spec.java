@@ -52,12 +52,12 @@ public class InWorkAutoFor6Spec extends OpMode {
     private int pathState;
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
-    private final Pose scoringBarPose = new Pose(-5.4, 38, Math.toRadians(90)); //start
+    private final Pose scoringBarPose = new Pose(-5.4, 44, Math.toRadians(90)); //start
     private final Pose specimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose firstSamplePickUpPos = new Pose(-48.5, 49, Math.toRadians(90)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-61, 49, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-60.5, 49, Math.toRadians(125)); //start
-    private final Pose parkingPose=new Pose(27,82,Math.toRadians(180)); //parking
+    private final Pose firstSamplePickUpPos = new Pose(-42.5, 52, Math.toRadians(90)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-56.5, 52, Math.toRadians(90)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-56, 52, Math.toRadians(45)); //start
+    private final Pose parkingPose=new Pose(-65,70,Math.toRadians(90)); //parking
 
     double intakeMotorPower=0;
     double outakeMotorPower=0;
@@ -191,36 +191,72 @@ public class InWorkAutoFor6Spec extends OpMode {
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    waitWhile(250);
-                    intakeExtended2out4();
-                    if(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)){
-                        intakeCabinDownOutputting();
-                        waitWhile(150);
-                        intakeCabinDownCollecting();
-                    }
-                    else{
-                        intakeRetracted();
-                        waitWhile(100);
-                        follower.followPath(goToPickUpSecondSample,true);
-                        setPathState(4);
-                    }
+                    intakeSpinMotorPow = 1;
+                    waitWhile(300);
+                    intakeExtended3out4();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    intakeRetracted();
+                    intakeCabinFullInBot();
+                    waitWhile(300);
+                    intakeCabinFullInBotOutputting();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+
+
+
+                    follower.followPath(goToPickUpSecondSample,true);
+                    setPathState(4);
                 }
                 break;
 
             case 4:
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
+                    intakeCabinDownCollecting();
+                    intakeSpinMotorPow = 1;
+                    waitWhile(300);
+                    intakeExtended3out4();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    intakeRetracted();
+                    intakeCabinFullInBot();
+                    waitWhile(300);
+                    intakeCabinFullInBotOutputting();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+
+
+
                     follower.followPath(goToPickUpThirdSample,true);
                     setPathState(105);
                 }
                 break;
 
-            //first spec
+            //last sample and first spec prep
             case 105:
                 if(!follower.isBusy()) {
+
+
+                    autoTimer = System.currentTimeMillis();
+                    intakeCabinDownCollecting();
+                    intakeSpinMotorPow = 1;
+                    waitWhile(300);
+                    intakeExtended3out4();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    intakeRetracted();
+                    intakeCabinFullInBot();
+                    waitWhile(300);
+                    intakeCabinFullInBotOutputting();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+
+
+
+
+
+
+
+
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
-                    outtakeWallPickUpNew();
+                    autoOuttakeWallPickUpNew();
+                    intakeCabinFullInBot();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(pickUpFirst,true);
                     setPathState(106);
@@ -240,7 +276,7 @@ public class InWorkAutoFor6Spec extends OpMode {
             //second spec
             case 107:
                 if(!follower.isBusy()) {
-                    outtakeWallPickUpNew();
+                    autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(pickUpSecond,true);
                     setPathState(108);
@@ -262,7 +298,7 @@ public class InWorkAutoFor6Spec extends OpMode {
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
-                    outtakeWallPickUpNew();
+                    autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(pickUpThird,true);
                     setPathState(110);
@@ -282,9 +318,9 @@ public class InWorkAutoFor6Spec extends OpMode {
             //fourth spec
             case 111:
                 if(!follower.isBusy()) {
-                    outtakeClawServoPos = outtakeClawServoRetractedPos;
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
-                    outtakeSpecimenHang();
+                    autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(pickUpFourth,true);
                     setPathState(112);
@@ -304,9 +340,9 @@ public class InWorkAutoFor6Spec extends OpMode {
             //fifth spec
             case 113:
                 if(!follower.isBusy()) {
-                    outtakeClawServoPos = outtakeClawServoRetractedPos;
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
-                    outtakeSpecimenHang();
+                    autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(pickUpFifth,true);
                     setPathState(114);
@@ -325,6 +361,8 @@ public class InWorkAutoFor6Spec extends OpMode {
 
             case 115:
                 if(!follower.isBusy()) {
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    waitWhile(150);
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(parking,true);
                     setPathState(-1);
@@ -378,7 +416,6 @@ public class InWorkAutoFor6Spec extends OpMode {
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeSpinMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -395,6 +432,13 @@ public class InWorkAutoFor6Spec extends OpMode {
 
 
     public void robotDoStuff(){
+        //ifs
+        if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis()){
+            needsToExtraExtend = false;
+            outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
+        }
+
+
 
         //color stuff
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
@@ -410,19 +454,37 @@ public class InWorkAutoFor6Spec extends OpMode {
         outakeRightMotor.setPower(outakeMotorPower);
         outakeLeftMotor.setPower(outakeMotorPower);
         intakeSpinMotor.setPower(intakeSpinMotorPow);
+        tel.addData("intakeSpinMotor",intakeSpinMotor.getPower());
+        tel.addData("intakeSpinMotorInCode",intakeSpinMotorPow);
 
         //Set servo Positions
         intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+
+        robotTelemetry();
     }
 
 
     public void waitWhile(int timeToWait) {
         long iniTime = System.currentTimeMillis();
-        while(iniTime + timeToWait < System.currentTimeMillis()){
+        while(iniTime + timeToWait > System.currentTimeMillis()){
             robotDoStuff();
         }
+    }
+
+
+    void robotTelemetry(){
+        tel.addData("path state", pathState);
+        tel.addData("x", follower.getPose().getX());
+        tel.addData("y", follower.getPose().getY());
+        tel.addData("heading", follower.getPose().getHeading());
+        tel.addData("intakePivotServoPos",intakePivotServoPos);
+        tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+        tel.addData("outtakeDirection",outakeMotorPower);
+        tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
+        Drawing.drawDebug(follower);
+        tel.update();
     }
 
 
@@ -438,16 +500,7 @@ public class InWorkAutoFor6Spec extends OpMode {
 
 
         // Feedback to Driver Hub
-        tel.addData("path state", pathState);
-        tel.addData("x", follower.getPose().getX());
-        tel.addData("y", follower.getPose().getY());
-        tel.addData("heading", follower.getPose().getHeading());
-        tel.addData("intakePivotServoPos",intakePivotServoPos);
-        tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-        tel.addData("outtakeDirection",outakeMotorPower);
-        tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
-        Drawing.drawDebug(follower);
-        tel.update();
+        robotTelemetry();
     }
 
 

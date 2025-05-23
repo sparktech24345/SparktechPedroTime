@@ -193,6 +193,16 @@ public class ClassWithStates {
         outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
+    public static void autoOuttakeWallPickUpNew(){
+        outtakeState = outtakeStates.outtakeWallPickUpNew;
+        outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
+        isInNeedToGoToSpecimenTransferPos = true;
+        needsToExtraExtend = true;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        //outtakeIsInNeedToExtraExtendClaw = true;
+        outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
+        outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
+    }
     public static void outtakeWallPickUpNewNoWireProtection(){
         outtakeState = outtakeStates.outtakeWallPickUpNew;
         outtakePivotServoPos = outtakePivotServoWallPickupPos; //wire interfereance
