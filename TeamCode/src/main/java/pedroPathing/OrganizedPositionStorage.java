@@ -45,14 +45,14 @@ public class OrganizedPositionStorage {
     // outtake pivot
     public static double outtakePivotServoWallPickupPos = 300;
     public static double outtakePivotServoHighRungHangPos = 183;
-    public static double outtakePivotServoBasketPos = 50;
+    public static double outtakePivotServoBasketPos = 52;
     public static double outtakePivotServoTransferPos = 212;
     public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
 
 
     // outtake sliders
 
-    public static double outtakeMotorMaxPos = 2038;
+    public static double outtakeMotorMaxPos = 2100;
     public static double outtakeSliderSpecimenHangPos = 1100;
     public static double autoOuttakeSliderSpecimenHangPos = 950;
     public static double outtakeSlidersWallPickPos = 690;
@@ -110,6 +110,7 @@ public class OrganizedPositionStorage {
     public static boolean wasIntakeCabinTruBotOutputting = false;
     public static boolean isIntakeInPositionToOutputTruBot = false;
     public static boolean hasIntakeOutputedTruBot = false;
+    public static boolean hasSmolOutputed = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff
@@ -149,6 +150,7 @@ public class OrganizedPositionStorage {
     public static long timeSinceStartedMovingForTruBotOutput;
     public static long waitingForOuttakeToEvadeIntakeTimer;
     public static long shouldStopIntakeCabinSpinningAfterTakigTimer;
+    public static long hasSmolOutputedTimer;
 
 
 
@@ -216,6 +218,7 @@ public class OrganizedPositionStorage {
         wasIntakeCabinTruBotOutputting = false;
         isIntakeInPositionToOutputTruBot = false;
         hasIntakeOutputedTruBot = false;
+        hasSmolOutputed = false;
 
         // outtake stuff
         isAfterOuttakeScoredSpecimen = false;

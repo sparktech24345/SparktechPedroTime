@@ -303,15 +303,23 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             }
 
+            //smol give out after the extra take in
+
 
             if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()){
+                intakeSpinMotorPow = -0.8;
+                shouldStopIntakeCabinSpinningAfterTakig = false;
+                hasSmolOutputed = true;
+                hasSmolOutputedTimer = System.currentTimeMillis();
+            }
+            //and then stop the power stuff
+            if(hasSmolOutputed && hasSmolOutputedTimer + 50 <System.currentTimeMillis()){
                 intakeCabinTransferPosition();
                 if(isInSpecimenState){
                     intakeCabinFullInBot();
                 }
-                shouldStopIntakeCabinSpinningAfterTakig = false;
-            }
-
+                hasSmolOutputed = false;
+            }//*/
 
 
 
@@ -440,6 +448,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             if(gamepad2.a) isPressedA2 = true;
             if(!gamepad2.a && isPressedA2){
                 isInSpecimenState = !isInSpecimenState;
+                isYellowSampleNotGood = !isYellowSampleNotGood;
                 isPressedA2 = false;
             }
 
@@ -474,9 +483,24 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 chassisBackLeftPow /= slowyDownyManal;
             }
             //auto slowdown
-            /*else if(outtakeState == outtakeStates.outtakeBasket ||
-                    outtakeState == outtakeStates.outtakeWallPickUpNew ||
-                    outtakeState == outtakeStates.outtakeSpecimenHang){
+
+            else if( intakeState == intakeStates.intakeExtended1out4 ||
+            intakeState == intakeStates.intakeExtended2out4 ||
+            intakeState == intakeStates.intakeExtended3out4 ||
+            intakeState == intakeStates.intakeExtended4out4 /*||
+            intakeCabinState == intakeCabinStates.intakeCabinDownCollecting*/)
+            {
+                chassisFrontLeftPow /= slowyDownyAuto;
+                chassisBackRightPow /= slowyDownyAuto;
+                chassisFrontRightPow /= slowyDownyAuto;
+                chassisBackLeftPow /= slowyDownyAuto;
+            }//-------> FACUT DE LUCA VOICILA :)
+
+
+           /* outtakeState == outtakeStates.outtakeBasket ||
+                    (outtakeState == outtakeStates.outtakeWallPickUpNew ||
+                    outtakeState == outtakeStates.outtakeSpecimenHang)
+            {
                 chassisFrontLeftPow /= slowyDownyAuto;
                 chassisBackRightPow /= slowyDownyAuto;
                 chassisFrontRightPow /= slowyDownyAuto;
