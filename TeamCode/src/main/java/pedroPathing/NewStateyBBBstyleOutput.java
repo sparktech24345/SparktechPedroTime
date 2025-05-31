@@ -274,10 +274,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 }
             }
             //some weird bug that can be easy fix
-            if(outtakeExtendMotorTargetPos == 0 && outtakeState == outtakeStates.outtakeBasket){
+            if(outtakeExtendMotorTargetPos == 0 && outtakeState == outtakeStates.outtakeLowerBasket){
                 outtakeLowerBasket();
             }
-
+            //*/
 
 
 

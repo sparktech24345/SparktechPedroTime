@@ -10,6 +10,7 @@ import android.graphics.Color;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -20,8 +21,10 @@ import pedroPathing.newOld.Toggle;
 
 
 @com.acmerobotics.dashboard.config.Config
+@Disabled
 @TeleOp(name = "BBBNewStatesOutputQueue", group = "Linear OpMode")
 public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
+
     MultipleTelemetry tel;
 
 
