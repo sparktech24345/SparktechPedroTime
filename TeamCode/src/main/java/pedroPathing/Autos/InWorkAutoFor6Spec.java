@@ -53,23 +53,24 @@ public class InWorkAutoFor6Spec extends OpMode {
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
+    private final float globalSpecimenYOffset = -4.5f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
-
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final float globalSpecimenPickupYOffset = 2.f;
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose secondSpecimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose thirdSpecimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose fifthSpecimenPickUpPose = new Pose(-43, 69.6, Math.toRadians(90)); //start
-    private final Pose firstSamplePickUpPos = new Pose(-42.5, 54+3, Math.toRadians(90)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-56.5, 54+3, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-56, 54+3, Math.toRadians(42.5)); //start
-    private final Pose parkingPose=new Pose(-65,70,Math.toRadians(90)); //parking
+    private final Pose firstSpecimenPickUpPose = new Pose(-43 + 3.5, 69.6 + 0.5 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose secondSpecimenPickUpPose = new Pose(-43, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose thirdSpecimenPickUpPose = new Pose(-43, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(-43, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose fifthSpecimenPickUpPose = new Pose(-43, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-42.5, 54+1, Math.toRadians(90)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-56 + 0.8 - 2, 54+1.5, Math.toRadians(90)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-56 + 1.5, 54+3, Math.toRadians(57)); //start
+    private final Pose parkingPose=new Pose(-55,70,Math.toRadians(90)); //parking
 
     double intakeMotorPower=0;
     double outakeMotorPower=0;
@@ -104,7 +105,7 @@ public class InWorkAutoFor6Spec extends OpMode {
         startPath = new Path(new BezierLine(new Point(startPose), new Point(scoringBarPosePreloadSpecimen)));
         startPath.setLinearHeadingInterpolation(startPose.getHeading(), scoringBarPosePreloadSpecimen.getHeading());
 
-        goToPickUpFirstSample=follower.pathBuilder()
+        /*goToPickUpFirstSample=follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(firstSamplePickUpPos)))
                 .setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), firstSamplePickUpPos.getHeading())
                 .build();
@@ -118,11 +119,25 @@ public class InWorkAutoFor6Spec extends OpMode {
                 .addPath(new BezierLine(new Point(secondSamplePickUpPos), new Point(thirdSamplePickUpPos)))
                 .setLinearHeadingInterpolation(secondSamplePickUpPos.getHeading(), thirdSamplePickUpPos.getHeading())
                 .build();
+*/  // 1 3 2 logic
+        goToPickUpFirstSample=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(firstSamplePickUpPos)))
+                .setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), firstSamplePickUpPos.getHeading())
+                .build();
 
+        goToPickUpThirdSample=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(firstSamplePickUpPos), new Point(thirdSamplePickUpPos)))
+                .setLinearHeadingInterpolation(firstSamplePickUpPos.getHeading(), thirdSamplePickUpPos.getHeading())
+                .build();
 
-        //first spec
-        pickUpFirst = new Path(new BezierLine(new Point(thirdSamplePickUpPos), new Point(firstSpecimenPickUpPose)));
-        pickUpFirst.setLinearHeadingInterpolation(thirdSamplePickUpPos.getHeading(), firstSpecimenPickUpPose.getHeading());
+        goToPickUpSecondSample=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(thirdSamplePickUpPos), new Point(secondSamplePickUpPos)))
+                .setLinearHeadingInterpolation(thirdSamplePickUpPos.getHeading(), secondSamplePickUpPos.getHeading())
+                .build();
+
+        //first spec //changed logic to fir 1 3 2 logic
+        pickUpFirst = new Path(new BezierLine(new Point(secondSamplePickUpPos), new Point(firstSpecimenPickUpPose)));
+        pickUpFirst.setLinearHeadingInterpolation(secondSamplePickUpPos.getHeading(), firstSpecimenPickUpPose.getHeading());
 
         scoreFirst = new Path(new BezierLine(new Point(firstSpecimenPickUpPose), new Point(scoringBarPoseFirstSpecimen)));
         scoreFirst.setLinearHeadingInterpolation(firstSpecimenPickUpPose.getHeading(), scoringBarPoseFirstSpecimen.getHeading());
@@ -248,7 +263,7 @@ public class InWorkAutoFor6Spec extends OpMode {
                     intakeCabinFullInBotOutputting();
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
 
-
+                    waitWhile(300);
 
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
@@ -499,6 +514,8 @@ public class InWorkAutoFor6Spec extends OpMode {
         tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
         tel.addData("outtakeDirection",outakeMotorPower);
         tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
+        tel.addData("sensor color",currentStateOfSampleInIntake);
+        tel.addData("follower is busy",follower.isBusy());
         Drawing.drawDebug(follower);
         tel.update();
     }
