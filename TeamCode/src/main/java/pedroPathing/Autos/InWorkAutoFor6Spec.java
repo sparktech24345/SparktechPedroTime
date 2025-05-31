@@ -215,7 +215,7 @@ public class InWorkAutoFor6Spec extends OpMode {
 
 
 
-                    follower.followPath(goToPickUpSecondSample,true);
+                    follower.followPath(goToPickUpThirdSample,true);
                     setPathState(4);
                 }
                 break;
@@ -231,12 +231,13 @@ public class InWorkAutoFor6Spec extends OpMode {
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
+                    /*
                     intakeCabinFullInBotOutputting();
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+                    */
 
 
-
-                    follower.followPath(goToPickUpThirdSample,true);
+                    follower.followPath(goToPickUpSecondSample,true);
                     setPathState(105);
                 }
                 break;
@@ -244,6 +245,9 @@ public class InWorkAutoFor6Spec extends OpMode {
             //last sample and first spec prep
             case 105:
                 if(!follower.isBusy()) {
+                    intakeCabinFullInBotOutputting();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+
 
 
                     autoTimer = System.currentTimeMillis();
