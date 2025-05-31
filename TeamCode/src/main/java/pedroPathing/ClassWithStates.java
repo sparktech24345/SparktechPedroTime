@@ -44,6 +44,7 @@ public class ClassWithStates {
         noStateSet,
         outtakeSpecimenHang,
         outtakeBasket,
+        outtakeLowerBasket,
         outtakeWallPickUpNormal,
         outtakeWallPickUpNew,
         outtakeTransfer,
@@ -176,6 +177,13 @@ public class ClassWithStates {
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakePivotServoPos = outtakePivotServoBasketPos;
         outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
+    }
+
+    public static void outtakeLowerBasket(){
+        outtakeState = outtakeStates.outtakeLowerBasket;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakePivotServoPos = outtakePivotServoBasketPos;
+        outtakeExtendMotorTargetPos = outtakeMotorMaxPosLowerBasket;
     }
     public static void outtakeWallPickUpNormal(){ //old one
         outtakeState = outtakeStates.outtakeWallPickUpNormal;

@@ -241,6 +241,46 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             }
 
 
+            //LOWERBASKET
+            if(gamepad2.b) isPressedB2  = true;
+            if(!gamepad2.b && isPressedB2){
+                if(!(outtakeState == outtakeStates.outtakeLowerBasket)){
+
+                    isAfterOuttakeClawClosedAfterTransfer = true;
+                    intakeAfterTransferClosedClawTimer = System.currentTimeMillis();
+                    isAtStateOfLettingBasketSampleGo = true;
+                }
+                else intakeRetracted();
+                isPressedB2 = false;
+            }
+            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis()){
+                intakeRetracted();
+                intakeCabinTransferPosition();
+                outtakeLowerBasket();
+                isAfterOuttakeClawClosedAfterTransfer = false;
+            }
+            //going down after, quite complicated cuz holding to let sample go
+            if(isAtStateOfLettingBasketSampleGo && gamepad1.x){
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                isAfterOuttakeScoredBasketSample = true;
+                isAtStateOfLettingBasketSampleGo = false;
+                outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
+            }
+            if(!gamepad2.b && isAfterOuttakeScoredBasketSample) {
+                outtakePivotServoPos = outtakePivotServoTransferPos;
+                if(outtakeAfterBasketSampleScoreTimer + 300 < System.currentTimeMillis()) {
+                    outtakeTransfer();
+                    isAfterOuttakeScoredBasketSample = false;
+                }
+            }
+            //some weird bug that can be easy fix
+            if(outtakeExtendMotorTargetPos == 0 && outtakeState == outtakeStates.outtakeBasket){
+                outtakeLowerBasket();
+            }
+
+
+
+
 
 
 
@@ -389,7 +429,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
 
-            if(!(gamepad2.b || gamepad1.y)){
+            if(!(gamepad1.y)){
                 isTimeToRefreshOutptingTime = true;
                 if(intakeCabinState == intakeCabinStates.intakeCabinFullInBotOutputting){
                     intakeCabinFullInBot();
@@ -453,11 +493,11 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             }
 
 
-
             //PIDs
             PIDincrement=1;
             double intakeExtendMotorPow;
             intakeExtendMotorPow = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.3;
             double outtakeExtendMotorPow;
             outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;
@@ -473,7 +513,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //slowdown
             double slowyDownyManal = 2.5;
-            double slowyDownyAuto = 1.75;
+            double slowyDownyAuto = 1.5;
 
             //manual slowdown
             if(gamepad1.right_bumper){
@@ -484,28 +524,18 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             }
             //auto slowdown
 
-            else if( intakeState == intakeStates.intakeExtended1out4 ||
+            else if(// intakeState == intakeStates.intakeExtended1out4 ||
             intakeState == intakeStates.intakeExtended2out4 ||
             intakeState == intakeStates.intakeExtended3out4 ||
-            intakeState == intakeStates.intakeExtended4out4 /*||
-            intakeCabinState == intakeCabinStates.intakeCabinDownCollecting*/)
+            intakeState == intakeStates.intakeExtended4out4 )
+            //intakeCabinState == intakeCabinStates.intakeCabinDownCollecting
             {
                 chassisFrontLeftPow /= slowyDownyAuto;
                 chassisBackRightPow /= slowyDownyAuto;
                 chassisFrontRightPow /= slowyDownyAuto;
                 chassisBackLeftPow /= slowyDownyAuto;
-            }//-------> FACUT DE LUCA VOICILA :)
+            }//-------> FACUT DE LUCA VOICILA :)  check by Atloe
 
-
-           /* outtakeState == outtakeStates.outtakeBasket ||
-                    (outtakeState == outtakeStates.outtakeWallPickUpNew ||
-                    outtakeState == outtakeStates.outtakeSpecimenHang)
-            {
-                chassisFrontLeftPow /= slowyDownyAuto;
-                chassisBackRightPow /= slowyDownyAuto;
-                chassisFrontRightPow /= slowyDownyAuto;
-                chassisBackLeftPow /= slowyDownyAuto;
-            }*/
 
             // Toggle Claw on Y2
 
