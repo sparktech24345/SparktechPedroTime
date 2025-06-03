@@ -228,6 +228,14 @@ public class ClassWithStates {
         isOuttakeInPositionToGoDown = true;
         beforeOuttakeGoDownTimer = System.currentTimeMillis();
     }
+    public static void autoOuttakeTransfer(){
+        outtakeState = outtakeStates.outtakeTransfer;
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakePivotServoPos = outtakePivotServoTransferPos;
+        outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
+        isOuttakeInPositionToGoDown = true;
+        beforeOuttakeGoDownTimer = System.currentTimeMillis();
+    }
     public static void outtakeStandByBasket(){
         outtakeState = outtakeStates.outtakeStandBy;
         outtakePivotServoPos = outtakePivotServoStandByPos;
