@@ -245,7 +245,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             if(gamepad2.b) isPressedB2  = true;
             if(!gamepad2.b && isPressedB2){
                 if(!(outtakeState == outtakeStates.outtakeLowerBasket)){
-
                     isAfterOuttakeClawClosedAfterTransfer = true;
                     intakeAfterTransferClosedClawTimer = System.currentTimeMillis();
                     isAtStateOfLettingBasketSampleGo = true;
@@ -260,7 +259,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 isAfterOuttakeClawClosedAfterTransfer = false;
             }
             //going down after, quite complicated cuz holding to let sample go
-            if(isAtStateOfLettingBasketSampleGo && gamepad1.x){
+            if(isAtStateOfLettingBasketSampleGo && gamepad2.b){
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
                 isAfterOuttakeScoredBasketSample = true;
                 isAtStateOfLettingBasketSampleGo = false;

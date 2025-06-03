@@ -280,6 +280,14 @@ public class ClassWithQueuerStates {
         outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
     }
 
+    public static void outtakeLowerBasketQueue(){
+        outtakeQueue.clearSteps();
+        outtakeState = outtakeStates.outtakeLowerBasket;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakePivotServoPos = outtakePivotServoBasketPos;
+        outtakeExtendMotorTargetPos = outtakeMotorMaxPosLowerBasket;
+    }
+
 
 
     public static void outtakeWallPickUpNewQueue(){

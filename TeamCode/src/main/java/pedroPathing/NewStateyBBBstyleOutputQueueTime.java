@@ -96,6 +96,20 @@ public class NewStateyBBBstyleOutputQueueTime extends LinearOpMode {
                 isPressedX1 = false;
             }
 
+            //LOWER BASKET
+            if(gamepad2.b) isPressedB2 = true;
+            if(gamepad2.b && outtakeState == outtakeStates.outtakeLowerBasket){
+                outtakeGetDownFromBasket();
+                isPressedB2 = false;
+            }
+            if(!gamepad2.b && isPressedB2 && !(outtakeState == outtakeStates.outtakeLowerBasket)){
+
+                if(outtakeState == outtakeStates.outtakeSpecimenHang || outtakeState == outtakeStates.outtakeTransfer) outtakeLowerBasketQueue();
+                else{ /*if(gamepad2.b)*/ outtakeLowerBasketQueue();}
+
+                isPressedB2 = false;
+            }
+
             //Specimen
 
             if(gamepad1.b) isPressedB1 = true;
