@@ -61,6 +61,8 @@ public class BasketTestAuto extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
     private final Pose behindBasket = new Pose(-46.2, 82.2, Math.toRadians(225));
     private final Pose firstSampleCollect = new Pose(-46.6, 91, 5.3);
+    private final Pose secondSampleCollect = new Pose(-46.6, 91, 5.3);
+    private final Pose thirdSampleCollect = new Pose(-46.6, 91, 5.3);
 
 
 
@@ -97,9 +99,29 @@ public class BasketTestAuto extends OpMode {
         preloadScorePath = new Path(new BezierLine(new Point(startPose), new Point(behindBasket)));
         preloadScorePath.setLinearHeadingInterpolation(startPose.getHeading(), behindBasket.getHeading());
 
+        /// FIRST SAMPLE 
+
         firstSampleCollectPath = new Path(new BezierLine(new Point(behindBasket), new Point(firstSampleCollect)));
         firstSampleCollectPath.setLinearHeadingInterpolation(behindBasket.getHeading(), firstSampleCollect.getHeading());
 
+        firstSampleScorePath = new Path(new BezierLine(new Point(firstSampleCollect), new Point(behindBasket)));
+        firstSampleScorePath.setLinearHeadingInterpolation(firstSampleCollect.getHeading(), behindBasket.getHeading());
+
+        /// SECOND SAMPLE
+
+        secondSampleCollectPath = new Path(new BezierLine(new Point(behindBasket), new Point(secondSampleCollect)));
+        secondSampleCollectPath.setLinearHeadingInterpolation(behindBasket.getHeading(), secondSampleCollectSampleCollect.getHeading());
+
+        secondSampleScorePath = new Path(new BezierLine(new Point(secondSampleCollect), new Point(behindBasket)));
+        secondSampleScorePath.setLinearHeadingInterpolation(secondSampleCollect.getHeading(), behindBasket.getHeading());
+
+        /// THIRD SAMPLE
+
+        thirdSampleCollectPath = new Path(new BezierLine(new Point(behindBasket), new Point(thirdSampleCollect)));
+        thirdSampleCollectPath.setLinearHeadingInterpolation(behindBasket.getHeading(), thirdSampleCollect.getHeading());
+
+        thirdSampleScorePath = new Path(new BezierLine(new Point(thirdSampleCollect), new Point(behindBasket)));
+        thirdSampleScorePath.setLinearHeadingInterpolation(thirdSampleCollect.getHeading(), behindBasket.getHeading());
 
     }
 
@@ -140,11 +162,9 @@ public class BasketTestAuto extends OpMode {
             case 3:
                 if(!follower.isBusy()){
                     autoTimer = System.currentTimeMillis();
-                    outtakeTransfer();
                     autoOuttakeTransfer();
                     waitWhile(500);
                     intakeCabinDownCollecting();
-                    intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
                     while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
@@ -153,6 +173,8 @@ public class BasketTestAuto extends OpMode {
                     setPathState(-1);
                 }
                 break;
+            case 4:
+
 
         }
     }
@@ -224,7 +246,7 @@ public class BasketTestAuto extends OpMode {
             outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
         }
 
-
+        
 
         //color stuff
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
