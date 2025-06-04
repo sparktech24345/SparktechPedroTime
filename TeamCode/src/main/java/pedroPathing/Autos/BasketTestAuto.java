@@ -10,6 +10,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
@@ -17,7 +18,6 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,7 +28,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import kotlin.math.UMathKt;
 import pedroPathing.ControlMotor;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -59,7 +58,8 @@ public class BasketTestAuto extends OpMode {
 
     // BASKET
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
-    private final Pose behindBasket = new Pose(-46.2, 82.2, Math.toRadians(225));
+    private final Pose behindBasketPreload = new Pose(-41.2, 80.2, Math.toRadians(225));
+    private final Pose behindBasketFirstSample = new Pose(-49.2 , 85.2, Math.toRadians(225));
     private final Pose firstSampleCollect = new Pose(-46.6, 91, 5.3);
     private final Pose secondSampleCollect = new Pose(-46.6, 91, 5.3);
     private final Pose thirdSampleCollect = new Pose(-46.6, 91, 5.3);
@@ -71,7 +71,7 @@ public class BasketTestAuto extends OpMode {
     //private Path startPath,pickUpFirst,pickUpSecond,pickUpThird,pickUpFourth,pickUpFifth,scoreFirst,scoreSecond,scoreThird,scoreFourth,scoreFifth,parking;
     //private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample;
 
-    private Path firstSampleCollectPath, preloadScorePath;
+    private PathChain firstSampleCollectPath, preloadScorePath, firstSampleScorePath, secondSampleCollectPath, secondSampleScorePath, thirdSampleCollectPath, thirdSampleScorePath;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -96,33 +96,42 @@ public class BasketTestAuto extends OpMode {
 //        startPath = new Path(new BezierLine(new Point(startPose), new Point(scoringBarPosePreloadSpecimen)));
 //        startPath.setLinearHeadingInterpolation(startPose.getHeading(), scoringBarPosePreloadSpecimen.getHeading());
 
-        preloadScorePath = new Path(new BezierLine(new Point(startPose), new Point(behindBasket)));
-        preloadScorePath.setLinearHeadingInterpolation(startPose.getHeading(), behindBasket.getHeading());
+        preloadScorePath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(behindBasketPreload)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), behindBasketPreload.getHeading())
+                .build();
 
         /// FIRST SAMPLE 
 
-        firstSampleCollectPath = new Path(new BezierLine(new Point(behindBasket), new Point(firstSampleCollect)));
-        firstSampleCollectPath.setLinearHeadingInterpolation(behindBasket.getHeading(), firstSampleCollect.getHeading());
+        firstSampleCollectPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(behindBasketPreload), new Point(firstSampleCollect)))
+                .setLinearHeadingInterpolation(behindBasketPreload.getHeading(), firstSampleCollect.getHeading())
+                .build();
 
-        firstSampleScorePath = new Path(new BezierLine(new Point(firstSampleCollect), new Point(behindBasket)));
-        firstSampleScorePath.setLinearHeadingInterpolation(firstSampleCollect.getHeading(), behindBasket.getHeading());
+        firstSampleScorePath = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(firstSampleCollect),
+                        new Point(-47.9, 88.1, Point.CARTESIAN),
+                        new Point(behindBasketFirstSample)))
+                .setLinearHeadingInterpolation(firstSampleCollect.getHeading(), behindBasketFirstSample.getHeading())
+                .build();
 
+        /*
         /// SECOND SAMPLE
 
-        secondSampleCollectPath = new Path(new BezierLine(new Point(behindBasket), new Point(secondSampleCollect)));
-        secondSampleCollectPath.setLinearHeadingInterpolation(behindBasket.getHeading(), secondSampleCollectSampleCollect.getHeading());
+        secondSampleCollectPath = new Path(new BezierLine(new Point(behindBasketPreload), new Point(secondSampleCollect)));
+        secondSampleCollectPath.setLinearHeadingInterpolation(behindBasketPreload.getHeading(), secondSampleCollect.getHeading());
 
-        secondSampleScorePath = new Path(new BezierLine(new Point(secondSampleCollect), new Point(behindBasket)));
-        secondSampleScorePath.setLinearHeadingInterpolation(secondSampleCollect.getHeading(), behindBasket.getHeading());
+        secondSampleScorePath = new Path(new BezierLine(new Point(secondSampleCollect), new Point(behindBasketPreload)));
+        secondSampleScorePath.setLinearHeadingInterpolation(secondSampleCollect.getHeading(), behindBasketPreload.getHeading());
 
         /// THIRD SAMPLE
 
-        thirdSampleCollectPath = new Path(new BezierLine(new Point(behindBasket), new Point(thirdSampleCollect)));
-        thirdSampleCollectPath.setLinearHeadingInterpolation(behindBasket.getHeading(), thirdSampleCollect.getHeading());
+        thirdSampleCollectPath = new Path(new BezierLine(new Point(behindBasketPreload), new Point(thirdSampleCollect)));
+        thirdSampleCollectPath.setLinearHeadingInterpolation(behindBasketPreload.getHeading(), thirdSampleCollect.getHeading());
 
-        thirdSampleScorePath = new Path(new BezierLine(new Point(thirdSampleCollect), new Point(behindBasket)));
-        thirdSampleScorePath.setLinearHeadingInterpolation(thirdSampleCollect.getHeading(), behindBasket.getHeading());
-
+        thirdSampleScorePath = new Path(new BezierLine(new Point(thirdSampleCollect), new Point(behindBasketPreload)));
+        thirdSampleScorePath.setLinearHeadingInterpolation(thirdSampleCollect.getHeading(), behindBasketPreload.getHeading());
+        */
     }
 
     /** This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
@@ -162,20 +171,30 @@ public class BasketTestAuto extends OpMode {
             case 3:
                 if(!follower.isBusy()){
                     autoTimer = System.currentTimeMillis();
-                    autoOuttakeTransfer();
-                    waitWhile(500);
                     intakeCabinDownCollecting();
+                    waitWhile(500);
+                    autoOuttakeTransfer();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
                     intakeRetracted();
-                    intakeCabinFullInBot();
-                    setPathState(-1);
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(4);
                 }
                 break;
             case 4:
-
-
+                if(!follower.isBusy()){
+                    executeAutoTransfer();
+                    follower.followPath(firstSampleScorePath);
+                    //outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(5);
+                }
+                break;
+            case 5:
+                if(!follower.isBusy()){
+                    setPathState(-1);
+                }
+                break;
         }
     }
 
@@ -238,6 +257,15 @@ public class BasketTestAuto extends OpMode {
         //end of our stuff
     }
 
+    public void executeAutoTransfer() {
+        waitWhile(500);
+        intakeSpinMotorPow = 0;
+        intakeCabinTransferPosition();
+        waitWhile(500);
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
+        waitWhile(200);
+        outtakeBasket();
+    }
 
     public void robotDoStuff(){
         //ifs
