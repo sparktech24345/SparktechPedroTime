@@ -425,10 +425,10 @@ slides pos on descent -223
 
         if (currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample){
             collectTimedOut = false;
+            intakeSpinMotorPow = 0;
         }
         intakeRetracted();
         outtakeClawServoPos = outtakeClawServoExtendedPos;
-        intakeSpinMotorPow = 0;
         return collectTimedOut;
     }
 
@@ -449,29 +449,6 @@ slides pos on descent -223
         }
         intakeRetracted();
         outtakeClawServoPos = outtakeClawServoExtendedPos;
-        intakeSpinMotorPow = 0;
-    }
-
-    public boolean submersibleExtend(){
-        autoTimer = System.currentTimeMillis();
-        autoOuttakeTransfer();
-        waitWhile(300);
-        intakeExtended3out4();
-        if(intakeMotor.getCurrentPosition() < -223){
-            intakeCabinDownCollecting();
-            return true;
-        }
-        return false;
-    }
-
-    public void submersibleCollect(){
-        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
-            robotDoStuff();
-        }
-
-        intakeRetracted();
-        outtakeClawServoPos = outtakeClawServoExtendedPos;
-        intakeSpinMotorPow = 0;
     }
 
     public void executeAutoTransfer() {
