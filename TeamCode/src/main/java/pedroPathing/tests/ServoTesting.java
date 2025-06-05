@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.openftc.easyopencv.OpenCvCamera;
 
 
 import pedroPathing.ControlMotor;
@@ -27,6 +28,7 @@ public class ServoTesting extends LinearOpMode {
     double outakeSampleServoPosition = servoextended;
     //double outakeRotateServoPosition =161; // new 0
     double intakeServoPower = 0;
+    boolean downIsPressed = false;
 
     SparkFunOTOS myOtos;
 
@@ -46,8 +48,11 @@ public class ServoTesting extends LinearOpMode {
         VisionPortal portal = new VisionPortal.Builder()
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "camera"))
+                .setShowStatsOverlay(false)
                 .build();
         dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
+
+
 
 
 
@@ -95,11 +100,16 @@ public class ServoTesting extends LinearOpMode {
             dashboardTelemetry.addData("intakeRotateServoPos(TBS)", intakeRotateServo.getPosition());
             dashboardTelemetry.addData("outake motor pos ", outakeLeftMotor.getCurrentPosition());
             dashboardTelemetry.addData("intake motor pos ", intakeMotor.getCurrentPosition());
-            int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
             FtcDashboard.getInstance().startCameraStream(portal, 10);
+            portal.saveNextFrameRaw("savedFramed");
             dashboardTelemetry.update();
             telemetry.update();
 
+            if(gamepad1.dpad_down) downIsPressed = true;
+            if(downIsPressed && !gamepad1.dpad_down) {
+                portal.saveNextFrameRaw("savedPhotoServoTesting");
+                downIsPressed = false;
+            }
 
 
             //tester.setPosition(0);

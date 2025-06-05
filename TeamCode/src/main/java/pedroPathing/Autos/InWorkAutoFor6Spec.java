@@ -475,6 +475,7 @@ public class InWorkAutoFor6Spec extends OpMode {
             outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
         }
 
+        follower.update();
 
 
         //color stuff
