@@ -59,8 +59,8 @@ public class BasketTestAuto extends OpMode {
     // BASKET
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
     private final Pose behindBasketPreload = new Pose(-41.2, 80.2, Math.toRadians(225));
-    private final Pose behindBasketFirstSample = new Pose(-49.2 , 85.2, Math.toRadians(225));
-    private final Pose firstSampleCollect = new Pose(-46.6, 91, 5.3);
+    private final Pose behindBasketFirstSample = new Pose(-48.5 , 88, Math.toRadians(225));
+    private final Pose firstSampleCollect = new Pose(-47, 92, 5.3);
     private final Pose secondSampleCollect = new Pose(-46.6, 91, 5.3);
     private final Pose thirdSampleCollect = new Pose(-46.6, 91, 5.3);
 
@@ -109,10 +109,11 @@ public class BasketTestAuto extends OpMode {
                 .build();
 
         firstSampleScorePath = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(firstSampleCollect),
-                        new Point(-47.9, 88.1, Point.CARTESIAN),
+                .addPath(new BezierLine(
+                        new Point(firstSampleCollect),
+                        //new Point(-47.9, 88.1, Point.CARTESIAN),
                         new Point(behindBasketFirstSample)))
-                .setLinearHeadingInterpolation(firstSampleCollect.getHeading(), behindBasketFirstSample.getHeading())
+                .setConstantHeadingInterpolation(behindBasketFirstSample.getHeading())
                 .build();
 
         /*
@@ -185,6 +186,7 @@ public class BasketTestAuto extends OpMode {
             case 4:
                 if(!follower.isBusy()){
                     executeAutoTransfer();
+                    waitWhile(500);
                     follower.followPath(firstSampleScorePath);
                     //outtakeClawServoPos = outtakeClawServoExtendedPos;
                     setPathState(5);
@@ -192,6 +194,8 @@ public class BasketTestAuto extends OpMode {
                 break;
             case 5:
                 if(!follower.isBusy()){
+                    waitWhile(300);
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
                     setPathState(-1);
                 }
                 break;
@@ -268,6 +272,12 @@ public class BasketTestAuto extends OpMode {
     }
 
     public void robotDoStuff(){
+        //risky
+        follower.update();
+
+
+
+
         //ifs
         if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis()){
             needsToExtraExtend = false;
