@@ -57,7 +57,6 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 
 @TeleOp(name = "Vision Color-Sensor", group = "Concept")
-@Disabled
 public class ConceptVisionColorSensor extends LinearOpMode
 {
     @Override
@@ -84,16 +83,6 @@ public class ConceptVisionColorSensor extends LinearOpMode
          *     This will force any other colored region into one of these colors.
          *     eg: Green may be reported as YELLOW, as this may be the "closest" match.
          */
-        PredominantColorProcessor colorSensor = new PredominantColorProcessor.Builder()
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.1, 0.1, 0.1, -0.1))
-                .setSwatches(
-                        PredominantColorProcessor.Swatch.RED,
-                        PredominantColorProcessor.Swatch.BLUE,
-                        PredominantColorProcessor.Swatch.YELLOW,
-                        PredominantColorProcessor.Swatch.BLACK,
-                        PredominantColorProcessor.Swatch.WHITE)
-                .build();
-
         /*
          * Build a vision portal to run the Color Sensor process.
          *
@@ -107,7 +96,6 @@ public class ConceptVisionColorSensor extends LinearOpMode
          *      .setCamera(BuiltinCameraDirection.BACK)    ... for a Phone Camera
          */
         VisionPortal portal = new VisionPortal.Builder()
-                .addProcessor(colorSensor)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "camera"))
                 .build();
@@ -117,18 +105,13 @@ public class ConceptVisionColorSensor extends LinearOpMode
         // WARNING:  To be able to view the stream preview on the Driver Station, this code runs in INIT mode.
         while (opModeIsActive() || opModeInInit())
         {
-            telemetry.addData("DS preview on/off", "3 dots, Camera Stream\n");
-
             // Request the most recent color analysis.
             // This will return the closest matching colorSwatch and the predominant RGB color.
             // Note: to take actions based on the detected color, simply use the colorSwatch in a comparison or switch.
             //  eg:
             //      if (result.closestSwatch == PredominantColorProcessor.Swatch.RED) {... some code  ...}
-            PredominantColorProcessor.Result result = colorSensor.getAnalysis();
 
             // Display the Color Sensor result.
-            telemetry.addData("Best Match:", result.closestSwatch);
-            telemetry.addLine(String.format("R %3d, G %3d, B %3d", Color.red(result.rgb), Color.green(result.rgb), Color.blue(result.rgb)));
             telemetry.update();
 
             sleep(20);

@@ -10,9 +10,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
-import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
@@ -58,14 +56,34 @@ public class BasketTestAuto extends OpMode {
 
     // BASKET
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
-    private final Pose behindBasketPreload = new Pose(-44.5, 79.5, Math.toRadians(225));
-    private final Pose behindBasketFirstSample = new Pose(-48.5, 81.5, Math.toRadians(225));
-    private final Pose behindBasketSecondSample = new Pose(-49.5, 82.5, Math.toRadians(225));
-    private final Pose behindBasketThirdSample = new Pose(-49 , 82, Math.toRadians(225));
-    private final Pose firstSampleCollect = new Pose( -49.25, 91, Math.toRadians(298));
-    private final Pose secondSampleCollect = new Pose(-49.25, 89, Math.toRadians(270));
-    private final Pose thirdSampleCollect = new Pose( -44.3, 86.20, Math.toRadians(270));
 
+    // place in basket
+    private final float xOffsetBasket = 0.4f;
+    private final float yOffsetBasket = 1f;
+    private final Pose behindBasketPreload = new Pose(-44.5 + 0.2, 79.5 + 0.5, Math.toRadians(225));
+    private final Pose behindBasketFirstSample = new Pose(-48.5 - 2.5 + xOffsetBasket, 81.5 + 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + xOffsetBasket, 82.5+ 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketThirdSample = new Pose(-49 - 2.5 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
+
+    // collect first 3 from floor
+    private final Pose firstSampleCollect = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
+    private final Pose secondSampleCollect = new Pose(-49.25 - 3.25 + 2.25, 89 + 2, Math.toRadians(270));
+    private final Pose thirdSampleCollect = new Pose( -44.3 - 4 + 5.25, 86.20 + 2, Math.toRadians(270));
+
+    // collect from submersible
+    private final Pose submersibleStdCollect = new Pose(-20.25, 122, 3.2909640328101575);
+    private final Pose submersibleStdBehindBasket = new Pose(-49 - 2.5 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
+
+    /*
+    heading: 4.0289046655823935
+intakerotate: 40.0
+path state: 0
+x: -52.47229868971458
+y: 83.09612604576769
+slides pos on descent -223
+     */
+
+    private boolean skipBasket = false;
 
 
     ControlMotor intakeControlMotor;
@@ -73,7 +91,8 @@ public class BasketTestAuto extends OpMode {
     //private Path startPath,pickUpFirst,pickUpSecond,pickUpThird,pickUpFourth,pickUpFifth,scoreFirst,scoreSecond,scoreThird,scoreFourth,scoreFifth,parking;
     //private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample;
 
-    private PathChain firstSampleCollectPath, preloadScorePath, firstSampleScorePath, secondSampleCollectPath, secondSampleScorePath, thirdSampleCollectPath, thirdSampleScorePath;
+    private PathChain firstSampleCollectPath, preloadScorePath, firstSampleScorePath, secondSampleCollectPath, secondSampleScorePath, thirdSampleCollectPath, thirdSampleScorePath
+            , submersibleCollectPath, submersibleScorePath;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -147,6 +166,19 @@ public class BasketTestAuto extends OpMode {
                 .setConstantHeadingInterpolation(behindBasketThirdSample.getHeading())
                 .build();
 
+        ///  COLLECT FROM SUBMERSIBLE
+
+        submersibleCollectPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(behindBasketThirdSample), new Point(submersibleStdCollect)))
+                .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), submersibleStdCollect.getHeading())
+                .build();
+
+        submersibleScorePath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(submersibleStdCollect), new Point(submersibleStdBehindBasket)))
+                .setLinearHeadingInterpolation(submersibleStdCollect.getHeading(), submersibleStdBehindBasket.getHeading())
+                .build();
+
+
     }
 
     /** This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
@@ -185,8 +217,13 @@ public class BasketTestAuto extends OpMode {
                 break;
             case 3:
                 if(!follower.isBusy()){
-                    executeAutoCollect();
-                    setPathState(4);
+                    skipBasket =  executeAutoCollect();
+                    if(!skipBasket){
+                        setPathState(4);
+                    } else {
+                        setPathState(6);
+                    }
+
                 }
                 break;
             case 4:
@@ -216,8 +253,13 @@ public class BasketTestAuto extends OpMode {
                 break;
             case 7:
                 if(!follower.isBusy()){
-                    executeAutoCollect();
-                    setPathState(8);
+                    skipBasket =  executeAutoCollect();
+                    if(!skipBasket){
+                        setPathState(8);
+                    } else {
+                        setPathState(10);
+                    }
+
                 }
                 break;
             case 8:
@@ -249,8 +291,13 @@ public class BasketTestAuto extends OpMode {
                 break;
             case 11:
                 if(!follower.isBusy()){
-                    executeAutoCollect();
-                    setPathState(12);
+                    skipBasket =  executeAutoCollect();
+                    if(!skipBasket){
+                        setPathState(12);
+                    } else {
+                        setPathState(14);
+                    }
+
                 }
                 break;
             case 12:
@@ -271,6 +318,33 @@ public class BasketTestAuto extends OpMode {
                 break;
             case 14:
                 if(!follower.isBusy()){
+                    autoOuttakeTransfer();
+                    follower.followPath(submersibleCollectPath);
+                    setPathState(15);
+                }
+                break;
+            case 15:
+                if(!follower.isBusy()){
+                    executeSubmersibleCollect();
+                    setPathState(16);
+                }
+                break;
+            case 16:
+                if(!follower.isBusy()){
+                    executeAutoTransfer();
+                    setPathState(17);
+                }
+                break;
+            case 17:
+                if(!follower.isBusy()){
+                    follower.followPath(submersibleScorePath);
+                    setPathState(18);
+                }
+                break;
+            case 18:
+                if(!follower.isBusy()){
+                    waitWhile(300);
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
                     setPathState(-1);
                 }
                 break;
@@ -336,16 +410,68 @@ public class BasketTestAuto extends OpMode {
         //end of our stuff
     }
 
-    public void executeAutoCollect(){
+    public boolean executeAutoCollect(){
+        boolean collectTimedOut = true;
         autoTimer = System.currentTimeMillis();
         intakeCabinDownCollecting();
         waitWhile(500);
         autoOuttakeTransfer();
         waitWhile(300);
         intakeExtended4out4();
-        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)
+                && autoTimer + 2000 > System.currentTimeMillis()) {
+            robotDoStuff();
+        }
+
+        if (currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+            collectTimedOut = false;
+        }
         intakeRetracted();
         outtakeClawServoPos = outtakeClawServoExtendedPos;
+        intakeSpinMotorPow = 0;
+        return collectTimedOut;
+    }
+
+    public void executeSubmersibleCollect() {
+        autoTimer = System.currentTimeMillis();
+        autoOuttakeTransfer();
+        waitWhile(300);
+        intakeExtended3out4();
+
+        while(intakeMotor.getCurrentPosition() < -223) {
+            robotDoStuff();
+        }
+
+        intakeCabinDownCollecting();
+
+        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
+            robotDoStuff();
+        }
+        intakeRetracted();
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        intakeSpinMotorPow = 0;
+    }
+
+    public boolean submersibleExtend(){
+        autoTimer = System.currentTimeMillis();
+        autoOuttakeTransfer();
+        waitWhile(300);
+        intakeExtended3out4();
+        if(intakeMotor.getCurrentPosition() < -223){
+            intakeCabinDownCollecting();
+            return true;
+        }
+        return false;
+    }
+
+    public void submersibleCollect(){
+        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
+            robotDoStuff();
+        }
+
+        intakeRetracted();
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        intakeSpinMotorPow = 0;
     }
 
     public void executeAutoTransfer() {
@@ -418,6 +544,7 @@ public class BasketTestAuto extends OpMode {
         tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
         tel.addData("sensor color",currentStateOfSampleInIntake);
         tel.addData("follower is busy",follower.isBusy());
+        tel.addData("intake motor", intakeMotor.getCurrentPosition());
         Drawing.drawDebug(follower);
         tel.update();
     }
