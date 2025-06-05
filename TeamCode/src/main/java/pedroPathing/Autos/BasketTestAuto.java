@@ -58,11 +58,13 @@ public class BasketTestAuto extends OpMode {
 
     // BASKET
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
-    private final Pose behindBasketPreload = new Pose(-41.2, 80.2, Math.toRadians(225));
-    private final Pose behindBasketFirstSample = new Pose(-48.5 , 88, Math.toRadians(225));
-    private final Pose firstSampleCollect = new Pose(-47, 92, 5.3);
-    private final Pose secondSampleCollect = new Pose(-46.6, 91, 5.3);
-    private final Pose thirdSampleCollect = new Pose(-46.6, 91, 5.3);
+    private final Pose behindBasketPreload = new Pose(-44.5, 79.5, Math.toRadians(225));
+    private final Pose behindBasketFirstSample = new Pose(-48.5, 81.5, Math.toRadians(225));
+    private final Pose behindBasketSecondSample = new Pose(-49.5, 82.5, Math.toRadians(225));
+    private final Pose behindBasketThirdSample = new Pose(-49 , 82, Math.toRadians(225));
+    private final Pose firstSampleCollect = new Pose( -49.25, 91, Math.toRadians(298));
+    private final Pose secondSampleCollect = new Pose(-49.25, 89, Math.toRadians(270));
+    private final Pose thirdSampleCollect = new Pose( -44.3, 86.20, Math.toRadians(270));
 
 
 
@@ -116,23 +118,35 @@ public class BasketTestAuto extends OpMode {
                 .setConstantHeadingInterpolation(behindBasketFirstSample.getHeading())
                 .build();
 
-        /*
+
         /// SECOND SAMPLE
 
-        secondSampleCollectPath = new Path(new BezierLine(new Point(behindBasketPreload), new Point(secondSampleCollect)));
-        secondSampleCollectPath.setLinearHeadingInterpolation(behindBasketPreload.getHeading(), secondSampleCollect.getHeading());
+        secondSampleCollectPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(behindBasketFirstSample), new Point(secondSampleCollect)))
+                .setLinearHeadingInterpolation(behindBasketFirstSample.getHeading(), secondSampleCollect.getHeading())
+                .build();
 
-        secondSampleScorePath = new Path(new BezierLine(new Point(secondSampleCollect), new Point(behindBasketPreload)));
-        secondSampleScorePath.setLinearHeadingInterpolation(secondSampleCollect.getHeading(), behindBasketPreload.getHeading());
+        secondSampleScorePath = follower.pathBuilder()
+                .addPath(new BezierLine(
+                        new Point(secondSampleCollect),
+                        new Point(behindBasketSecondSample)))
+                .setConstantHeadingInterpolation(behindBasketSecondSample.getHeading())
+                .build();
 
         /// THIRD SAMPLE
 
-        thirdSampleCollectPath = new Path(new BezierLine(new Point(behindBasketPreload), new Point(thirdSampleCollect)));
-        thirdSampleCollectPath.setLinearHeadingInterpolation(behindBasketPreload.getHeading(), thirdSampleCollect.getHeading());
+        thirdSampleCollectPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(behindBasketSecondSample), new Point(thirdSampleCollect)))
+                .setLinearHeadingInterpolation(behindBasketSecondSample.getHeading(), thirdSampleCollect.getHeading())
+                .build();
 
-        thirdSampleScorePath = new Path(new BezierLine(new Point(thirdSampleCollect), new Point(behindBasketPreload)));
-        thirdSampleScorePath.setLinearHeadingInterpolation(thirdSampleCollect.getHeading(), behindBasketPreload.getHeading());
-        */
+        thirdSampleScorePath = follower.pathBuilder()
+                .addPath(new BezierLine(
+                        new Point(thirdSampleCollect),
+                        new Point(behindBasketThirdSample)))
+                .setConstantHeadingInterpolation(behindBasketThirdSample.getHeading())
+                .build();
+
     }
 
     /** This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
@@ -171,15 +185,7 @@ public class BasketTestAuto extends OpMode {
                 break;
             case 3:
                 if(!follower.isBusy()){
-                    autoTimer = System.currentTimeMillis();
-                    intakeCabinDownCollecting();
-                    waitWhile(500);
-                    autoOuttakeTransfer();
-                    waitWhile(300);
-                    intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
-                    intakeRetracted();
-                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    executeAutoCollect();
                     setPathState(4);
                 }
                 break;
@@ -196,6 +202,75 @@ public class BasketTestAuto extends OpMode {
                 if(!follower.isBusy()){
                     waitWhile(300);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(6);
+                }
+                break;
+
+                // SECOND SAMPLE
+
+            case 6:
+                if(!follower.isBusy()){
+                    follower.followPath(secondSampleCollectPath,true);
+                    setPathState(7);
+                }
+                break;
+            case 7:
+                if(!follower.isBusy()){
+                    executeAutoCollect();
+                    setPathState(8);
+                }
+                break;
+            case 8:
+                if(!follower.isBusy()){
+                    executeAutoTransfer();
+                    waitWhile(500);
+                    follower.followPath(secondSampleScorePath);
+                    //outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(9);
+                }
+                break;
+
+            case 9:
+                if(!follower.isBusy()){
+                    waitWhile(300);
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(10);
+                }
+                break;
+
+
+                // THIRD SAMPLE
+
+            case 10:
+                if(!follower.isBusy()){
+                    follower.followPath(thirdSampleCollectPath,true);
+                    setPathState(11);
+                }
+                break;
+            case 11:
+                if(!follower.isBusy()){
+                    executeAutoCollect();
+                    setPathState(12);
+                }
+                break;
+            case 12:
+                if(!follower.isBusy()){
+                    executeAutoTransfer();
+                    waitWhile(500);
+                    follower.followPath(thirdSampleScorePath);
+                    //outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(13);
+                }
+                break;
+            case 13:
+                if(!follower.isBusy()){
+                    waitWhile(300);
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(14);
+                }
+                break;
+            case 14:
+                if(!follower.isBusy()){
                     setPathState(-1);
                 }
                 break;
@@ -259,6 +334,18 @@ public class BasketTestAuto extends OpMode {
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
         //end of our stuff
+    }
+
+    public void executeAutoCollect(){
+        autoTimer = System.currentTimeMillis();
+        intakeCabinDownCollecting();
+        waitWhile(500);
+        autoOuttakeTransfer();
+        waitWhile(300);
+        intakeExtended4out4();
+        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+        intakeRetracted();
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
     }
 
     public void executeAutoTransfer() {
