@@ -210,7 +210,8 @@ public class AutoOf5Spec extends OpMode {
                     intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample) && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -231,7 +232,8 @@ public class AutoOf5Spec extends OpMode {
                     intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample) && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -259,7 +261,8 @@ public class AutoOf5Spec extends OpMode {
                     intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);

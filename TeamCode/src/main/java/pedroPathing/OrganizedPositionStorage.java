@@ -55,7 +55,7 @@ public class OrganizedPositionStorage {
 
     public static double outtakeMotorMaxPos = 2100;
 
-    public static double outtakeMotorMaxPosLowerBasket = 1075;
+    public static double outtakeMotorMaxPosLowerBasket = 800;
     public static double outtakeSliderSpecimenHangPos = 1100;
     public static double autoOuttakeSliderSpecimenHangPos = 950;
     public static double outtakeSlidersWallPickPos = 690;
@@ -82,6 +82,7 @@ public class OrganizedPositionStorage {
     public static boolean isYellowSampleNotGood = false;
     public static boolean reverseGamepad2 = false;
     public static boolean isRobotInAuto = false;
+    public static boolean isInLowerBasketState = false;
 
 
     //is pressed
@@ -131,6 +132,7 @@ public class OrganizedPositionStorage {
     public static boolean shouldTransfer = false;
     public static boolean shouldSpecimenTransfer = false;
     public static boolean isOuttakeAfterOutputedTruBot = false;
+    public static boolean justTransfered = false;
 
 
 
@@ -176,6 +178,7 @@ public class OrganizedPositionStorage {
         Toggle.toggledButton2 = false;
         Toggle.toggledVarButton2 = false;
         isRobotInAuto = false;
+        isInLowerBasketState = false;
         // MISC
         PIDincrement = 0;
         gravityAdder = 0;
@@ -232,6 +235,7 @@ public class OrganizedPositionStorage {
         isOuttakeInPositionToCloseClawForTransfer = false;
         isOuttakeInPositionToGoToStandBy = false;
         isOuttakeAfterOutputedTruBot = false;
+        justTransfered = false;
 
         // LONGS / TIMERS
         outtakeSpecimenAfterScoreTimer = 0;

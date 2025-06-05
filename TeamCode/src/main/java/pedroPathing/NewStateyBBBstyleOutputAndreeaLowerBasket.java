@@ -1,15 +1,107 @@
 package pedroPathing;
 
 
-import static pedroPathing.OrganizedPositionStorage.*;
-import static pedroPathing.ClassWithStates.*;
-
+import static pedroPathing.ClassWithStates.ColorCompare;
+import static pedroPathing.ClassWithStates.colorList;
+import static pedroPathing.ClassWithStates.colorSensorOutty;
+import static pedroPathing.ClassWithStates.currentStateOfSampleInIntake;
+import static pedroPathing.ClassWithStates.currentTeam;
+import static pedroPathing.ClassWithStates.initStates;
+import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
+import static pedroPathing.ClassWithStates.intakeCabinDownOutputting;
+import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
+import static pedroPathing.ClassWithStates.intakeCabinFullInBotOutputting;
+import static pedroPathing.ClassWithStates.intakeCabinState;
+import static pedroPathing.ClassWithStates.intakeCabinStates;
+import static pedroPathing.ClassWithStates.intakeCabinTransferPosition;
+import static pedroPathing.ClassWithStates.intakeCabinTransferPositionWithPower;
+import static pedroPathing.ClassWithStates.intakeExtended1out4;
+import static pedroPathing.ClassWithStates.intakeExtended2out4;
+import static pedroPathing.ClassWithStates.intakeExtended3out4;
+import static pedroPathing.ClassWithStates.intakeExtended4out4;
+import static pedroPathing.ClassWithStates.intakeRetracted;
+import static pedroPathing.ClassWithStates.intakeState;
+import static pedroPathing.ClassWithStates.intakeStates;
+import static pedroPathing.ClassWithStates.outtakeBasket;
+import static pedroPathing.ClassWithStates.outtakeLowerBasket;
+import static pedroPathing.ClassWithStates.outtakeSpecimenHang;
+import static pedroPathing.ClassWithStates.outtakeStandByWithoutExtensions;
+import static pedroPathing.ClassWithStates.outtakeState;
+import static pedroPathing.ClassWithStates.outtakeStates;
+import static pedroPathing.ClassWithStates.outtakeTransfer;
+import static pedroPathing.ClassWithStates.outtakeWallPickUpNew;
+import static pedroPathing.OrganizedPositionStorage.PIDincrement;
+import static pedroPathing.OrganizedPositionStorage.basketStandbyState;
+import static pedroPathing.OrganizedPositionStorage.beforeOuttakeGoDownTimer;
+import static pedroPathing.OrganizedPositionStorage.chassisBackLeftPow;
+import static pedroPathing.OrganizedPositionStorage.chassisBackRightPow;
+import static pedroPathing.OrganizedPositionStorage.chassisFrontLeftPow;
+import static pedroPathing.OrganizedPositionStorage.chassisFrontRightPow;
+import static pedroPathing.OrganizedPositionStorage.hasIntakeOutputedTruBot;
+import static pedroPathing.OrganizedPositionStorage.hasSmolOutputed;
+import static pedroPathing.OrganizedPositionStorage.hasSmolOutputedTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeAfterTransferClosedClawTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
+import static pedroPathing.OrganizedPositionStorage.intakeOutputtingTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeOutputtingTimerManual;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorMorePowerAfterTakingTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
+import static pedroPathing.OrganizedPositionStorage.intakeTargetPosAdder;
+import static pedroPathing.OrganizedPositionStorage.isAfterIntakeBeenDownColecting;
+import static pedroPathing.OrganizedPositionStorage.isAfterOuttakeClawClosedAfterTransfer;
+import static pedroPathing.OrganizedPositionStorage.isAfterOuttakeClosedClawAtWallSpecimen;
+import static pedroPathing.OrganizedPositionStorage.isAfterOuttakeScoredBasketSample;
+import static pedroPathing.OrganizedPositionStorage.isAfterOuttakeScoredSpecimen;
+import static pedroPathing.OrganizedPositionStorage.isAfterTakingTakeySpiny;
+import static pedroPathing.OrganizedPositionStorage.isAtStateOfLettingBasketSampleGo;
+import static pedroPathing.OrganizedPositionStorage.isInNeedToGoToSpecimenTransferPos;
+import static pedroPathing.OrganizedPositionStorage.isInPositionToRaiseOuttakeInOrderToEvadeIntake;
+import static pedroPathing.OrganizedPositionStorage.isInSpecimenState;
+import static pedroPathing.OrganizedPositionStorage.isIntakeOutputting;
+import static pedroPathing.OrganizedPositionStorage.isIntakeOutputtingManual;
+import static pedroPathing.OrganizedPositionStorage.isIntakeSpinMOtorAfterJustTaking;
+import static pedroPathing.OrganizedPositionStorage.isOuttakeAfterOutputedTruBot;
+import static pedroPathing.OrganizedPositionStorage.isOuttakeAfterOutputedTruBotTimer;
+import static pedroPathing.OrganizedPositionStorage.isOuttakeInPositionToGoDown;
+import static pedroPathing.OrganizedPositionStorage.isPressedA1;
+import static pedroPathing.OrganizedPositionStorage.isPressedA2;
+import static pedroPathing.OrganizedPositionStorage.isPressedB1;
+import static pedroPathing.OrganizedPositionStorage.isPressedB2;
+import static pedroPathing.OrganizedPositionStorage.isPressedX1;
+import static pedroPathing.OrganizedPositionStorage.isPressedX2;
+import static pedroPathing.OrganizedPositionStorage.isPressedY2;
+import static pedroPathing.OrganizedPositionStorage.isTimeToRefreshOutptingTime;
+import static pedroPathing.OrganizedPositionStorage.isYellowSampleNotGood;
+import static pedroPathing.OrganizedPositionStorage.needsToExtraExtend;
+import static pedroPathing.OrganizedPositionStorage.outtakeAfterBasketSampleScoreTimer;
+import static pedroPathing.OrganizedPositionStorage.outtakeAfterHasClosedClawAtWallSpecimenTimer;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtendedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtraExtendedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoRetractedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeIsInNeedToExtraExtendClawTimer;
+import static pedroPathing.OrganizedPositionStorage.outtakeMotorActualZeroPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoTransferPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoWallPickupPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeSlidersWallPickPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeSpecimenAfterScoreTimer;
+import static pedroPathing.OrganizedPositionStorage.outtakeTargetPosAdder;
+import static pedroPathing.OrganizedPositionStorage.shouldAutoCollect;
+import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakig;
+import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakigTimer;
+import static pedroPathing.OrganizedPositionStorage.timeSinceStartedMovingForTruBotOutput;
+import static pedroPathing.OrganizedPositionStorage.waitingForOuttakeToEvadeIntakeTimer;
 
 import android.graphics.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,8 +115,9 @@ import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "BBBNewStatesOutput", group = "Linear OpMode")
-public class NewStateyBBBstyleOutput extends LinearOpMode {
+@TeleOp(name = "BBBNewStatesOutputA", group = "Linear OpMode")
+@Disabled
+public class NewStateyBBBstyleOutputAndreeaLowerBasket extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
 
@@ -244,14 +337,42 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //LOWERBASKET
             if(gamepad2.b) isPressedB2  = true;
             if(!gamepad2.b && isPressedB2){
-                isInLowerBasketState = !isInLowerBasketState;
+                if(!(outtakeState == outtakeStates.outtakeLowerBasket)){
+                    isAfterOuttakeClawClosedAfterTransfer = true;
+                    intakeAfterTransferClosedClawTimer = System.currentTimeMillis();
+                    isAtStateOfLettingBasketSampleGo = true;
+                }
+                else intakeRetracted();
                 isPressedB2 = false;
             }
-            if(justTransfered && isInLowerBasketState && outtakeState == outtakeStates.outtakeSpecimenHang){
-                justTransfered = false;
-                //outtakeBasket();
-                isPressedX1 = true;
+            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis()){
+                intakeRetracted();
+                intakeCabinTransferPosition();
+                outtakeLowerBasket();
+                isAfterOuttakeClawClosedAfterTransfer = false;
             }
+            //going down after, quite complicated cuz holding to let sample go
+            if(isAtStateOfLettingBasketSampleGo && gamepad2.b){
+                outtakeClawServoPos = outtakeClawServoExtendedPos;
+                isAfterOuttakeScoredBasketSample = true;
+                isAtStateOfLettingBasketSampleGo = false;
+                outtakeAfterBasketSampleScoreTimer = System.currentTimeMillis();
+            }
+            if(!gamepad2.b && isAfterOuttakeScoredBasketSample) {
+                outtakePivotServoPos = outtakePivotServoTransferPos;
+                if(outtakeAfterBasketSampleScoreTimer + 300 < System.currentTimeMillis()) {
+                    outtakeTransfer();
+                    isAfterOuttakeScoredBasketSample = false;
+                }
+            }
+            //some weird bug that can be easy fix
+            if(outtakeExtendMotorTargetPos == 0 && outtakeState == outtakeStates.outtakeLowerBasket){
+                outtakeLowerBasket();
+            }
+            //*/
+
+
+
 
 
 
@@ -308,7 +429,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 //outtakeClawServoPos = outtakeClawServoRetractedPos;
                 basketStandbyState++;
                 outtakeSpecimenHang();
-                justTransfered = true;
 
                 basketStandbyState = 0;
                 //outtakeExtendMotorTargetPos = outtakeMotorStandByPos;

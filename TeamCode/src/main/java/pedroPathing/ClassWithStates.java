@@ -176,7 +176,8 @@ public class ClassWithStates {
         outtakeState = outtakeStates.outtakeBasket;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakePivotServoPos = outtakePivotServoBasketPos;
-        outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
+        if(!isInLowerBasketState) outtakeExtendMotorTargetPos = outtakeMotorMaxPos;
+        else outtakeExtendMotorTargetPos = outtakeMotorMaxPosLowerBasket;
     }
 
     public static void outtakeLowerBasket(){
