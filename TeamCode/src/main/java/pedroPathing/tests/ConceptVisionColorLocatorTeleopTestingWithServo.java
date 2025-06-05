@@ -74,7 +74,7 @@ import pedroPathing.ControlMotor;
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Vision Color-Locator Teleop TestingWITHSERVO", group = "Concept")
-@Disabled
+//@Disabled
 public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMode
 {
     public static final ColorRange FTC_YELLOW = new ColorRange(
@@ -197,7 +197,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         ControlMotor intakeControlMotor = new ControlMotor();
-        outakeArmServo.setPosition((double) 144 / 360);
+        //outakeArmServo.setPosition((double) 144 / 360);
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
@@ -339,8 +339,8 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
             telemetry.update();
 
 
-            intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-            intakeMotor.setPower(intakeMotorPower);
+            //intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            //intakeMotor.setPower(intakeMotorPower);
 
             sleep(50);
         }
