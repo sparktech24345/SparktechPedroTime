@@ -4,11 +4,12 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -19,7 +20,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@TeleOp(name = "Photo Capture TeleOp", group = "Linear Opmode")
+@TeleOp(name = "Dashboard Photo Capture", group = "Linear Opmode")
+@Config
 public class captureACamFrame extends LinearOpMode {
 
     OpenCvWebcam camera;
@@ -27,21 +29,28 @@ public class captureACamFrame extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        camera = OpenCvCameraFactory.getInstance().createWebcam(
+                hardwareMap.get(WebcamName.class, "camera"), cameraMonitorViewId);
 
         pipeline = new PhotoCapturePipeline();
         camera.setPipeline(pipeline);
 
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        dashboard.startCameraStream(camera, 0); // 0 ms delay between frames
+
+        camera.openCameraDeviceAsync(new OpenCvWebcam.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(320, 240); // You can change resolution
+                camera.startStreaming(320, 240);
             }
 
             @Override
             public void onError(int errorCode) {
                 telemetry.addData("Camera error", errorCode);
+                telemetry.update();
             }
         });
 
@@ -55,7 +64,7 @@ public class captureACamFrame extends LinearOpMode {
                 telemetry.addLine("Photo capture triggered");
             }
             telemetry.update();
-            sleep(100); // debouncing
+            sleep(100);
         }
 
         camera.stopStreaming();
