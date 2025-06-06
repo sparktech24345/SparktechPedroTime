@@ -39,12 +39,12 @@ public class captureACamFrame extends LinearOpMode {
         camera.setPipeline(pipeline);
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
-        dashboard.startCameraStream(camera, 0); // 0 ms delay between frames
+        dashboard.startCameraStream(camera, 30); // 0 ms delay between frames
 
         camera.openCameraDeviceAsync(new OpenCvWebcam.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(320, 240);
+                camera.startStreaming(640, 480);
             }
 
             @Override
