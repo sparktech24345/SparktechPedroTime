@@ -44,7 +44,7 @@ public class captureACamFrame extends LinearOpMode {
         camera.openCameraDeviceAsync(new OpenCvWebcam.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(640, 480);
+                camera.startStreaming(480, 640);
             }
 
             @Override
