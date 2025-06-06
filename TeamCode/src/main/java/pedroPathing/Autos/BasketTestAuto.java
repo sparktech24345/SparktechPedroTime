@@ -10,6 +10,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
@@ -58,12 +59,12 @@ public class BasketTestAuto extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
 
     // place in basket
-    private final float xOffsetBasket = 0.4f;
-    private final float yOffsetBasket = 1f;
+    private final float xOffsetBasket = 1.2f;
+    private final float yOffsetBasket = 1.2f;
     private final Pose behindBasketPreload = new Pose(-44.5 + 0.2, 79.5 + 0.5, Math.toRadians(225));
     private final Pose behindBasketFirstSample = new Pose(-48.5 - 2.5 + xOffsetBasket, 81.5 + 2 + yOffsetBasket, Math.toRadians(225));
-    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + xOffsetBasket, 82.5+ 2 + yOffsetBasket, Math.toRadians(225));
-    private final Pose behindBasketThirdSample = new Pose(-49 - 2.5 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + 1 + xOffsetBasket, 82.5+ 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketThirdSample = new Pose(-49 - 2.5 + 1 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
 
     // collect first 3 from floor
     private final Pose firstSampleCollect = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
@@ -169,7 +170,9 @@ slides pos on descent -223
         ///  COLLECT FROM SUBMERSIBLE
 
         submersibleCollectPath = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(behindBasketThirdSample), new Point(submersibleStdCollect)))
+                .addPath(new BezierCurve(new Point(behindBasketThirdSample),
+                        new Point(-44, 102),
+                        new Point(submersibleStdCollect)))
                 .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), submersibleStdCollect.getHeading())
                 .build();
 
@@ -428,6 +431,7 @@ slides pos on descent -223
             intakeSpinMotorPow = 0;
         }
         intakeRetracted();
+        intakeCabinTransferPositionWithPower();
         outtakeClawServoPos = outtakeClawServoExtendedPos;
         return collectTimedOut;
     }
@@ -438,7 +442,7 @@ slides pos on descent -223
         waitWhile(300);
         intakeExtended3out4();
 
-        while(intakeMotor.getCurrentPosition() < -223) {
+        while(intakeMotor.getCurrentPosition() < 223) {
             robotDoStuff();
         }
 
@@ -447,15 +451,17 @@ slides pos on descent -223
         while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
             robotDoStuff();
         }
+        intakeCabinTransferPosition();
         intakeRetracted();
-        outtakeClawServoPos = outtakeClawServoExtendedPos;
+        outtakeClawServoPos = outtakeClawServoExtendedPos + 50;
     }
 
     public void executeAutoTransfer() {
-        waitWhile(500);
+        while(intakeMotor.getCurrentPosition() > 75) {
+            robotDoStuff();
+        }
+        waitWhile(75);
         intakeSpinMotorPow = 0;
-        intakeCabinTransferPosition();
-        waitWhile(500);
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         waitWhile(200);
         outtakeBasket();
@@ -472,6 +478,22 @@ slides pos on descent -223
         if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis()){
             needsToExtraExtend = false;
             outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
+        }
+
+        //intake stop spinning
+        if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()){
+            intakeSpinMotorPow = -0.8;
+            shouldStopIntakeCabinSpinningAfterTakig = false;
+            hasSmolOutputed = true;
+            hasSmolOutputedTimer = System.currentTimeMillis();
+        }
+        //and then stop the power stuff
+        if(hasSmolOutputed && hasSmolOutputedTimer + 50 <System.currentTimeMillis()){
+            intakeCabinTransferPosition();
+            if(isInSpecimenState){
+                intakeCabinFullInBot();
+            }
+            hasSmolOutputed = false;
         }
 
         
