@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import pedroPathing.AutoPIDS.NewPidsController;
 import pedroPathing.newOld.Toggle;
 import pedroPathing.tests.Config;
 
@@ -473,7 +474,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //PIDs
             PIDincrement=1;
             double intakeExtendMotorPow;
-            intakeExtendMotorPow = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            intakeExtendMotorPow = NewPidsController.pidController (intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
             if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.3;
             double outtakeExtendMotorPow;
             outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());

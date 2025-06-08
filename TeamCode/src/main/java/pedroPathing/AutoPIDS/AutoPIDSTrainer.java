@@ -1,11 +1,17 @@
 package pedroPathing.AutoPIDS;
 
+import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.BufferedWriter;
@@ -28,6 +34,9 @@ public class AutoPIDSTrainer extends LinearOpMode {
     public static double settleErrorThreshold = 10;
     public static int maxOscillationCycles = 400;
     public static double completionTimePercent = 0.85;
+    public static long stuckTimeoutMs = 2000;  // 2 seconds without motion is considered stuck
+    public static double stuckThresholdTicks = 3;  // Minimum tick change to count as motion
+
     public static boolean wasPressedBegging = false;
     public static boolean canAutoTrain = false;
     public static boolean hasNotFullPowered = true;
@@ -44,6 +53,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
     FtcDashboard dashboard;
     Telemetry dashboardTelemetry;
+    MultipleTelemetry tel;
 
     String pidFilename = "/sdcard/FIRST/pid_values.txt";
 
@@ -59,17 +69,20 @@ public class AutoPIDSTrainer extends LinearOpMode {
         wasBPressed = false;
         gravityCompensation = 0; //got bored of gravity not yed added
 
-        testMotor = hardwareMap.get(DcMotor.class, "motor0");
+        testMotor = hardwareMap.get(DcMotor.class, "intakemotor");
+        testMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        intakeRotateServo.setPosition((30) / 228);
         testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //multiple telemetry
         dashboard = FtcDashboard.getInstance();
-        MultipleTelemetry telemetry =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+        tel =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
 
-        telemetry.addLine("Ready. Press Gamepad1 A to begin MAX POWER TEST and then press again to begin autotrain");
-        telemetry.update();
+        tel.addLine("Ready. Press Gamepad1 A to begin MAX POWER TEST and then press again to begin autotrain");
+        tel.update();
 
         waitForStart();
 
@@ -82,6 +95,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
             if(!gamepad1.a && wasPressedBegging && hasNotFullPowered){
 
                 fullPowerRun();
+                returnMotor();
 
                 canAutoTrain = true;
                 wasPressedBegging = false;
@@ -98,20 +112,18 @@ public class AutoPIDSTrainer extends LinearOpMode {
                 wasPressedBegging = false;
             }
 
-            telemetry.addLine("Ready. Press Gamepad1 A to begin MAX POWER TEST and then press again to begin autotrain");
-            telemetry.addLine("autoTrainingFailed");
-            telemetry.addLine("waiting for button press to begin");
+            tel.addLine("Ready. Press Gamepad1 A to begin MAX POWER TEST and then press again to begin autotrain");
+            tel.addLine("waiting for button press to begin");
             if(emergencyReturned) {
-                telemetry.addLine("EMERGENCY OCCURRED !!!");
-                telemetry.addLine("EMERGENCY OCCURRED !!!");
-                telemetry.addLine("EMERGENCY OCCURRED !!!");
+                tel.addLine("EMERGENCY OCCURRED !!!");
+                tel.addLine("EMERGENCY OCCURRED !!!");
+                tel.addLine("EMERGENCY OCCURRED !!!");
                 testMotor.setPower(0);
                 testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
-            if(autoTrainingFailed) telemetry.addLine("auto Training Failed ( VALUES = 0 ) ");
+            if(autoTrainingFailed) tel.addLine("auto Training Failed ( VALUES = 0 ) ");
 
-            if(!stopTelemetryUpdate) telemetry.update();
-
+            if(!stopTelemetryUpdate) tel.update();
         }
 
 
@@ -140,9 +152,9 @@ public class AutoPIDSTrainer extends LinearOpMode {
                 break;
             }  //ran for 10 seconds
 
-            telemetry.addData("Max Power Running",true);
-            telemetry.addData("Curent Motor Position",testMotor.getCurrentPosition());
-            telemetry.update();
+            tel.addData("Max Power Running",true);
+            tel.addData("Curent Motor Position",testMotor.getCurrentPosition());
+            tel.update();
         }
 
         //outputs are public static
@@ -152,46 +164,83 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
     }
 
+
+    void returnMotor() {
+        tel.addLine("Returning motor to start position at 50% power...");
+        tel.update();
+
+        testMotor.setPower(-0.5);  // Reverse at half power
+        long startTime = System.currentTimeMillis();
+        long lastMoveTime = startTime;
+        int lastPosition = testMotor.getCurrentPosition();
+
+        while (opModeIsActive()) {
+            int currentPosition = testMotor.getCurrentPosition();
+            long currentTime = System.currentTimeMillis();
+
+            if (Math.abs(currentPosition - lastPosition) > stillThresholdTicks) {
+                lastMoveTime = currentTime;
+                lastPosition = currentPosition;
+            }
+
+            // Exit if motor has been stalled
+            if ((currentTime - lastMoveTime) > stillTimeoutMs) break;
+
+            // Safety timeout
+            if (currentTime - startTime > 10000) {
+                emergencyReturned = true;
+                break;
+            }
+
+            tel.addData("Returning Motor", true);
+            tel.addData("Current Position", testMotor.getCurrentPosition());
+            tel.update();
+        }
+
+        testMotor.setPower(0);
+    }
+
     void runOscillationAutotune() {
-        /// used values in auto tuning THIS CODE ISNT OPTIMIZED AND ISNT MEANT TO BE
         double p = 0.01;
         double step = 0.005;
+        double minStep = 0.0001;
         double ku = 0;
         double tu = 0;
 
-        long lastPeakTime = 0;
-
-        int peakCount = 0;
-        int lastSign = 1;
-        int oscCycles = 0;
-
         double target = maxDistanceTicks / 2.0;
-        if(target == 0){
+        if (target == 0) {
             emergencyReturned = true;
             return;
         }
 
+        boolean pidCalculated = false;
+        boolean increasing = true;
+        double lastOscillationAmplitude = Double.MAX_VALUE;
+
         for (int trial = 0; trial < 20 && opModeIsActive(); trial++) {
-            // motor checks ig just making sure
-            //testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            tel.addData("Trial", trial + 1);
+            tel.addData("Current P", p);
+            tel.update();
 
-            lastPeakTime = 0;
-            peakCount = 0;
-            oscCycles = 0;
+            long lastPeakTime = 0;
+            int peakCount = 0;
+            int lastSign = 1;
+            int oscCycles = 0;
 
+            double maxError = 0;
+            double minError = Double.MAX_VALUE;
+
+            // --- EXTEND PHASE ---
             long startTime = System.currentTimeMillis();
-            boolean stopConditionMet = false;
-
-            while (opModeIsActive()) {
-                //constantly doing stuff in a while
-
+            while (opModeIsActive() && (System.currentTimeMillis() - startTime < 10000)) {
                 int pos = testMotor.getCurrentPosition();
                 double error = target - pos;
-                int currentSign = (int) Math.signum(error);
 
-                //direction checks
-                if (currentSign != lastSign && lastSign != 0) {
+                maxError = Math.max(maxError, Math.abs(error));
+                minError = Math.min(minError, Math.abs(error));
+
+                int sign = (int) Math.signum(error);
+                if (sign != lastSign && lastSign != 0) {
                     long now = System.currentTimeMillis();
                     if (lastPeakTime != 0) {
                         tu = (now - lastPeakTime) / 1000.0;
@@ -199,62 +248,102 @@ public class AutoPIDSTrainer extends LinearOpMode {
                     }
                     lastPeakTime = now;
                 }
-
-                lastSign = currentSign;
+                lastSign = sign;
 
                 double output = p * error;
-                output = Math.max(-1.0, Math.min(1.0, output)); // just a fancy compatible math clamp
+                output = Math.max(-1.0, Math.min(1.0, output));
                 testMotor.setPower(output);
 
-                long elapsed = System.currentTimeMillis() - startTime;
-                boolean withinTime = elapsed >= (completionTimePercent * maxSpeedTimeMs);
-                boolean settled =
-                        Math.abs(pos - maxDistanceTicks / 4) < settleErrorThreshold ||
-                                Math.abs(pos - maxDistanceTicks / 2) < settleErrorThreshold ||
-                                Math.abs(pos - 3 * maxDistanceTicks / 4) < settleErrorThreshold ||
-                                Math.abs(pos - maxDistanceTicks) < settleErrorThreshold;
+                oscCycles++;
+                if (oscCycles > maxOscillationCycles) break;
 
-                if (withinTime && settled) {
-                    stopConditionMet = true;
-                    break;
-                }
-
-                if (++oscCycles > maxOscillationCycles) break;
-
-                sendDashboard(pos, target, error, output, p); //dashboard graphs!
-                idle(); //not sure if i actually need this but idk
+                sendDashboard(pos, target, error, output, p);
+                idle();
             }
 
             testMotor.setPower(0);
 
-            if (peakCount >= 3 || stopConditionMet) {
+            // Oscillation amplitude estimate:
+            double oscillationAmplitude = maxError - minError;
+
+            // --- ANALYSIS ---
+            if (!pidCalculated && peakCount >= 3 && tu > 0) {
                 ku = p;
-                break;
+                pidCalculated = true; // flag to prevent re-calculating
             }
 
-            p += step;
+            // Decide whether oscillation improved or got worse
+            if (oscillationAmplitude > lastOscillationAmplitude) {
+                // Worse - reverse direction and reduce step
+                increasing = !increasing;
+                step *= 0.5;
+                if (step < minStep) step = minStep;
+            }
+
+            lastOscillationAmplitude = oscillationAmplitude;
+
+            // --- RETRACT PHASE ---
+            long retractStart = System.currentTimeMillis();
+            testMotor.setPower(-0.5);
+            int lastPos = testMotor.getCurrentPosition();
+
+            while (opModeIsActive() && System.currentTimeMillis() - retractStart < 5000) {
+                int currPos = testMotor.getCurrentPosition();
+
+                if (Math.abs(currPos) < stillThresholdTicks) {
+                    break;
+                }
+
+                if (Math.abs(currPos - lastPos) < stillThresholdTicks) {
+                    // stuck detection
+                    if (System.currentTimeMillis() - retractStart > 3000) break;
+                } else {
+                    lastPos = currPos;
+                    retractStart = System.currentTimeMillis(); // reset timeout
+                }
+
+                tel.addData("Retracting...", currPos);
+                tel.update();
+                idle();
+            }
+
+            testMotor.setPower(0);
+
+            // Adjust p for next trial
+            if (increasing) {
+                p += step;
+            } else {
+                p -= step;
+                if (p < 0) p = 0.001;  // avoid negative or zero p
+            }
         }
 
-        if (ku == 0 || tu == 0) {
+        if (!pidCalculated || ku == 0 || tu == 0) {
             autoTrainingFailed = true;
+            tel.addLine("Auto training failed — no stable oscillation detected.");
+            tel.update();
             return;
         }
 
         double kp = 0.6 * ku;
-        double ki = 2 * kp / tu; /// I personally strongly recommend NOT using the I term but never the less it is trained
+        double ki = 2 * kp / tu;
         double kd = kp * tu / 8;
 
         savePIDValues(kp, ki, kd);
 
-        telemetry.addLine("PID Tune Complete");
-        telemetry.addData("Ku", ku);
-        telemetry.addData("Tu", tu);
-        telemetry.addData("Kp", kp);
-        telemetry.addData("Ki", ki);
-        telemetry.addData("Kd", kd);
+        tel.addLine("PID Tune Complete");
+        tel.addData("Ku", ku);
+        tel.addData("Tu", tu);
+        tel.addData("Kp", kp);
+        tel.addData("Ki", ki);
+        tel.addData("Kd", kd);
+        tel.update();
+
         stopTelemetryUpdate = true;
-        telemetry.update();
     }
+
+
+
 
     void sendDashboard(double position, double target, double error, double output, double p) {
         TelemetryPacket packet = new TelemetryPacket();
@@ -278,9 +367,9 @@ public class AutoPIDSTrainer extends LinearOpMode {
             writer.write("Ki=" + ki + "\n");
             writer.write("Kd=" + kd + "\n");
         } catch (IOException e) {
-            telemetry.addLine("Failed to write PID values to file");
+            tel.addLine("Failed to write PID values to file");
             stopTelemetryUpdate = true;
-            telemetry.update();
+            tel.update();
         }
     }
 }
