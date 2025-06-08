@@ -68,9 +68,9 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 207;
+    public static double intakePivotServoPickupPos = 195;
     public static double intakePivotServoOutputTruBotPos = 0;
-    public static double intakePivotServoTransferPos = 135;
+    public static double intakePivotServoTransferPos = 125;
     public static double tempIntakeTargetPastPosDifrence = 135;
     public static double tempIntakeAPosition = 0;
 
@@ -83,6 +83,7 @@ public class OrganizedPositionStorage {
     public static boolean reverseGamepad2 = false;
     public static boolean isRobotInAuto = false;
     public static boolean isInLowerBasketState = false;
+    public static boolean isColorSensorNotInUse = false;
 
 
     //is pressed
@@ -96,6 +97,7 @@ public class OrganizedPositionStorage {
     public static boolean isPressedY1 = false;
     public static boolean isPressedY2 = false;
     public static boolean isPressedDL1 = false;
+    public static boolean isPressedD2Up = false;
 
 
     //intake stuff
@@ -211,6 +213,7 @@ public class OrganizedPositionStorage {
         isPressedY1 = false;
         isPressedY2 = false;
         isPressedDL1 = false;
+        isPressedD2Up = false;
 
         // intake stuff
         isAfterIntakeBeenDownColecting = false;

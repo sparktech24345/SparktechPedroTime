@@ -117,12 +117,12 @@ public class ClassWithStates {
         intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
         intakePivotServoPos = intakePivotServoPickupPos;
         isAfterTakingTakeySpiny = true;
-        intakeSpinMotorPow = 1;
+        intakeSpinMotorPow = -1;
     }
     public static void intakeCabinDownOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownOutputting;
         intakePivotServoPos = intakePivotServoPickupPos;
-        intakeSpinMotorPow = -1;
+        intakeSpinMotorPow = 1;
     }
     public static void intakeCabinDownStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
@@ -139,7 +139,7 @@ public class ClassWithStates {
         intakePivotServoPos = intakePivotServoTransferPos;
         shouldStopIntakeCabinSpinningAfterTakig = true;
         shouldStopIntakeCabinSpinningAfterTakigTimer = System.currentTimeMillis();
-        intakeSpinMotorPow = 1;
+        intakeSpinMotorPow = -1;
     }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
@@ -149,7 +149,7 @@ public class ClassWithStates {
     public static void intakeCabinFullInBotOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBotOutputting;
         intakePivotServoPos = intakePivotServoOutputTruBotPos;
-        intakeSpinMotorPow = -1;
+        intakeSpinMotorPow = 1;
     }
 
 
@@ -253,7 +253,7 @@ public class ClassWithStates {
 
     public static colorSensorOutty ColorCompare(NormalizedRGBA colors, colorList currentTeam,boolean isYellowSampleNotGood){
 
-        if(colors.red < 0.002 && colors.blue < 0.001) return colorSensorOutty.noSample;
+        if(!(colors.red > 0.006 || colors.blue > 0.004)) return colorSensorOutty.noSample;
         colorList color=colorList.teamNotSet;
 
         if (colors.red > colors.blue && colors.red > colors.green)

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -37,6 +38,8 @@ public class captureACamFrame extends LinearOpMode {
 
         pipeline = new PhotoCapturePipeline();
         camera.setPipeline(pipeline);
+        camera.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.MAXIMIZE_EFFICIENCY);
+
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
         dashboard.startCameraStream(camera, 30); // 0 ms delay between frames

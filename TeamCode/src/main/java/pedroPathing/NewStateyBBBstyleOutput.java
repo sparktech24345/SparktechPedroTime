@@ -269,7 +269,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             ///SOME STUFF
 
             //auto retract
-            if((currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting) ||
+            if((currentStateOfSampleInIntake == colorSensorOutty.correctSample && isAfterIntakeBeenDownColecting && !isColorSensorNotInUse) ||
                 shouldAutoCollect
             ){
                 shouldAutoCollect = false;
@@ -319,7 +319,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()){
-                intakeSpinMotorPow = -0.8;
+                intakeSpinMotorPow = 0.8;
                 shouldStopIntakeCabinSpinningAfterTakig = false;
                 hasSmolOutputed = true;
                 hasSmolOutputedTimer = System.currentTimeMillis();
@@ -350,7 +350,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //manual eject
             if(gamepad1.left_bumper){
-                intakeSpinMotorPow = -0.75;
+                intakeSpinMotorPow = 0.75;
                 isIntakeOutputtingManual = true;
                 intakeOutputtingTimerManual = System.currentTimeMillis();
             }
@@ -447,7 +447,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     intakeCabinFullInBot();
                     outtakeSpecimenHang();
                 } else if (timeSinceStartedMovingForTruBotOutput + 1000 < System.currentTimeMillis() ){
-                        intakeSpinMotorPow = -1;
+                        intakeSpinMotorPow = 1;
                     }
             }
             else if (intakeCabinState == intakeCabinStates.intakeCabinFullInBot){
@@ -464,6 +464,11 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 isPressedA2 = false;
             }
 
+            if(gamepad2.dpad_up) isPressedD2Up = true;
+            if(isPressedD2Up && !gamepad2.dpad_up){
+                isColorSensorNotInUse = !isColorSensorNotInUse;
+                isPressedD2Up = false;
+            }
 
             //PIDs
             PIDincrement=1;
