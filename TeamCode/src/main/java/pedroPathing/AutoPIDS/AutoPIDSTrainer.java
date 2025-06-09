@@ -135,6 +135,8 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
             if(gamepad1.b) wasBPressed = true;
             if (autoTrainingFailed && !gamepad1.b && wasBPressed) {
+                tel.clearAll();
+                tel.update();
                 runAggressivePIDTraining();
                 wasBPressed = false;
             }
@@ -414,21 +416,20 @@ public class AutoPIDSTrainer extends LinearOpMode {
         double kp = 0.01;
         double ki = 0.0;
         double kd = 0.0;
-        double bestError = Double.MAX_VALUE;
-        double bestKp = kp;
-        double bestKi = ki;
-        double bestKd = kd;
 
-        double lastError = 0;
-        double integral = 0;
+        double bestError = Double.MAX_VALUE;
+        double bestKp = kp, bestKi = ki, bestKd = kd;
+
+        int noImprovementCount = 0;
+        final int maxNoImprovement = 5;
 
         for (int trial = 0; trial < 20 && opModeIsActive(); trial++) {
-            double totalError = 0;
             long startTime = System.currentTimeMillis();
+            double integral = 0;
+            double lastError = 0;
+            double totalError = 0;
 
-            integral = 0;
-            lastError = 0;
-
+            // Extend phase with PID
             while (System.currentTimeMillis() - startTime < 2000 && opModeIsActive()) {
                 double pos = testMotor.getCurrentPosition();
                 double error = target - pos;
@@ -439,38 +440,62 @@ public class AutoPIDSTrainer extends LinearOpMode {
                 output = Math.max(-1.0, Math.min(1.0, output));
 
                 motorsSetPower(output);
-
                 totalError += Math.abs(error);
                 lastError = error;
 
                 sendDashboard(pos, target, error, output, kp);
                 idle();
             }
+            motorsSetPower(0);
+
+            // Retract phase (half power)
+            long retractStart = System.currentTimeMillis();
+            motorsSetPower(-0.5);
+            int lastPos = testMotor.getCurrentPosition();
+
+            while (opModeIsActive() && System.currentTimeMillis() - retractStart < 5000) {
+                int currPos = testMotor.getCurrentPosition();
+
+                if (Math.abs(currPos) < stillThresholdTicks) break;
+
+                if (Math.abs(currPos - lastPos) < stillThresholdTicks) {
+                    if (System.currentTimeMillis() - retractStart > 3000) break;
+                } else {
+                    lastPos = currPos;
+                    retractStart = System.currentTimeMillis();
+                }
+
+                tel.addData("Retracting...", currPos);
+                tel.update();
+                idle();
+            }
 
             motorsSetPower(0);
-            returnMotor();
 
-            if (totalError < bestError) {
+            // Evaluation
+            tel.addData("Trial", trial + 1);
+            tel.addData("Total Error", totalError);
+            tel.addData("Current Kp", kp);
+            tel.update();
+
+            if (totalError < bestError - 5) {  // Significant improvement
                 bestError = totalError;
                 bestKp = kp;
                 bestKi = ki;
                 bestKd = kd;
-                // Try more aggressive next time
-                kp *= 1.2;
+                kp *= 1.25;
+                noImprovementCount = 0;
             } else {
-                // Dial back if worse
-                kp *= 0.8;
+                kp *= 0.7;
+                noImprovementCount++;
             }
-            tel.clearAll();
-            tel.addLine("Trial " + (trial + 1));
-            tel.addData("Total Error", totalError);
-            tel.addData("Current P", kp);
-            tel.update();
+
+            if (noImprovementCount >= maxNoImprovement) break;
         }
 
-        //savePIDValues(bestKp, bestKi, bestKd);
+        savePIDValues(bestKp, bestKi, bestKd);
 
-        tel.addLine("Non-Oscillatory PID Tune Complete");
+        tel.addLine("Stable PID Tune Complete");
         tel.addData("Best Kp", bestKp);
         tel.addData("Best Ki", bestKi);
         tel.addData("Best Kd", bestKd);
@@ -478,5 +503,6 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
         stopTelemetryUpdate = true;
     }
+
 
 }
