@@ -532,10 +532,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             // set motor power
-            frontLeftMotor.setPower(chassisFrontLeftPow*0.8);
-            backLeftMotor.setPower(chassisBackLeftPow*0.8);
-            frontRightMotor.setPower(chassisFrontRightPow*0.8);
-            backRightMotor.setPower(chassisBackRightPow*0.8);
+            frontLeftMotor.setPower(chassisFrontLeftPow*0.9);
+            backLeftMotor.setPower(chassisBackLeftPow*0.9);
+            frontRightMotor.setPower(chassisFrontRightPow*0.9);
+            backRightMotor.setPower(chassisBackRightPow*0.9);
             intakeMotor.setPower(intakeExtendMotorPow);
             outakeRightMotor.setPower(outtakeExtendMotorPow);
             outakeLeftMotor.setPower(outtakeExtendMotorPow);

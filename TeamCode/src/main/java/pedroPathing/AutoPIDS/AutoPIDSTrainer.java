@@ -46,6 +46,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
     public static boolean autoTrainingFailed = false;
     public static boolean stopTelemetryUpdate = false;
     public static boolean wasBPressed = false;
+    public static boolean hasTrained = false;
     public static double gravityCompensation = 0;
 
 
@@ -53,16 +54,13 @@ public class AutoPIDSTrainer extends LinearOpMode {
     DcMotor auxMotor;
     double maxDistanceTicks = 0;
     long maxSpeedTimeMs = 0;
-
-    FtcDashboard dashboard;
-    Telemetry dashboardTelemetry;
     MultipleTelemetry tel;
 
     String pidFilename = "/sdcard/FIRST/pid_values.txt";
 
     void motorsSetPower(double power) {
         testMotor.setPower(power);
-        auxMotor.setPower(power);
+        //auxMotor.setPower(power);
     }
 
 
@@ -77,27 +75,27 @@ public class AutoPIDSTrainer extends LinearOpMode {
         autoTrainingFailed = false;
         stopTelemetryUpdate = false;
         wasBPressed = false;
+        hasTrained = false;
         gravityCompensation = 0; //got bored of gravity not yed added
 
         //---------------MOTOR DECLARATION----------------------\\
 
-        testMotor = hardwareMap.get(DcMotor.class, "outakeleftmotor");
-        //testMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        testMotor = hardwareMap.get(DcMotor.class, "intakemotor");
+        testMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         auxMotor = hardwareMap.dcMotor.get("outakerightmotor");
         auxMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //-------------SERVO STUFF ( OPTIONAL )-----------------\\
-        //Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
-        //intakeRotateServo.setPosition((30) / 228);
+        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        intakeRotateServo.setPosition((30) / 228);
 
-        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
-        outakeArmServo.setPosition(90 / 328);
+        //Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        //outakeArmServo.setPosition(90 / 328);
 
         //-------------- TELEMETRY ---------------\\
-        dashboard = FtcDashboard.getInstance();
         tel =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
         tel.addLine("Ready. Press Gamepad1 A to begin MAX POWER TEST and then press again to begin autotrain");
         tel.update();
@@ -134,7 +132,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
 
             if(gamepad1.b) wasBPressed = true;
-            if (autoTrainingFailed && !gamepad1.b && wasBPressed) {
+            if (hasTrained && !gamepad1.b && wasBPressed) {
                 tel.clearAll();
                 tel.update();
                 runAggressivePIDTraining();
@@ -221,10 +219,6 @@ public class AutoPIDSTrainer extends LinearOpMode {
                 emergencyReturned = true;
                 break;
             }
-
-            tel.addData("Returning Motor", true);
-            tel.addData("Current Position", testMotor.getCurrentPosition());
-            tel.update();
         }
 
         motorsSetPower(0);
@@ -236,6 +230,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
         double minStep = 0.0001;
         double ku = 0;
         double tu = 0;
+        hasTrained = true;
 
         double target = maxDistanceTicks / 2.0;
         if (target == 0) {
@@ -286,9 +281,12 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
                 oscCycles++;
                 if (oscCycles > maxOscillationCycles) break;
-
-                sendDashboard(pos, target, error, output, p);
-                idle();
+                tel.addData("pos",pos);
+                tel.addData("target",target);
+                tel.addData("error",error);
+                tel.addData("power",output);
+                tel.addData("P term",p);
+                tel.update();
             }
 
             motorsSetPower(0);
@@ -331,10 +329,6 @@ public class AutoPIDSTrainer extends LinearOpMode {
                     lastPos = currPos;
                     retractStart = System.currentTimeMillis(); // reset timeout
                 }
-
-                tel.addData("Retracting...", currPos);
-                tel.update();
-                idle();
             }
 
             motorsSetPower(0);
@@ -366,10 +360,10 @@ public class AutoPIDSTrainer extends LinearOpMode {
         savePIDValues(kp, ki, kd);
 
         tel.addLine("PID Tune Complete");
-        tel.addData("Ku", ku);
-        tel.addData("Tu", tu);
+        tel.addData("Ku ( ignore ) ", ku);
+        tel.addData("Tu ( ignore )", tu);
         tel.addData("Kp", kp);
-        tel.addData("Ki", ki);
+        tel.addData("Ki NOT RECOMENDED FOR USE", ki);
         tel.addData("Kd", kd);
         tel.update();
 
@@ -379,21 +373,12 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
 
 
-    void sendDashboard(double position, double target, double error, double output, double p) {
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Position", position);
-        packet.put("Target", target);
-        packet.put("Error", error);
-        packet.put("Output", output);
-        packet.put("P", p);
-        dashboard.sendTelemetryPacket(packet);
-    }
-
     void savePIDValues(double kp, double ki, double kd) {
         //file creation for value storing
         File pidFile = new File(pidFilename);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pidFile,true))) {
+            writer.write("\n\n");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); // date and time might crash
             writer.write(sdf.format(new Date()));
             writer.newLine();
@@ -406,6 +391,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
             tel.update();
         }
     }
+
     void runAggressivePIDTraining() {
         double target = maxDistanceTicks / 2.0;
         if (target == 0) {
@@ -413,96 +399,54 @@ public class AutoPIDSTrainer extends LinearOpMode {
             return;
         }
 
-        double kp = 0.01;
-        double ki = 0.0;
-        double kd = 0.0;
+        motorsSetPower(0);
+        sleep(250);
 
-        double bestError = Double.MAX_VALUE;
-        double bestKp = kp, bestKi = ki, bestKd = kd;
+        long startTime = System.currentTimeMillis();
+        double maxError = 0;
+        boolean reachedTarget = false;
 
-        int noImprovementCount = 0;
-        final int maxNoImprovement = 5;
+        while (System.currentTimeMillis() - startTime < 5000 && opModeIsActive()) {
+            double pos = testMotor.getCurrentPosition();
+            double error = target - pos;
 
-        for (int trial = 0; trial < 20 && opModeIsActive(); trial++) {
-            long startTime = System.currentTimeMillis();
-            double integral = 0;
-            double lastError = 0;
-            double totalError = 0;
 
-            // Extend phase with PID
-            while (System.currentTimeMillis() - startTime < 2000 && opModeIsActive()) {
-                double pos = testMotor.getCurrentPosition();
-                double error = target - pos;
-                integral += error;
-                double derivative = error - lastError;
-
-                double output = kp * error + ki * integral + kd * derivative;
-                output = Math.max(-1.0, Math.min(1.0, output));
-
-                motorsSetPower(output);
-                totalError += Math.abs(error);
-                lastError = error;
-
-                sendDashboard(pos, target, error, output, kp);
-                idle();
-            }
-            motorsSetPower(0);
-
-            // Retract phase (half power)
-            long retractStart = System.currentTimeMillis();
-            motorsSetPower(-0.5);
-            int lastPos = testMotor.getCurrentPosition();
-
-            while (opModeIsActive() && System.currentTimeMillis() - retractStart < 5000) {
-                int currPos = testMotor.getCurrentPosition();
-
-                if (Math.abs(currPos) < stillThresholdTicks) break;
-
-                if (Math.abs(currPos - lastPos) < stillThresholdTicks) {
-                    if (System.currentTimeMillis() - retractStart > 3000) break;
-                } else {
-                    lastPos = currPos;
-                    retractStart = System.currentTimeMillis();
+            if (pos >= target) {
+                reachedTarget = true;
+                if (Math.abs(error) > maxError) {
+                    maxError = Math.abs(error);
                 }
-
-                tel.addData("Retracting...", currPos);
-                tel.update();
-                idle();
             }
 
-            motorsSetPower(0);
+            double power = pos < target ? 1.0 : -1.0;
+            motorsSetPower(power);
 
-            // Evaluation
-            tel.addData("Trial", trial + 1);
-            tel.addData("Total Error", totalError);
-            tel.addData("Current Kp", kp);
-            tel.update();
-
-            if (totalError < bestError - 5) {  // Significant improvement
-                bestError = totalError;
-                bestKp = kp;
-                bestKi = ki;
-                bestKd = kd;
-                kp *= 1.25;
-                noImprovementCount = 0;
-            } else {
-                kp *= 0.7;
-                noImprovementCount++;
-            }
-
-            if (noImprovementCount >= maxNoImprovement) break;
+            if(reachedTarget) break;
         }
 
-        savePIDValues(bestKp, bestKi, bestKd);
+        motorsSetPower(0);
 
-        tel.addLine("Stable PID Tune Complete");
-        tel.addData("Best Kp", bestKp);
-        tel.addData("Best Ki", bestKi);
-        tel.addData("Best Kd", bestKd);
+        if (!reachedTarget) {
+            tel.addLine("Target not reached, defaulting Kp");
+            tel.update();
+            return;
+        }
+
+        // Calculate kp such that kp * maxError = 1.0 (full power)
+        double calculatedKp = 1.0 / maxError;
+
+        // Clamp Kp to reasonable range
+        calculatedKp = Math.max(0.0001, Math.min(1.0, calculatedKp));
+
+        tel.addLine("Bang-Bang Reverse-Engineered Kp");
+        tel.addData("Max Overshoot Error", maxError);
+        tel.addData("Calculated Kp", calculatedKp);
         tel.update();
 
         stopTelemetryUpdate = true;
     }
+
+
 
 
 }
