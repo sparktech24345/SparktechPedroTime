@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.AutoPIDS.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateExtendedRo2v2;
