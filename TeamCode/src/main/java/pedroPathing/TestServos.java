@@ -85,7 +85,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
     @Override
     public void runOpMode() {
-
+        /// TO DO: ADD ACTUAL POS
         intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);

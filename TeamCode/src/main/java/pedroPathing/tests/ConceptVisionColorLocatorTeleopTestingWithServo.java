@@ -79,10 +79,19 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
 {
     public static final ColorRange FTC_YELLOW = new ColorRange(
             ColorSpace.RGB,
-            new Scalar(175, 125, 0),
-            new Scalar( 255, 225,  70)
+            new Scalar( 220, 220,   0),  //yellow
+            new Scalar(255, 255, 255)
     );
-
+    public static final ColorRange FTC_RED = new ColorRange(
+            ColorSpace.RGB,
+            new Scalar( 230, 0,  0),  //red
+            new Scalar(255, 219, 180)
+    );
+    public static final ColorRange FTC_BLUE = new ColorRange(
+            ColorSpace.RGB,
+            new Scalar( 16,   0, 225), //blue
+            new Scalar(255, 127, 255)
+    );
     double intakeMotorPower = 0;
     int lateralTargetPos = 0;
     int verticalTargetPos = 0;
@@ -137,11 +146,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
          */
 
         ColorBlobLocatorProcessor colorLocatorBlue = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(new ColorRange(
-                        ColorSpace.RGB,
-                        new Scalar( 16,   0, 225), //blue
-                        new Scalar(255, 127, 255)
-                ))         // use a predefined color match
+                .setTargetColorRange(FTC_BLUE)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
@@ -149,11 +154,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
                 .setErodeSize(2)
                 .build();
         ColorBlobLocatorProcessor colorLocatorRed = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(new ColorRange(
-                        ColorSpace.RGB,
-                        new Scalar( 230, 0,  0),  //red
-                        new Scalar(255, 219, 180)
-                ))         // use a predefined color match
+                .setTargetColorRange(FTC_RED)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
@@ -161,11 +162,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
                 .setErodeSize(2)
                 .build();
         ColorBlobLocatorProcessor colorLocatorYellow = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(new ColorRange(
-                        ColorSpace.RGB,
-                        new Scalar( 220, 220,   0),  //yellow
-                        new Scalar(255, 255, 255)
-                ))         // use a predefined color match
+                .setTargetColorRange(FTC_YELLOW)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
@@ -277,16 +274,21 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
 
             // Display the size (area) and center location for each Blob.
             ColorBlobLocatorProcessor.Blob selectedBlob = null; // Variable to hold the blob with the maximum y coordinate
-            int maxY = Integer.MIN_VALUE; // Initialize maxY to the smallest possible integer
+            int minDistance = Integer.MAX_VALUE; // Initialize maxY to the smallest possible integer
+
+            int xCenter = 320;
+            int yCenter = 480;
 
             for (ColorBlobLocatorProcessor.Blob b : blobs) {
                 String color = "Cat";
                 if (colorLocatorRed.getBlobs().contains(b))
                     color = "Red";
-                if (colorLocatorBlue.getBlobs().contains(b))
+                else if (colorLocatorBlue.getBlobs().contains(b))
                     color = "Blue";
-                if (colorLocatorYellow.getBlobs().contains(b))
+                else if (colorLocatorYellow.getBlobs().contains(b))
                     color = "Yellow";
+                else
+                    continue;
 
                 RotatedRect boxFit = b.getBoxFit();
                 telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
@@ -295,9 +297,13 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
                 dashboardTelemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                         b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) + " " + b.getBoxFit().angle + " " + color);
 
+                int xDistance = (int) boxFit.center.x - xCenter;
+                int yDistance = (int) boxFit.center.y - yCenter;
+                int distance = xDistance*xDistance + yDistance*yDistance;
+
                 // Check if the current blob has a higher y coordinate than the current maxY
-                if ((int) boxFit.center.y > maxY) {
-                    maxY = (int) boxFit.center.y; // Update maxY
+                if (distance < minDistance) {
+                    minDistance = distance; // Update maxY
                     selectedBlob = b; // Update selectedBlob to the current blob
                 }
             }
