@@ -62,13 +62,13 @@ public class BasketTestAuto extends OpMode {
     private final float xOffsetBasket = 1.25f;
     private final float yOffsetBasket = 1.5f;
     private final Pose behindBasketPreload = new Pose(-44.5 + 0.2, 79.5 + 0.5, Math.toRadians(225));
-    private final Pose behindBasketFirstSample = new Pose(-48.5 - 2.5 + xOffsetBasket, 81.5 + 2 + yOffsetBasket, Math.toRadians(225));
-    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + 1 + xOffsetBasket, 82.5+ 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketFirstSample = new Pose(-48.5 - 1 + xOffsetBasket, 81.5 + 0.5 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + 3 + xOffsetBasket, 82.5+ 1 + yOffsetBasket, Math.toRadians(225));
     private final Pose behindBasketThirdSample = new Pose(-49 - 2.5 + 1 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
 
     // collect first 3 from floor
     private final Pose firstSampleCollect = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
-    private final Pose secondSampleCollect = new Pose(-49.25 - 3.25 + 2.25, 89 + 2, Math.toRadians(270));
+    private final Pose secondSampleCollect = new Pose(-49.25, 89 + 2, Math.toRadians(270));
     private final Pose thirdSampleCollect = new Pose( -44.3 - 4.5 + 5.25, 86.20 + 2, Math.toRadians(270));
 
     // collect from submersible
@@ -182,7 +182,7 @@ slides pos on descent -223
         ///  FIRST
         firstSubmersibleCollectPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(behindBasketThirdSample),
-                        new Point(-49, 102),
+                        new Point(-51, 102),
                         new Point(firstSubmersibleStdCollect)))
                 .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleStdCollect.getHeading())
                 .build();
@@ -195,7 +195,7 @@ slides pos on descent -223
         /// SECOND
         secondSubmersibleCollectPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(firstSubmersibleStdBehindBasket),
-                        new Point(-44, 102),
+                        new Point(-51, 102),
                         new Point(secondSubmersibleStdCollect)))
                 .setLinearHeadingInterpolation(firstSubmersibleStdBehindBasket.getHeading(), secondSubmersibleStdCollect.getHeading())
                 .build();
@@ -527,7 +527,7 @@ slides pos on descent -223
         while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
             robotDoStuff();
         }
-        intakeCabinTransferPosition();
+        intakeCabinTransferPositionWithPower();
         intakeRetracted();
         outtakeClawServoPos = outtakeClawServoExtendedPos + 50;
     }
