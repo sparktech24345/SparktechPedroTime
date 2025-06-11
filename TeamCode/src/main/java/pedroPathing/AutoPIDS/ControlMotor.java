@@ -1,7 +1,7 @@
 package pedroPathing.AutoPIDS;
 import com.qualcomm.robotcore.util.ElapsedTime;
 @com.acmerobotics.dashboard.config.Config
-public class ControlMotor {
+public class ControlMotor { //FINAL AUTOTUNED STUFF
     public static double integralSum =0;
     public static double kpIntake =0.0090; //old is 90
     public static double kdIntake =0.0002;
