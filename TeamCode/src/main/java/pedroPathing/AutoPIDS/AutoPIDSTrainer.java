@@ -80,13 +80,14 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
         //---------------MOTOR DECLARATION----------------------\\
 
-        testMotor = hardwareMap.get(DcMotor.class, "MotorBratDreapta");
-        testMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        testMotor = hardwareMap.get(DcMotor.class, "outakeleftmotor");
+        //testMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        auxMotor = hardwareMap.dcMotor.get("MotorBratStanga");
-        //auxMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        auxMotor = hardwareMap.dcMotor.get("outakerightmotor");
+        auxMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         //-------------SERVO STUFF ( OPTIONAL )-----------------\\
         //Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
@@ -135,7 +136,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
             if (hasTrained && !gamepad1.b && wasBPressed) {
                 tel.clearAll();
                 tel.update();
-                runAggressivePIDTraining();
+                runOscillationAutotuneBrutal();
                 wasBPressed = false;
             }
 
@@ -445,6 +446,154 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
         stopTelemetryUpdate = true;
     }
+
+
+    void runOscillationAutotuneBrutal() {
+        double p = 0.01;
+        double step = 0.005;
+        double minStep = 0.0001;
+        double ku = 0;
+        double tu = 0;
+        hasTrained = true;
+
+        double target = maxDistanceTicks / 2.0;
+        if (target == 0) {
+            emergencyReturned = true;
+            return;
+        }
+
+        boolean pidCalculated = false;
+        boolean increasing = true;
+        double lastOscillationAmplitude = Double.MAX_VALUE;
+
+        for (int trial = 0; trial < numberOfCycles && opModeIsActive(); trial++) {
+            tel.addData("Trial", trial + 1);
+            tel.addData("Current P", p);
+            tel.update();
+
+            long lastPeakTime = 0;
+            int peakCount = 0;
+            int lastSign = 1;
+            int oscCycles = 0;
+
+            double maxError = 0;
+            double minError = Double.MAX_VALUE;
+
+            // --- EXTEND PHASE ---
+            long startTime = System.currentTimeMillis();
+            while (opModeIsActive() && (System.currentTimeMillis() - startTime < 10000)) {
+                int pos = testMotor.getCurrentPosition();
+                double error = target - pos;
+
+                maxError = Math.max(maxError, Math.abs(error));
+                minError = Math.min(minError, Math.abs(error));
+
+                int sign = (int) Math.signum(error);
+                if (sign != lastSign && lastSign != 0) {
+                    long now = System.currentTimeMillis();
+                    if (lastPeakTime != 0) {
+                        tu = (now - lastPeakTime) / 1000.0;
+                        peakCount++;
+                    }
+                    lastPeakTime = now;
+                }
+                lastSign = sign;
+
+                double output = p * error;
+                output = Math.max(-1.0, Math.min(1.0, output));
+                motorsSetPower(output);
+
+                oscCycles++;
+                if (oscCycles > maxOscillationCycles) break;
+                tel.addData("pos",pos);
+                tel.addData("target",target);
+                tel.addData("error",error);
+                tel.addData("power",output);
+                tel.addData("P term",p);
+                tel.update();
+            }
+
+            motorsSetPower(0);
+
+            // Oscillation amplitude estimate:
+            double oscillationAmplitude = maxError - minError;
+
+            // --- ANALYSIS ---
+            if (!pidCalculated && peakCount >= 3 && tu > 0) {
+                ku = p;
+                pidCalculated = true; // flag to prevent re-calculating
+            }
+
+            // Decide whether oscillation improved or got worse
+            if (oscillationAmplitude > lastOscillationAmplitude) {
+                // Worse - reverse direction and reduce step
+                increasing = !increasing;
+                step *= 0.5;
+                if (step < minStep) step = minStep;
+            }
+
+            lastOscillationAmplitude = oscillationAmplitude;
+
+            // --- RETRACT PHASE ---
+            long retractStart = System.currentTimeMillis();
+            motorsSetPower(-0.5);
+            int lastPos = testMotor.getCurrentPosition();
+
+            while (opModeIsActive() && System.currentTimeMillis() - retractStart < 5000) {
+                int currPos = testMotor.getCurrentPosition();
+
+                if (Math.abs(currPos) < stillThresholdTicks) {
+                    break;
+                }
+
+                if (Math.abs(currPos - lastPos) < stillThresholdTicks) {
+                    // stuck detection
+                    if (System.currentTimeMillis() - retractStart > 3000) break;
+                } else {
+                    lastPos = currPos;
+                    retractStart = System.currentTimeMillis(); // reset timeout
+                }
+            }
+
+            motorsSetPower(0);
+
+            // Adjust p for next trial
+            if (increasing) {
+                p += step;
+                p *= 1.2;
+            } else {
+                p -= step;
+                p /= 1.2;
+                if (p < 0) p = 0.001;  // avoid negative or zero p
+            }
+        }
+
+        if (!pidCalculated || ku == 0 || tu == 0) {
+            autoTrainingFailed = true;
+            tel.addLine("Brutal training also failed -- Use bang bang control");
+            tel.update();
+            stopTelemetryUpdate = true; //already finished and its not great
+            return;
+        }
+
+        double kp = 0.6 * ku;
+        double ki = 2 * kp / tu;
+        double kd = kp * tu / 8;
+
+        savePIDValues(kp, ki, kd);
+
+        tel.addLine("PID Tune Complete");
+        tel.addData("Ku ( ignore ) ", ku);
+        tel.addData("Tu ( ignore )", tu);
+        tel.addData("Kp", kp);
+        tel.addData("Ki VERY VERY VERY MUCH NOT RECOMENDED FOR USE", ki);
+        tel.addData("Kd", kd);
+        tel.update();
+
+        stopTelemetryUpdate = true;
+    }
+
+
 
 
 
