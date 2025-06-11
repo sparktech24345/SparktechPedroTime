@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.AutoPIDS.ControlMotor;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 

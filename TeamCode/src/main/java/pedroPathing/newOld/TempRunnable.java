@@ -7,7 +7,7 @@ import static pedroPathing.newOld.PositionStorage.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.AutoPIDS.ControlMotor;
 
 
 public class TempRunnable implements Runnable {

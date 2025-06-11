@@ -18,7 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.AutoPIDS.ControlMotor;
 
 @TeleOp(name = "Only Drive Teleop", group = "Linear OpMode")
 @Disabled

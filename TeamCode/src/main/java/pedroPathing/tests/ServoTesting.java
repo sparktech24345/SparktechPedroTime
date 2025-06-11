@@ -2,7 +2,6 @@ package pedroPathing.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,10 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.openftc.easyopencv.OpenCvCamera;
 
 
-import pedroPathing.ControlMotor;
+import pedroPathing.AutoPIDS.ControlMotor;
 
 import pedroPathing.newOld.Toggle;
 import static pedroPathing.newOld.PositionStorage.*;

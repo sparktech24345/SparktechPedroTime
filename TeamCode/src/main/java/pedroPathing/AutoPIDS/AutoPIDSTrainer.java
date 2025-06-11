@@ -80,17 +80,17 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
         //---------------MOTOR DECLARATION----------------------\\
 
-        testMotor = hardwareMap.get(DcMotor.class, "intakemotor");
+        testMotor = hardwareMap.get(DcMotor.class, "MotorBratDreapta");
         testMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         //testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        auxMotor = hardwareMap.dcMotor.get("outakerightmotor");
-        auxMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        auxMotor = hardwareMap.dcMotor.get("MotorBratStanga");
+        //auxMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //-------------SERVO STUFF ( OPTIONAL )-----------------\\
-        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
-        intakeRotateServo.setPosition((30) / 228);
+        //Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        //intakeRotateServo.setPosition((30) / 228);
 
         //Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
         //outakeArmServo.setPosition(90 / 328);

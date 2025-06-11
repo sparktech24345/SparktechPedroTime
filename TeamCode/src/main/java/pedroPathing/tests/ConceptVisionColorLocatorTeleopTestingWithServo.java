@@ -22,12 +22,10 @@
 package pedroPathing.tests;
 
 import static pedroPathing.newOld.PositionStorage.intakeTargetPos;
-import static pedroPathing.newOld.PositionStorage.intakeTargetPosAdder;
 
 import android.util.Size;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -48,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pedroPathing.ControlMotor;
+import pedroPathing.AutoPIDS.ControlMotor;
 
 /*
  * This OpMode illustrates how to use a video source (camera) to locate specifically colored regions
