@@ -82,12 +82,12 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
     );
     public static final ColorRange FTC_RED = new ColorRange(
             ColorSpace.RGB,
-            new Scalar( 230, 0,  0),  //red
+            new Scalar( 215, 0,  0),  //red
             new Scalar(255, 219, 180)
     );
     public static final ColorRange FTC_BLUE = new ColorRange(
             ColorSpace.RGB,
-            new Scalar( 16,   0, 225), //blue
+            new Scalar( 16,   0, 215), //blue
             new Scalar(255, 127, 255)
     );
     double intakeMotorPower = 0;
@@ -146,7 +146,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
         ColorBlobLocatorProcessor colorLocatorBlue = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(FTC_BLUE)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(0)// Smooth the transitions between different colors in image
                 .setErodeSize(2)
@@ -154,7 +154,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
         ColorBlobLocatorProcessor colorLocatorRed = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(FTC_RED)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(0)                               // Smooth the transitions between different colors in image
                 .setErodeSize(2)
@@ -162,7 +162,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
         ColorBlobLocatorProcessor colorLocatorYellow = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(FTC_YELLOW)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 0.8, -1))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(0)                               // Smooth the transitions between different colors in image
                 .setErodeSize(2)
@@ -186,6 +186,7 @@ public class ConceptVisionColorLocatorTeleopTestingWithServo extends LinearOpMod
                 .addProcessor(colorLocatorYellow)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "camera"))
+                .setShowStatsOverlay(false)
                 .build();
 
         Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
