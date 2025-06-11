@@ -509,7 +509,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
                 tel.addData("target",target);
                 tel.addData("error",error);
                 tel.addData("power",output);
-                tel.addData("P term",p);
+                tel.addData("P term trial",p);
                 tel.update();
             }
 
@@ -562,8 +562,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
                 p += step;
                 p *= 1.2;
             } else {
-                p -= step;
-                p /= 1.2;
+                p += step;
                 if (p < 0) p = 0.001;  // avoid negative or zero p
             }
         }
