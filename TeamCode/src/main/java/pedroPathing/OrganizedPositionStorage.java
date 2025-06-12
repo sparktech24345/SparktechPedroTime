@@ -68,9 +68,9 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 195;
-    public static double intakePivotServoOutputTruBotPos = 0;
-    public static double intakePivotServoTransferPos = 125;
+    public static double intakePivotServoPickupPos = 200;
+    public static double intakePivotServoOutputTruBotPos = 20;
+    public static double intakePivotServoTransferPos = 145;
     public static double tempIntakeTargetPastPosDifrence = 135;
     public static double tempIntakeAPosition = 0;
 
