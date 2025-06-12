@@ -182,7 +182,7 @@ slides pos on descent -223
         ///  FIRST
         firstSubmersibleCollectPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(behindBasketThirdSample),
-                        new Point(-51, 102),
+                        new Point(-56, 102),
                         new Point(firstSubmersibleStdCollect)))
                 .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleStdCollect.getHeading())
                 .build();
@@ -195,7 +195,7 @@ slides pos on descent -223
         /// SECOND
         secondSubmersibleCollectPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(firstSubmersibleStdBehindBasket),
-                        new Point(-51, 102),
+                        new Point(-56, 102),
                         new Point(secondSubmersibleStdCollect)))
                 .setLinearHeadingInterpolation(firstSubmersibleStdBehindBasket.getHeading(), secondSubmersibleStdCollect.getHeading())
                 .build();
@@ -533,7 +533,8 @@ slides pos on descent -223
     }
 
     public void executeAutoTransfer() {
-        while(intakeMotor.getCurrentPosition() > 75) {
+        autoOuttakeTransfer();
+        while(intakeMotor.getCurrentPosition() > 50) {
             robotDoStuff();
         }
         waitWhile(75);
