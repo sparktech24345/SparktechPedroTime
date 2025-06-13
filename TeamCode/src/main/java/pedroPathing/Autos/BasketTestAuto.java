@@ -59,16 +59,16 @@ public class BasketTestAuto extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
 
     // place in basket
-    private final float xOffsetBasket = 1.25f;
+    private final float xOffsetBasket = 3f;
     private final float yOffsetBasket = 1.5f;
-    private final Pose behindBasketPreload = new Pose(-44.5 + 0.2, 79.5 + 0.5, Math.toRadians(225));
-    private final Pose behindBasketFirstSample = new Pose(-48.5 - 1 + xOffsetBasket, 81.5 + 0.5 + yOffsetBasket, Math.toRadians(225));
-    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + 3 + xOffsetBasket, 82.5+ 1 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketPreload = new Pose(-44.5 + 0.2 + 1.5, 79.5 + 0.5, Math.toRadians(225));
+    private final Pose behindBasketFirstSample = new Pose(-48.5 - 2.5 + xOffsetBasket, 81.5 + 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + 1 + xOffsetBasket, 82.5+ 2 + yOffsetBasket, Math.toRadians(225));
     private final Pose behindBasketThirdSample = new Pose(-49 - 2.5 + 1 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
 
     // collect first 3 from floor
     private final Pose firstSampleCollect = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
-    private final Pose secondSampleCollect = new Pose(-49.25, 89 + 2, Math.toRadians(270));
+    private final Pose secondSampleCollect = new Pose(-49.25 - 3.25 + 2.25, 89 + 2, Math.toRadians(270));
     private final Pose thirdSampleCollect = new Pose( -44.3 - 4.5 + 5.25, 86.20 + 2, Math.toRadians(270));
 
     // collect from submersible
@@ -80,9 +80,8 @@ public class BasketTestAuto extends OpMode {
     // second
     private final Pose secondSubmersibleStdCollect = new Pose(-20.25, 122, 3.2909640328101575);
     private final Pose secondSubmersibleStdBehindBasket = new Pose(-49 - 2.5 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
-
     // sign off
-    private final Pose endingPosition = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
+    private final Pose endingPosition = new Pose( -45 , 93, Math.toRadians(287));
 
     /*
     heading: 4.0289046655823935
@@ -236,6 +235,7 @@ slides pos on descent -223
                 break;
             case 1:
                 if(!follower.isBusy()){
+                    waitWhile(500);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     setPathState(2);
 
@@ -252,6 +252,7 @@ slides pos on descent -223
             case 3:
                 if(!follower.isBusy()){
                     skipBasket =  executeAutoCollect();
+                    // skipBasket = false;
                     if(!skipBasket){
                         setPathState(4);
                     } else {
@@ -263,7 +264,7 @@ slides pos on descent -223
             case 4:
                 if(!follower.isBusy()){
                     executeAutoTransfer();
-                    //waitWhile(500);
+                    waitWhile(300);
                     follower.followPath(firstSampleScorePath);
                     //outtakeClawServoPos = outtakeClawServoExtendedPos;
                     setPathState(5);
@@ -288,6 +289,7 @@ slides pos on descent -223
             case 7:
                 if(!follower.isBusy()){
                     skipBasket =  executeAutoCollect();
+                    skipBasket = false;
                     if(!skipBasket){
                         setPathState(8);
                     } else {
@@ -299,7 +301,7 @@ slides pos on descent -223
             case 8:
                 if(!follower.isBusy()){
                     executeAutoTransfer();
-                    //waitWhile(500);
+                    waitWhile(300);
                     follower.followPath(secondSampleScorePath);
                     //outtakeClawServoPos = outtakeClawServoExtendedPos;
                     setPathState(9);
@@ -533,6 +535,7 @@ slides pos on descent -223
     }
 
     public void executeAutoTransfer() {
+
         autoOuttakeTransfer();
         while(intakeMotor.getCurrentPosition() > 50) {
             robotDoStuff();
@@ -581,7 +584,10 @@ slides pos on descent -223
         currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
         //PID Stuff
+
         intakeMotorPower = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+        if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeMotorPower *= 1.5;
+
         outakeMotorPower = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos, outakeLeftMotor.getCurrentPosition());
 
         //set motor positions

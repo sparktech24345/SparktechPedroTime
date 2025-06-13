@@ -23,8 +23,8 @@ public class FConstants {
 
         FollowerConstants.mass = 11.4;
 
-        FollowerConstants.xMovement = 78;
-        FollowerConstants.yMovement = 63;
+        FollowerConstants.xMovement = 0.5*78;
+        FollowerConstants.yMovement = 0.5*63;
 
         FollowerConstants.forwardZeroPowerAcceleration = -37.169;
         FollowerConstants.lateralZeroPowerAcceleration = -70;
@@ -44,7 +44,7 @@ public class FConstants {
         FollowerConstants.zeroPowerAccelerationMultiplier = 3;
         FollowerConstants.centripetalScaling = 0.0005;
 
-        FollowerConstants.pathEndTimeoutConstraint = 500;
+        FollowerConstants.pathEndTimeoutConstraint = 350;
         FollowerConstants.pathEndTValueConstraint = 0.995;
         FollowerConstants.pathEndVelocityConstraint = 0.1;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;

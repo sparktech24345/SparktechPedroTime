@@ -33,7 +33,12 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ColorSpace;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import pedroPathing.AutoPIDS.ControlMotor;
 import pedroPathing.constants.FConstants;
@@ -97,24 +102,32 @@ public class BasketTestAutoVision extends OpMode {
     // place in basket
     private final float xOffsetBasket = 1.25f;
     private final float yOffsetBasket = 1.5f;
-    private final Pose behindBasketPreload = new Pose(-44.5 + 0.2, 79.5 + 0.5, Math.toRadians(225));
-    private final Pose behindBasketFirstSample = new Pose(-48.5 - 1 + xOffsetBasket, 81.5 + 0.5 + yOffsetBasket, Math.toRadians(225));
-    private final Pose behindBasketSecondSample = new Pose(-49.5 - 2.5 + 3 + xOffsetBasket, 82.5+ 1 + yOffsetBasket, Math.toRadians(225));
-    private final Pose behindBasketThirdSample = new Pose(-49 - 2.5 + 1 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketPreload = new Pose(-44.3, 80, Math.toRadians(225));
+    private final Pose behindBasketFirstSample = new Pose(-48.5 - 2 + xOffsetBasket, 81.5 +1.5 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketSecondSample = new Pose(-49.5 - 4.5 + 3 + xOffsetBasket, 82.5 + 2 + yOffsetBasket, Math.toRadians(225));
+    private final Pose behindBasketThirdSample = new Pose(-49 - 0.5 + 1 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
 
     // collect first 3 from floor
     private final Pose firstSampleCollect = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
-    private final Pose secondSampleCollect = new Pose(-49.25, 89 + 2, Math.toRadians(270));
+    private final Pose secondSampleCollect = new Pose(-49.25 - 1, 89 + 2, Math.toRadians(270));
     private final Pose thirdSampleCollect = new Pose( -44.3 - 4.5 + 5.25, 86.20 + 2, Math.toRadians(270));
 
-    // collect from submersible
+    /// SUBMERSIBLE
+    /// INTERMEDIARY POSES (FOR EXECUTING DETECTION)
+
+    private final Pose firstSubmersibleCollectIntermediary = new Pose();
+    private final Pose secondSubmersibleCollectIntermediary = new Pose();
+
+    /// INTERPOLATION VARIABLES
+    private double startOfSubmersible = 50;
+    private double endOfSubmersible = 50;
 
     // first
-    private final Pose firstSubmersibleStdCollect = new Pose(-20.25, 122, 3.2909640328101575);
+    private Pose firstSubmersibleStdCollect = new Pose();
     private final Pose firstSubmersibleStdBehindBasket = new Pose(-49 - 1.8 + xOffsetBasket, 82 + 2.7 + yOffsetBasket, Math.toRadians(225));
 
     // second
-    private final Pose secondSubmersibleStdCollect = new Pose(-20.25, 122, 3.2909640328101575);
+    private Pose secondSubmersibleStdCollect = new Pose();
     private final Pose secondSubmersibleStdBehindBasket = new Pose(-49 - 2.5 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
 
     // sign off
@@ -138,8 +151,8 @@ slides pos on descent -223
     //private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample;
 
     private PathChain firstSampleCollectPath, preloadScorePath, firstSampleScorePath, secondSampleCollectPath, secondSampleScorePath, thirdSampleCollectPath, thirdSampleScorePath
-            , firstSubmersibleCollectPath, firstSubmersibleScorePath,
-            secondSubmersibleCollectPath, secondSubmersibleScorePath
+            , firstSubmersibleIntermediaryPath, firstSubmersibleCollectPath, firstSubmersibleScorePath,
+            secondSubmersibleIntermediaryPath, secondSubmersibleCollectPath, secondSubmersibleScorePath
             , signOffPath;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
@@ -216,9 +229,9 @@ slides pos on descent -223
 
         ///  COLLECT FROM SUBMERSIBLE
         ///  FIRST
-        firstSubmersibleCollectPath = follower.pathBuilder()
+        firstSubmersibleIntermediaryPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(behindBasketThirdSample),
-                        new Point(-51, 102),
+                        new Point(-56, 102),
                         new Point(firstSubmersibleStdCollect)))
                 .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleStdCollect.getHeading())
                 .build();
@@ -229,9 +242,9 @@ slides pos on descent -223
                 .build();
 
         /// SECOND
-        secondSubmersibleCollectPath = follower.pathBuilder()
+        secondSubmersibleIntermediaryPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(firstSubmersibleStdBehindBasket),
-                        new Point(-51, 102),
+                        new Point(-56, 102),
                         new Point(secondSubmersibleStdCollect)))
                 .setLinearHeadingInterpolation(firstSubmersibleStdBehindBasket.getHeading(), secondSubmersibleStdCollect.getHeading())
                 .build();
@@ -394,7 +407,7 @@ slides pos on descent -223
             case 14:
                 if(!follower.isBusy()){
                     autoOuttakeTransfer();
-                    follower.followPath(firstSubmersibleCollectPath);
+                    follower.followPath(firstSubmersibleIntermediaryPath);
                     setPathState(15);
                 }
                 break;
@@ -427,7 +440,7 @@ slides pos on descent -223
             case 19:
                 if(!follower.isBusy()){
                     autoOuttakeTransfer();
-                    follower.followPath(secondSubmersibleCollectPath);
+                    follower.followPath(secondSubmersibleIntermediaryPath);
                     setPathState(20);
                 }
                 break;
@@ -610,7 +623,8 @@ slides pos on descent -223
     }
 
     public void executeAutoTransfer() {
-        while(intakeMotor.getCurrentPosition() > 75) {
+        autoOuttakeTransfer();
+        while(intakeMotor.getCurrentPosition() > 50) {
             robotDoStuff();
         }
         waitWhile(75);
@@ -707,9 +721,11 @@ slides pos on descent -223
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
     @Override
     public void loop() {
+        ColorBlobLocatorProcessor.Blob selectedBlob = selectFromDetection();
 
         // These loop the movements of the robot
         follower.update();
+
         autonomousPathUpdate();
 
         robotDoStuff();
@@ -719,7 +735,80 @@ slides pos on descent -223
         robotTelemetry();
     }
 
+    public ColorBlobLocatorProcessor.Blob selectFromDetection(){
+        ColorBlobLocatorProcessor.Blob selectedBlob = null;
 
+        List<ColorBlobLocatorProcessor.Blob> blobs = new ArrayList<>();
+        blobs.addAll(colorLocatorRed.getBlobs());
+        blobs.addAll(colorLocatorBlue.getBlobs());
+        blobs.addAll(colorLocatorYellow.getBlobs());
+        AtomicInteger i = new AtomicInteger(1);
+        colorLocatorRed.getBlobs().forEach( blob -> {
+            if(blob.getBoxFit() != null) {
+                //telemetry.addData("Red Blob " + i + " Size Y", blob.getBoxFit().size.height);
+                //telemetry.addData("Red Blob " + i + " Size X", blob.getBoxFit().size.width);
+                //telemetry.addData("Red Blob " + i + " Angle", blob.getBoxFit().angle);
+                i.getAndIncrement();
+            }
+        });
+        AtomicInteger j = new AtomicInteger(1);
+        colorLocatorYellow.getBlobs().forEach( blob -> {
+            if(blob.getBoxFit() != null) {
+
+                //telemetry.addData();
+                //telemetry.addData("Yellow Blob " + j + " Size X", blob.getBoxFit().size.width);
+                //telemetry.addData("Yellow Blob " + j + " Angle", blob.getBoxFit().angle);
+                j.getAndIncrement();
+            }
+        });
+        AtomicInteger k = new AtomicInteger(1);
+        colorLocatorBlue.getBlobs().forEach( blob -> {
+            if(blob.getBoxFit() != null) {
+                //telemetry.addData("Blue Blob " + k + " Size Y", blob.getBoxFit().size.height);
+                //telemetry.addData("Blue Blob " + k + " Size X", blob.getBoxFit().size.width);
+                //telemetry.addData("Blue Blob " + k + " Angle", blob.getBoxFit().angle);
+                k.getAndIncrement();
+            }
+        });
+
+
+        // Variable to hold the blob with the maximum y coordinate
+        int minDistance = Integer.MAX_VALUE; // Initialize maxY to the smallest possible integer
+
+        int xCenter = 320;
+        int yCenter = 480;
+
+        for (ColorBlobLocatorProcessor.Blob b : blobs) {
+            String color = "Cat";
+            if (colorLocatorRed.getBlobs().contains(b))
+                color = "Red";
+            else if (colorLocatorBlue.getBlobs().contains(b))
+                color = "Blue";
+            else if (colorLocatorYellow.getBlobs().contains(b))
+                color = "Yellow";
+            else
+                continue;
+
+            RotatedRect boxFit = b.getBoxFit();
+            telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
+                    b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) + " " + b.getBoxFit().angle + " " + color);
+
+            dashboardTelemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
+                    b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y) + " " + b.getBoxFit().angle + " " + color);
+
+            int xDistance = (int) boxFit.center.x - xCenter;
+            int yDistance = (int) boxFit.center.y - yCenter;
+            int distance = xDistance*xDistance + yDistance*yDistance;
+
+            // Check if the current blob has a higher y coordinate than the current maxY
+            if (distance < minDistance) {
+                minDistance = distance; // Update maxY
+                selectedBlob = b; // Update selectedBlob to the current blob
+            }
+        }
+
+        return selectedBlob;
+    }
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
