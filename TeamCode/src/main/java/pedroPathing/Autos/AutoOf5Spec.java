@@ -91,12 +91,12 @@ public class AutoOf5Spec extends OpMode {
     private final float globalSpecimenPickupYOffset = 1.25f;
     private final float globalSpecimenPickupXOffset = 2f;
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(-43 + 1 + globalSpecimenPickupXOffset, 69.6 + 0.5 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose firstSpecimenPickUpPose = new Pose(-43 + 1 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose secondSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose thirdSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose fourthSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
-    private final Pose firstSamplePickUpPos = new Pose(-44.6, 54+1, Math.toRadians(90)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-58.2, 54+1.5, Math.toRadians(90)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-43.6, 54+1, Math.toRadians(90)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-56.2, 54+1.5, Math.toRadians(90)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-56 + 1.5, 54+3, Math.toRadians(57)); //start
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
 
@@ -299,7 +299,7 @@ public class AutoOf5Spec extends OpMode {
 
 
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    waitWhile(150);
+                    waitWhile(300);
                     autoOuttakeWallPickUpNew();
                     intakeCabinFullInBot();
                     autoTimer = System.currentTimeMillis();
