@@ -1,7 +1,35 @@
 package pedroPathing.Autos;
 
-import static pedroPathing.ClassWithStates.*;
-import static pedroPathing.OrganizedPositionStorage.*;
+import static pedroPathing.ClassWithStates.ColorCompare;
+import static pedroPathing.ClassWithStates.autoOuttakeWallPickUpNew;
+import static pedroPathing.ClassWithStates.colorList;
+import static pedroPathing.ClassWithStates.colorSensorOutty;
+import static pedroPathing.ClassWithStates.currentStateOfSampleInIntake;
+import static pedroPathing.ClassWithStates.currentTeam;
+import static pedroPathing.ClassWithStates.initStates;
+import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
+import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
+import static pedroPathing.ClassWithStates.intakeCabinFullInBotOutputting;
+import static pedroPathing.ClassWithStates.intakeExtended4out4;
+import static pedroPathing.ClassWithStates.intakeRetracted;
+import static pedroPathing.ClassWithStates.outtakeSpecimenHang;
+import static pedroPathing.OrganizedPositionStorage.autoTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
+import static pedroPathing.OrganizedPositionStorage.intakeTargetPosAdder;
+import static pedroPathing.OrganizedPositionStorage.isRobotInAuto;
+import static pedroPathing.OrganizedPositionStorage.isYellowSampleNotGood;
+import static pedroPathing.OrganizedPositionStorage.needsToExtraExtend;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtendedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtraExtendedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoRetractedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeIsInNeedToExtraExtendClawTimer;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.resetStuff;
 
 import android.graphics.Color;
 
@@ -18,6 +46,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -52,22 +81,22 @@ public class AutoOf5Spec extends OpMode {
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
-    private final float globalSpecimenYOffset = -4.5f;
-    private final Pose scoringBarPosePreloadSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
+    private final float globalSpecimenYOffset = -8f;
+    private final Pose scoringBarPosePreloadSpecimen = new Pose(-5.4, 41, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final Pose scoringBarPoseThirdSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFourthSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final float globalSpecimenPickupYOffset = 1.25f;
-    private final float globalSpecimenPickupXOffset = 2.5f;
+    private final float globalSpecimenPickupXOffset = 2f;
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(-43 + 1 + globalSpecimenPickupXOffset, 69.6 + 0.5 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose secondSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose thirdSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose fourthSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
-    private final Pose firstSamplePickUpPos = new Pose(-42.5, 54+1, Math.toRadians(90)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-56 + 0.8 - 2, 54+1.5, Math.toRadians(90)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-44.6, 54+1, Math.toRadians(90)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-58.2, 54+1.5, Math.toRadians(90)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-56 + 1.5, 54+3, Math.toRadians(57)); //start
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
 
@@ -206,14 +235,12 @@ public class AutoOf5Spec extends OpMode {
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
-                    autoTimer = System.currentTimeMillis();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample) && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
-                    waitWhile(300);
+                    waitWhile(350);
                     intakeCabinFullInBotOutputting();
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
 
@@ -228,11 +255,9 @@ public class AutoOf5Spec extends OpMode {
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
-                    autoTimer = System.currentTimeMillis();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample) && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -257,14 +282,12 @@ public class AutoOf5Spec extends OpMode {
 
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    intakeSpinMotorPow = 1;
                     waitWhile(300);
                     intakeExtended4out4();
-                    autoTimer = System.currentTimeMillis();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
-                    waitWhile(300);
+                    waitWhile(350);
                     intakeCabinFullInBotOutputting();
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
 
@@ -388,7 +411,6 @@ public class AutoOf5Spec extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
-
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);

@@ -82,8 +82,8 @@ public class AutoOf5SpecBACKUPDoNOTTouch extends OpMode {
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
-    private final float globalSpecimenYOffset = -4.5f;
-    private final Pose scoringBarPosePreloadSpecimen = new Pose(-5.4, 45, Math.toRadians(90)); //start
+    private final float globalSpecimenYOffset = -3f;
+    private final Pose scoringBarPosePreloadSpecimen = new Pose(-5.4, 46, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final Pose scoringBarPoseThirdSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
