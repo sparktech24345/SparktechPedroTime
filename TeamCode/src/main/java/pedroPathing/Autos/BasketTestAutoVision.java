@@ -50,7 +50,6 @@ public class BasketTestAutoVision extends OpMode {
     private FtcDashboard dashboard;
     private Telemetry dashboardTelemetry;
 
-
     /// SAMPLE DETECTION VALUES
     private final ColorRange FTC_YELLOW = new ColorRange(
             ColorSpace.RGB,
@@ -114,24 +113,31 @@ public class BasketTestAutoVision extends OpMode {
 
     /// SUBMERSIBLE
     /// INTERMEDIARY POSES (FOR EXECUTING DETECTION)
+    /// THESE ARE THE POSITIONS AT WHICH THE ROBOT WILL DO THE DETECTION
 
     private final Pose firstSubmersibleCollectIntermediary = new Pose();
     private final Pose secondSubmersibleCollectIntermediary = new Pose();
 
-    /// INTERPOLATION VARIABLES
+    /// THESE ARE GUIDELINE VALUES FOR CALCULATING ACTUAL SAMPLE POSITION
+    /// THIS IS THE VERY FIRST Y COORDINATE THAT THE CAMERA SEES (TO ITS RIGHT)
     private double startOfSubmersible = 50;
+    /// THIS IS THE VERY LAST Y COORDINATE THAT THE CAMERA SEES (TO ITS LEFT)
     private double endOfSubmersible = 50;
 
     // first
-    private Pose firstSubmersibleStdCollect = new Pose();
+    private Pose firstSubmersibleCollect = new Pose();
     private final Pose firstSubmersibleStdBehindBasket = new Pose(-49 - 1.8 + xOffsetBasket, 82 + 2.7 + yOffsetBasket, Math.toRadians(225));
 
     // second
-    private Pose secondSubmersibleStdCollect = new Pose();
+    private Pose secondSubmersibleCollect = new Pose();
     private final Pose secondSubmersibleStdBehindBasket = new Pose(-49 - 2.5 + xOffsetBasket, 82 + 2 + yOffsetBasket, Math.toRadians(225));
 
     // sign off
     private final Pose endingPosition = new Pose( -49.25 - 2.5, 91 + 2, Math.toRadians(287));
+
+    /// VALUES FOR HOLDING
+    private boolean needsToHold = false;
+    private Pose poseToHold;
 
     /*
     heading: 4.0289046655823935
@@ -228,30 +234,33 @@ slides pos on descent -223
                 .build();
 
         ///  COLLECT FROM SUBMERSIBLE
+        ///  PATHS TO DETECTION
         ///  FIRST
         firstSubmersibleIntermediaryPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(behindBasketThirdSample),
                         new Point(-56, 102),
-                        new Point(firstSubmersibleStdCollect)))
-                .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleStdCollect.getHeading())
+                        new Point(firstSubmersibleCollectIntermediary)))
+                .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleCollect.getHeading())
                 .build();
 
         firstSubmersibleScorePath = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(firstSubmersibleStdCollect), new Point(firstSubmersibleStdBehindBasket)))
-                .setLinearHeadingInterpolation(firstSubmersibleStdCollect.getHeading(), firstSubmersibleStdBehindBasket.getHeading())
+                .addPath(new BezierCurve(new Point(firstSubmersibleCollectIntermediary),
+                        new Point(firstSubmersibleStdBehindBasket)))
+                .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleCollect.getHeading())
                 .build();
 
         /// SECOND
         secondSubmersibleIntermediaryPath = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(firstSubmersibleStdBehindBasket),
                         new Point(-56, 102),
-                        new Point(secondSubmersibleStdCollect)))
-                .setLinearHeadingInterpolation(firstSubmersibleStdBehindBasket.getHeading(), secondSubmersibleStdCollect.getHeading())
+                        new Point(secondSubmersibleCollectIntermediary)))
+                .setLinearHeadingInterpolation(firstSubmersibleStdBehindBasket.getHeading(), secondSubmersibleCollect.getHeading())
                 .build();
 
         secondSubmersibleScorePath = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(secondSubmersibleStdCollect), new Point(secondSubmersibleStdBehindBasket)))
-                .setLinearHeadingInterpolation(secondSubmersibleStdCollect.getHeading(), secondSubmersibleStdBehindBasket.getHeading())
+                .addPath(new BezierCurve(new Point(secondSubmersibleCollectIntermediary),
+                        new Point(secondSubmersibleStdBehindBasket)))
+                .setLinearHeadingInterpolation(behindBasketThirdSample.getHeading(), firstSubmersibleCollect.getHeading())
                 .build();
 
         /// end autonomy
@@ -271,10 +280,8 @@ slides pos on descent -223
     private final int slideExtensionTimer = 300;
     private final int basketDropTimer = 75;
     public void autonomousPathUpdate() {
-
-
         switch (pathState) {
-            // PRELOAD
+            /// PRELOAD
             case 0:
                 if(!follower.isBusy()){
                     outtakeBasket();
@@ -293,7 +300,7 @@ slides pos on descent -223
                 }
                 break;
 
-            // FIRST SAMPLE
+            /// FIRST SAMPLE
             case 2:
                 if(!follower.isBusy()){
                     follower.followPath(firstSampleCollectPath,true);
@@ -328,7 +335,7 @@ slides pos on descent -223
                 }
                 break;
 
-            // SECOND SAMPLE
+            /// SECOND SAMPLE
 
             case 6:
                 if(!follower.isBusy()){
@@ -366,7 +373,7 @@ slides pos on descent -223
                 break;
 
 
-            // THIRD SAMPLE
+            /// THIRD SAMPLE
 
             case 10:
                 if(!follower.isBusy()){
@@ -411,15 +418,23 @@ slides pos on descent -223
                     setPathState(15);
                 }
                 break;
+            /// ROBOT NEEDS TO DECIDE WHICH SAMPLE TO COLLECT
             case 15:
                 if(!follower.isBusy()){
+                    ColorBlobLocatorProcessor.Blob selectedBlob = selectFromDetection();
+                    calculateFirstSubmersibleCollectPoint(selectedBlob);
+                    needsToHold = true;
+                    poseToHold = firstSubmersibleCollect;
+                    waitWhile(500);
                     executeSubmersibleCollect();
+                    //executeSubmersibleCollect();
                     setPathState(16);
                 }
                 break;
             case 16:
                 if(!follower.isBusy()){
                     executeAutoTransfer();
+                    needsToHold = false;
                     setPathState(17);
                 }
                 break;
@@ -433,7 +448,7 @@ slides pos on descent -223
                 if(!follower.isBusy()){
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    setPathState(19);
+                    setPathState(-1);
                 }
                 break;
             /// SECOND
@@ -479,6 +494,20 @@ slides pos on descent -223
                 }
                 break;
         }
+    }
+
+    private void calculateFirstSubmersibleCollectPoint(ColorBlobLocatorProcessor.Blob selectedBlob) {
+        double visionX = selectedBlob.getBoxFit().center.x;
+        /// INTERPOLATING TO GET IRL SAMPLE POSITION
+        double sampleY = endOfSubmersible - (endOfSubmersible - startOfSubmersible) * visionX / 640;
+        firstSubmersibleCollect = new Pose(-20, sampleY, Math.toRadians(180));
+    }
+
+    private void calculateSecondSubmersibleCollectPoint(ColorBlobLocatorProcessor.Blob selectedBlob) {
+        double visionX = selectedBlob.getBoxFit().center.x;
+        /// INTERPOLATING TO GET IRL SAMPLE POSITION
+        double sampleY = endOfSubmersible - (endOfSubmersible - startOfSubmersible) * visionX / 640;
+        secondSubmersibleCollect = new Pose(-20, sampleY, Math.toRadians(180));
     }
 
     /** These change the states of the paths and actions
@@ -638,7 +667,9 @@ slides pos on descent -223
         //risky
         follower.update();
 
-
+        if(needsToHold){
+            follower.holdPoint(poseToHold);
+        }
 
         /*
         //ifs
