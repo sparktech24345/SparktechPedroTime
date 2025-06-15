@@ -106,7 +106,7 @@ public class AutoTestPositions extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(-10, 70, Math.toRadians(180)); //start
+    private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     private final Pose FirstSampleScorePose = new Pose(1, 85, Math.toRadians(90)); //line 1
     private final Pose SecondSamplePickUP=new Pose(1,87,Math.toRadians(180)); //line 2 //old 124
     private final Pose SecondSampleScore=new Pose(5,78,Math.toRadians(145)); //line 3
@@ -350,7 +350,7 @@ public class AutoTestPositions extends OpMode {
         tel.addData("path state", pathState);
         tel.addData("x", follower.getPose().getX());
         tel.addData("y", follower.getPose().getY());
-        tel.addData("heading", follower.getPose().getHeading());
+        tel.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
         tel.addData("intakerotate",intakeRotateServoPosition);
         tel.update();
     }
