@@ -83,21 +83,21 @@ public class AutoOf5Spec extends OpMode {
     //scoring bar positions
     private final float globalSpecimenYOffset = -8f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(-5.4, 43, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(-5.4, 45 + globalSpecimenYOffset, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 46 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(-5.4, 44.5 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
     private final float globalSpecimenPickupYOffset = .75f;
     private final float globalSpecimenPickupXOffset = 0f;
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(-43 + 1 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose secondSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
     private final Pose thirdSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.6 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
-    private final Pose firstSamplePickUpPos = new Pose(-43.6 - 1.5, 54+1, Math.toRadians(90)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-55.2 - 1.5, 54+2.5, Math.toRadians(88)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-56 + 1.5, 54+3, Math.toRadians(58.5)); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(-43 + globalSpecimenPickupXOffset, 69.2 + globalSpecimenPickupYOffset, Math.toRadians(90)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-43.6 - 1, 54+1, Math.toRadians(90)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-55.2 - 3, 54+2.5, Math.toRadians(88)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-56.5 , 54+3, Math.toRadians(58.5)); //start
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
 
     double intakeMotorPower=0;
