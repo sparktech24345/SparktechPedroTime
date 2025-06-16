@@ -46,7 +46,6 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -61,8 +60,8 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "AutoOf5Spec", group = "Examples")
-public class AutoOf5Spec extends OpMode {
+@Autonomous(name = "AutoRepairPositionsSpecTime", group = "Examples")
+public class AutoRepairPositionsSpecTime extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -218,10 +217,16 @@ public class AutoOf5Spec extends OpMode {
 
     public void autonomousPathUpdate() {
         switch (pathState) {
-            case 0:
+            case 0: //idk why this is a thing
+                setPathState(1);
+                break;
+            case 1:
                 if(!follower.isBusy()) {
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(startPath,true);
                     setPathState(2);
                 }
@@ -232,6 +237,9 @@ public class AutoOf5Spec extends OpMode {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(goToPickUpFirstSample,true);
                     setPathState(3);
                 }
@@ -248,6 +256,8 @@ public class AutoOf5Spec extends OpMode {
                     intakeCabinFullInBot();
                     waitWhile(300);
 
+
+                    roboBreaker();
 
 
                     follower.followPath(goToPickUpSecondSample,true);
@@ -280,14 +290,16 @@ public class AutoOf5Spec extends OpMode {
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
                     */
 
+                    roboBreaker();
+
 
                     follower.followPath(goToPickUpThirdSample,true);
-                    setPathState(105);
+                    setPathState(5);
                 }
                 break;
 
             //last sample and first spec prep
-            case 105:
+            case 5:
                 if(!follower.isBusy()) {
                     //trow out second sample
                     intakeCabinFullInBotOutputting();
@@ -318,93 +330,118 @@ public class AutoOf5Spec extends OpMode {
                     autoTimer = System.currentTimeMillis();
 
 
+                    roboBreaker();
 
 
                     follower.followPath(pickUpFirst,true);
-                    setPathState(106);
+                    setPathState(6);
                 }
                 break;
-            case 106:
+            case 6:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(scoreFirst,true);
-                    setPathState(107);
+                    setPathState(7);
                 }
                 break;
 
             //second spec
-            case 107:
+            case 7:
                 if(!follower.isBusy()) {
                     autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(pickUpSecond,true);
-                    setPathState(108);
+                    setPathState(8);
                 }
                 break;
-            case 108:
+            case 8:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(scoreSecond,true);
-                    setPathState(109);
+                    setPathState(9);
                 }
                 break;
 
             //third spec
-            case 109:
+            case 9:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(pickUpThird,true);
-                    setPathState(110);
+                    setPathState(10);
                 }
                 break;
-            case 110:
+            case 10:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(scoreThird,true);
-                    setPathState(111);
+                    setPathState(11);
                 }
                 break;
 
             //fourth spec
-            case 111:
+            case 11:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(pickUpFourth,true);
-                    setPathState(112);
+                    setPathState(12);
                 }
                 break;
-            case 112:
+            case 12:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(scoreFourth,true);
-                    setPathState(113);
+                    setPathState(13);
                 }
                 break;
 
 
-            case 113:
+            case 13:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
+
+                    roboBreaker();
+
                     follower.followPath(parking,true);
                     setPathState(-1);
                 }
@@ -489,6 +526,8 @@ public class AutoOf5Spec extends OpMode {
         intakeMotorPower = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
         outakeMotorPower = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos, outakeLeftMotor.getCurrentPosition());
 
+
+        /*
         //set motor positions
         intakeMotor.setPower(intakeMotorPower);
         outakeRightMotor.setPower(outakeMotorPower);
@@ -501,6 +540,13 @@ public class AutoOf5Spec extends OpMode {
         intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+        */
+
+        if(gamepad1.y){
+            follower.breakFollowing();
+        }
+
+
 
         robotTelemetry();
     }
@@ -510,6 +556,29 @@ public class AutoOf5Spec extends OpMode {
         long iniTime = System.currentTimeMillis();
         while(iniTime + timeToWait > System.currentTimeMillis()){
             robotDoStuff();
+        }
+    }
+
+    public void roboBreaker() {
+        //break line
+        follower.breakFollowing();
+
+        while(!gamepad1.b){
+            robotDoStuff();
+
+
+
+
+            //fat telemetry
+            tel.clear();
+            tel.addData("path state", pathState);
+            tel.addData("x", follower.getPose().getX());
+            tel.addData("y", follower.getPose().getY());
+            tel.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
+            tel.addData("follower is busy",follower.isBusy());
+            tel.addData("is in breaker",true);
+            Drawing.drawDebug(follower);
+            tel.update();
         }
     }
 
@@ -525,6 +594,7 @@ public class AutoOf5Spec extends OpMode {
         tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
         tel.addData("sensor color",currentStateOfSampleInIntake);
         tel.addData("follower is busy",follower.isBusy());
+        tel.addData("is in breaker",false);
         Drawing.drawDebug(follower);
         tel.update();
     }
@@ -541,11 +611,9 @@ public class AutoOf5Spec extends OpMode {
         robotDoStuff();
 
 
-        // Feedback to Driver Hub
+        // Feedback telemetry
         robotTelemetry();
     }
-
-
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
