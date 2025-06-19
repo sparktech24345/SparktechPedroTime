@@ -130,7 +130,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             double timeAtTransfer = 0;
             boolean isYetToGrab = false;
             */
-            if(gamepad1.a) isPressedA1 = true;
+            if(gamepad1.a){
+                isPressedA1 = true;
+            }
             if(!gamepad1.a && isPressedA1){
                 if(intakeCabinState == intakeCabinStates.intakeCabinFullInBot && (intakeState==intakeStates.intakeRetracted || intakeState == intakeStates.intakeExtended1out4)){
                     isInPositionToRaiseOuttakeInOrderToEvadeIntake = true;
@@ -205,7 +207,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //BASKET SCORING
-            if(gamepad1.x) isPressedX1 = true;
+            if(gamepad1.x) {
+                isPressedX1 = true;
+                hasPressedXTimer = System.currentTimeMillis();
+            }
             if(!gamepad1.x && isPressedX1){
                 if(!(outtakeState == outtakeStates.outtakeBasket)){
 
@@ -216,14 +221,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 else intakeRetracted();
                 isPressedX1 = false;
             }
-            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis()){
+            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis() ){
                 intakeRetracted();
                 intakeCabinTransferPosition();
                 outtakeBasket();
                 isAfterOuttakeClawClosedAfterTransfer = false;
             }
             //going down after, quite complicated cuz holding to let sample go
-            if(isAtStateOfLettingBasketSampleGo && gamepad1.x){
+            if(isAtStateOfLettingBasketSampleGo && gamepad1.x && outtakeState == outtakeStates.outtakeBasket){
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
                 isAfterOuttakeScoredBasketSample = true;
                 isAtStateOfLettingBasketSampleGo = false;
@@ -278,6 +283,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 //makins sure sample enetered the intake fully with a small timer
                 isAfterIntakeBeenDownColecting = false;
                 isIntakeSpinMOtorAfterJustTaking = true;
+                basketStandbyState = 0;
                 intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
 
 
@@ -490,28 +496,30 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //slowdown
-            double slowyDownyManal = 2.5;
-            double slowyDownyAuto = 1.5;
+            double slowyDownyManal = 0.4;
+            double slowyDownyAuto = 0.5;
 
             //manual slowdown
             if(gamepad1.right_bumper){
-                chassisFrontLeftPow /= slowyDownyManal;
-                chassisBackRightPow /= slowyDownyManal;
-                chassisFrontRightPow /= slowyDownyManal;
-                chassisBackLeftPow /= slowyDownyManal;
+                chassisFrontLeftPow *= slowyDownyManal;
+                chassisBackRightPow *= slowyDownyManal;
+                chassisFrontRightPow *= slowyDownyManal;
+                chassisBackLeftPow *= slowyDownyManal;
             }
             //auto slowdown
 
-            else if(// intakeState == intakeStates.intakeExtended1out4 ||
+            else if(// intakeState == intakeStates.intakeExtended1out4
+                 outtakeState == outtakeStates.outtakeBasket  ||
             intakeState == intakeStates.intakeExtended2out4 ||
             intakeState == intakeStates.intakeExtended3out4 ||
             intakeState == intakeStates.intakeExtended4out4 )
+
             //intakeCabinState == intakeCabinStates.intakeCabinDownCollecting
             {
-                chassisFrontLeftPow /= slowyDownyAuto;
-                chassisBackRightPow /= slowyDownyAuto;
-                chassisFrontRightPow /= slowyDownyAuto;
-                chassisBackLeftPow /= slowyDownyAuto;
+                chassisFrontLeftPow *= slowyDownyAuto;
+                chassisBackRightPow *= slowyDownyAuto;
+                chassisFrontRightPow *= slowyDownyAuto;
+                chassisBackLeftPow *= slowyDownyAuto;
             }//-------> FACUT DE LUCA VOICILA :)  check by Atloe
 
 
@@ -561,6 +569,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             tel.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
             tel.addData("blue color",colors.blue);
             tel.addData("red color",colors.red);
+            tel.addData("is color not used", isColorSensorNotInUse);
 
             updateTelemetry(tel);
         }

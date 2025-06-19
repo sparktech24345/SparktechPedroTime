@@ -81,8 +81,8 @@ public class AutoOf5Spec extends OpMode {
 
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
-    private final float scoringBarX = -6f;
-    private final float scoringBarY = 53f;
+    private final float scoringBarX = -4f;
+    private final float scoringBarY = 43f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
@@ -90,8 +90,8 @@ public class AutoOf5Spec extends OpMode {
     private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
-    private final float wallPickUpX = -21.2f;
-    private final float wallPickUpY = 67.6f;
+    private final float wallPickUpX = -42f;
+    private final float wallPickUpY = 52f;
 
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
@@ -101,13 +101,12 @@ public class AutoOf5Spec extends OpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-38,55,Math.toRadians(110)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-40, 57, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-41, 57, Math.toRadians(60)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-59,59,Math.toRadians(100)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-61, 60, Math.toRadians(90)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-60, 63, Math.toRadians(70)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
-
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
