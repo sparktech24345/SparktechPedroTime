@@ -42,17 +42,20 @@ public class brake extends LinearOpMode {
     private boolean wasGamepad1rightPressed = false;
     private Direction DirectionBeforeBrake = Direction.Stopped;
     private Rotation RotationBeforeBrake = Rotation.Stopped;
+    private DcMotor intakeMotor;
 
     @Override
     public void runOpMode() {
 
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFront");
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFront");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "rightRear");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "leftRear");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "frontright");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "frontleft");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "backright");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "backleft");
+        intakeMotor = hardwareMap.get(DcMotor.class, "intakemotor");
 
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -178,6 +181,12 @@ public class brake extends LinearOpMode {
         tel.addLine();
         tel.addData("Direction", DirectionBeforeBrake);
         tel.addData("Rotation", RotationBeforeBrake);
+        tel.addLine();
+        tel.addData("leftstickx", gamepad1.left_stick_x);
+        tel.addData("leftsticky", gamepad1.left_stick_y);
+        tel.addLine();
+        tel.addData("rightstickx", gamepad1.right_stick_x);
+        tel.addData("rightsticky", gamepad1.right_stick_y);
         tel.update();
     }
 
