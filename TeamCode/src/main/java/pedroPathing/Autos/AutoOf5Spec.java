@@ -82,28 +82,28 @@ public class AutoOf5Spec extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -4f;
-    private final float scoringBarY = 43f;
+    private final float scoringBarY = 41f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 52f;
+    private final float wallPickUpY = 72f;
 
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
-    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
-    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
+    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
+    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+0.5, Math.toRadians(90)); //start
+    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+1, Math.toRadians(90)); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+1.5, Math.toRadians(90)); //start
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-59,59,Math.toRadians(100)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-61, 60, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-60, 63, Math.toRadians(70)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-59.5,60,Math.toRadians(110)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-61, 61, Math.toRadians(99)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-56.5, 63, Math.toRadians(70)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
@@ -242,7 +242,8 @@ public class AutoOf5Spec extends OpMode {
                     intakeCabinDownCollecting();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -270,7 +271,9 @@ public class AutoOf5Spec extends OpMode {
                     intakeCabinDownCollecting();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -300,7 +303,9 @@ public class AutoOf5Spec extends OpMode {
                     intakeCabinDownCollecting();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(350);
@@ -476,7 +481,9 @@ public class AutoOf5Spec extends OpMode {
             needsToExtraExtend = false;
             outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
         }
-
+        if (follower.getVelocity().getMagnitude() == 0 && follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.8) {
+            follower.breakFollowing();
+        }
 
 
         //color stuff

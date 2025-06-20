@@ -46,6 +46,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -60,8 +61,9 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "AutoRepairPositionsSpecTime", group = "Examples")
-public class AutoRepairPositionsSpecTime extends OpMode {
+@Autonomous(name = "AutoOf5SpecWithBadOtos", group = "Examples")
+@Disabled
+public class AutoOf5SpecWithBadOtos extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -81,7 +83,7 @@ public class AutoRepairPositionsSpecTime extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -4f;
-    private final float scoringBarY = 40f;
+    private final float scoringBarY = 42f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1.5, Math.toRadians(90)); //start
@@ -89,7 +91,7 @@ public class AutoRepairPositionsSpecTime extends OpMode {
     private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+2.5, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
-    private final float wallPickUpX = -43f;
+    private final float wallPickUpX = -42f;
     private final float wallPickUpY = 70f;
 
     //specimen pick up positions
@@ -100,13 +102,12 @@ public class AutoRepairPositionsSpecTime extends OpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-59,60.7,Math.toRadians(106)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-60, 63.4, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-57, 64, Math.toRadians(60)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-52,60,Math.toRadians(97)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-55.5, 60, Math.toRadians(91)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-54.5, 60.5, Math.toRadians(60)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
-
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
@@ -217,16 +218,10 @@ public class AutoRepairPositionsSpecTime extends OpMode {
 
     public void autonomousPathUpdate() {
         switch (pathState) {
-            case 0: //idk why this is a thing
-                setPathState(1);
-                break;
-            case 1:
+            case 0:
                 if(!follower.isBusy()) {
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(startPath,true);
                     setPathState(2);
                 }
@@ -237,9 +232,6 @@ public class AutoRepairPositionsSpecTime extends OpMode {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(goToPickUpFirstSample,true);
                     setPathState(3);
                 }
@@ -256,8 +248,6 @@ public class AutoRepairPositionsSpecTime extends OpMode {
                     intakeCabinFullInBot();
                     waitWhile(300);
 
-
-                    roboBreaker();
 
 
                     follower.followPath(goToPickUpSecondSample,true);
@@ -290,16 +280,14 @@ public class AutoRepairPositionsSpecTime extends OpMode {
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
                     */
 
-                    roboBreaker();
-
 
                     follower.followPath(goToPickUpThirdSample,true);
-                    setPathState(5);
+                    setPathState(105);
                 }
                 break;
 
             //last sample and first spec prep
-            case 5:
+            case 105:
                 if(!follower.isBusy()) {
                     //trow out second sample
                     intakeCabinFullInBotOutputting();
@@ -330,118 +318,93 @@ public class AutoRepairPositionsSpecTime extends OpMode {
                     autoTimer = System.currentTimeMillis();
 
 
-                    roboBreaker();
 
 
                     follower.followPath(pickUpFirst,true);
-                    setPathState(6);
+                    setPathState(106);
                 }
                 break;
-            case 6:
+            case 106:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(scoreFirst,true);
-                    setPathState(7);
+                    setPathState(107);
                 }
                 break;
 
             //second spec
-            case 7:
+            case 107:
                 if(!follower.isBusy()) {
                     autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(pickUpSecond,true);
-                    setPathState(8);
+                    setPathState(108);
                 }
                 break;
-            case 8:
+            case 108:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(scoreSecond,true);
-                    setPathState(9);
+                    setPathState(109);
                 }
                 break;
 
             //third spec
-            case 9:
+            case 109:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(pickUpThird,true);
-                    setPathState(10);
+                    setPathState(110);
                 }
                 break;
-            case 10:
+            case 110:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(scoreThird,true);
-                    setPathState(11);
+                    setPathState(111);
                 }
                 break;
 
             //fourth spec
-            case 11:
+            case 111:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoOuttakeWallPickUpNew();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(pickUpFourth,true);
-                    setPathState(12);
+                    setPathState(112);
                 }
                 break;
-            case 12:
+            case 112:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     waitWhile(150);
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(scoreFourth,true);
-                    setPathState(13);
+                    setPathState(113);
                 }
                 break;
 
 
-            case 13:
+            case 113:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
-
-                    roboBreaker();
-
                     follower.followPath(parking,true);
                     setPathState(-1);
                 }
@@ -526,8 +489,6 @@ public class AutoRepairPositionsSpecTime extends OpMode {
         intakeMotorPower = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
         outakeMotorPower = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos, outakeLeftMotor.getCurrentPosition());
 
-
-
         //set motor positions
         intakeMotor.setPower(intakeMotorPower);
         outakeRightMotor.setPower(outakeMotorPower);
@@ -540,13 +501,6 @@ public class AutoRepairPositionsSpecTime extends OpMode {
         intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
-        //*/
-
-        if(gamepad1.y){
-            follower.breakFollowing();
-        }
-
-
 
         robotTelemetry();
     }
@@ -555,16 +509,6 @@ public class AutoRepairPositionsSpecTime extends OpMode {
     public void waitWhile(int timeToWait) {
         long iniTime = System.currentTimeMillis();
         while(iniTime + timeToWait > System.currentTimeMillis()){
-            robotDoStuff();
-        }
-    }
-
-    public void roboBreaker() {
-        //break line
-        follower.breakFollowing();
-
-        while(!gamepad1.b){
-            follower.updatePose();
             robotDoStuff();
         }
     }
@@ -581,7 +525,6 @@ public class AutoRepairPositionsSpecTime extends OpMode {
         tel.addData("outtakeCurrenPos",outakeLeftMotor.getCurrentPosition());
         tel.addData("sensor color",currentStateOfSampleInIntake);
         tel.addData("follower is busy",follower.isBusy());
-        tel.addData("is in breaker",false);
         Drawing.drawDebug(follower);
         tel.update();
     }
@@ -598,9 +541,11 @@ public class AutoRepairPositionsSpecTime extends OpMode {
         robotDoStuff();
 
 
-        // Feedback telemetry
+        // Feedback to Driver Hub
         robotTelemetry();
     }
+
+
 
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
