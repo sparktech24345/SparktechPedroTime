@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import pedroPathing.newOld.Toggle;
+import pedroPathing.Toggle;
 
 @com.acmerobotics.dashboard.config.Config
 public class DriveTrain {

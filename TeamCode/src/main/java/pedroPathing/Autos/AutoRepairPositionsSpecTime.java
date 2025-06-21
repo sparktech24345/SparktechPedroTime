@@ -81,28 +81,28 @@ public class AutoRepairPositionsSpecTime extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -4f;
-    private final float scoringBarY = 40f;
+    private final float scoringBarY = 41.3f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1.5, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+2, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+2.5, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
-    private final float wallPickUpX = -43f;
-    private final float wallPickUpY = 70f;
+    private final float wallPickUpX = -42f;
+    private final float wallPickUpY = 71f;
 
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
     private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
-    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
+    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+0.2, Math.toRadians(90)); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+0.4, Math.toRadians(90)); //start
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-59,60.7,Math.toRadians(106)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-60, 63.4, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-57, 64, Math.toRadians(60)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-59.5,60,Math.toRadians(110)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-61, 61, Math.toRadians(101)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-53.64, 67, Math.toRadians(60)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
@@ -467,7 +467,7 @@ public class AutoRepairPositionsSpecTime extends OpMode {
         opmodeTimer.resetTimer();
 
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);

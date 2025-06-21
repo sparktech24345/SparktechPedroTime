@@ -3,7 +3,7 @@ package pedroPathing.States;
 import static pedroPathing.newOld.PositionStorage.*;
 
 
-import pedroPathing.newOld.Toggle;
+import pedroPathing.Toggle;
 
 public class IntakeStateRetractedRo2 implements State {
     @Override

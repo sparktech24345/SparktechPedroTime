@@ -8,7 +8,7 @@ import static pedroPathing.newOld.PositionStorage.isIntakeStateRectracted;
 import static pedroPathing.newOld.PositionStorage.stateStringIntake;
 import static pedroPathing.newOld.PositionStorage.wasActivePastActiveIntake;
 
-import pedroPathing.newOld.Toggle;
+import pedroPathing.Toggle;
 
 public class IntakeStateWallPURetractionRo2v2 implements State {
     @Override

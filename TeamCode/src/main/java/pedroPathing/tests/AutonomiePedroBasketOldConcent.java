@@ -375,7 +375,7 @@ public class AutonomiePedroBasketOldConcent extends OpMode {
         FollowerConstants.pathEndTimeoutConstraint = 2000;
         Constants.setConstants(FConstants.class, LConstants.class);
         FollowerConstants.pathEndTimeoutConstraint = 2000;
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
 

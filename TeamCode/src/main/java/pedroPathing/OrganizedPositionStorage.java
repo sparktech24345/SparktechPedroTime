@@ -1,5 +1,4 @@
 package pedroPathing;
-import pedroPathing.newOld.Toggle;
 
 @com.acmerobotics.dashboard.config.Config
 public class OrganizedPositionStorage {
@@ -38,9 +37,9 @@ public class OrganizedPositionStorage {
     //Outtake
 
     //outtake claw
-    public static double outtakeClawServoExtendedPos = 120;
-    public static double outtakeClawServoExtraExtendedPos = 200;
-    public static double outtakeClawServoRetractedPos = 12;
+    public static double outtakeClawServoExtendedPos = 128;
+    public static double outtakeClawServoExtraExtendedPos = 208;
+    public static double outtakeClawServoRetractedPos = 17;
 
 
     // outtake pivot
@@ -65,12 +64,13 @@ public class OrganizedPositionStorage {
 
 
 
+
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 208;   // old 206
-    public static double intakePivotServoOutputTruBotPos = 5;
-    public static double intakePivotServoTransferPos = 158;
+    public static double intakePivotServoPickupPos = 181;   // old 206
+    public static double intakePivotServoOutputTruBotPos = 0;
+    public static double intakePivotServoTransferPos = 130;
     public static double tempIntakeTargetPastPosDifrence = 135;
     public static double tempIntakeAPosition = 0;
 

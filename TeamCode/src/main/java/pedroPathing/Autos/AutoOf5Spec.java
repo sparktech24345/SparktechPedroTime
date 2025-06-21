@@ -82,7 +82,7 @@ public class AutoOf5Spec extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -4f;
-    private final float scoringBarY = 41f;
+    private final float scoringBarY = 41.3f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
@@ -91,19 +91,20 @@ public class AutoOf5Spec extends OpMode {
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 72f;
+    private final float wallPickUpY = 71f;
+    private final float wallAdderY = 2f;
 
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
-    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+0.5, Math.toRadians(90)); //start
-    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+1, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+1.5, Math.toRadians(90)); //start
+    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY, Math.toRadians(90)); //start
+    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.2, Math.toRadians(90)); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.4, Math.toRadians(90)); //start
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
     private final Pose firstSamplePickUpPos = new Pose(-59.5,60,Math.toRadians(110)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-61, 61, Math.toRadians(99)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-56.5, 63, Math.toRadians(70)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-61, 61, Math.toRadians(101)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-54, 65, Math.toRadians(64)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
@@ -434,7 +435,7 @@ public class AutoOf5Spec extends OpMode {
         opmodeTimer.resetTimer();
 
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);
@@ -481,7 +482,7 @@ public class AutoOf5Spec extends OpMode {
             needsToExtraExtend = false;
             outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
         }
-        if (follower.getVelocity().getMagnitude() == 0 && follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.8) {
+        if (follower.getVelocity().getMagnitude() == 0 && follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5) {
             follower.breakFollowing();
         }
 
