@@ -1,14 +1,14 @@
 package pedroPathing.newOld;
 
 
-import static pedroPathing.newOld.Toggle.*;
+import static pedroPathing.Toggle.*;
 
 @com.acmerobotics.dashboard.config.Config
 public class PositionStorage {
 
 
     // always remember Pisicaaaa
-    public static double intakeTargetPosAdder=20;
+    public static double intakeTargetPosAdder=0;
     public static boolean timerNotSet = false;
     public static double intakeTimeTransferAdder = 15;
     public static double outakeSampleRetracted = 12;
@@ -182,7 +182,7 @@ public class PositionStorage {
         wasOutputHM = false;
         IntakeServoColectPos = 235; //from 320 from 300
         willTransfer = true;
-        intakeTargetPosAdder=20;
+        intakeTargetPosAdder=0;
         timerNotSet = false;
         intakeTimeTransferAdder = 15;
         outakeSampleRetracted = 12;

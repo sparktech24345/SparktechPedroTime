@@ -31,7 +31,7 @@ import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
-import pedroPathing.newOld.Toggle;
+import pedroPathing.Toggle;
 import pedroPathing.tests.Config;
 
 

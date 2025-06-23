@@ -643,7 +643,7 @@ public class AutonomiePedro4SpecIntake extends OpMode {
         FollowerConstants.pathEndTimeoutConstraint = 500;
         Constants.setConstants(FConstants.class, LConstants.class);
         FollowerConstants.pathEndTimeoutConstraint = 500;
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
 

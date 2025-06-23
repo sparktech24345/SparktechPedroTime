@@ -5,19 +5,13 @@ import static pedroPathing.ClassWithQueuerStates.*;
 import static pedroPathing.ClassWithStates.*;
 import static pedroPathing.OrganizedPositionStorage.*;
 
-import android.graphics.Color;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import pedroPathing.SubSys.OurRobot;
-import pedroPathing.newOld.Toggle;
 
 
 @com.acmerobotics.dashboard.config.Config

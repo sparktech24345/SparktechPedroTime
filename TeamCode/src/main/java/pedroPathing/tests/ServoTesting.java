@@ -13,7 +13,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import pedroPathing.AutoPIDS.ControlMotor;
 
-import pedroPathing.newOld.Toggle;
+import pedroPathing.Toggle;
 import static pedroPathing.newOld.PositionStorage.*;
 
 import android.util.Size;

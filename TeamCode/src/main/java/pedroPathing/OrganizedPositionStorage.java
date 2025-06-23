@@ -1,5 +1,4 @@
 package pedroPathing;
-import pedroPathing.newOld.Toggle;
 
 @com.acmerobotics.dashboard.config.Config
 public class OrganizedPositionStorage {
@@ -38,9 +37,9 @@ public class OrganizedPositionStorage {
     //Outtake
 
     //outtake claw
-    public static double outtakeClawServoExtendedPos = 120;
-    public static double outtakeClawServoExtraExtendedPos = 200;
-    public static double outtakeClawServoRetractedPos = 12;
+    public static double outtakeClawServoExtendedPos = 128;
+    public static double outtakeClawServoExtraExtendedPos = 208;
+    public static double outtakeClawServoRetractedPos = 17;
 
 
     // outtake pivot
@@ -65,12 +64,13 @@ public class OrganizedPositionStorage {
 
 
 
+
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 206;
-    public static double intakePivotServoOutputTruBotPos = 5;
-    public static double intakePivotServoTransferPos = 145;
+    public static double intakePivotServoPickupPos = 181;   // old 206
+    public static double intakePivotServoOutputTruBotPos = 0;
+    public static double intakePivotServoTransferPos = 130;
     public static double tempIntakeTargetPastPosDifrence = 135;
     public static double tempIntakeAPosition = 0;
 
@@ -117,6 +117,7 @@ public class OrganizedPositionStorage {
     public static boolean isIntakeInPositionToOutputTruBot = false;
     public static boolean hasIntakeOutputedTruBot = false;
     public static boolean hasSmolOutputed = false;
+    public static boolean didTransfera = false;
     public static int basketStandbyState = 0;
 
     //outtake stuff
@@ -158,6 +159,8 @@ public class OrganizedPositionStorage {
     public static long waitingForOuttakeToEvadeIntakeTimer;
     public static long shouldStopIntakeCabinSpinningAfterTakigTimer;
     public static long hasSmolOutputedTimer;
+    public static long hasPressedXTimer;
+    public static long didTransferTime;
 
 
 
@@ -227,6 +230,7 @@ public class OrganizedPositionStorage {
         wasIntakeCabinTruBotOutputting = false;
         isIntakeInPositionToOutputTruBot = false;
         hasIntakeOutputedTruBot = false;
+        didTransfera = false;
         hasSmolOutputed = false;
 
         // outtake stuff

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class ControlMotor { //FINAL AUTOTUNED STUFF
     public static double integralSum =0;
     public static double kpIntake =0.0090; //old is 90
-    public static double kdIntake =0.0002;
+    public static double kdIntake =0.00018;
     //double ki=0.02;
     //double kf=0;
 
@@ -30,8 +30,8 @@ public class ControlMotor { //FINAL AUTOTUNED STUFF
         /*if(pid<0 && curentPosition<40) pid = -0.3;
         if(pid<0 && curentPosition<10) pid = -0.25;
         if(pid<0 && curentPosition<=3) pid = 0;//*/
-        if(pid<0 && curentPosition<40) pid = pid*1.6;
-        if(pid<0 && curentPosition<5) pid *= 0.6;
+        if(pid<0 && curentPosition<40) pid = pid*1.4;
+        if(pid<0 && curentPosition<5) pid *= 0.4;
         return pid;
 
         //return (error*kp+derivative*kd) * (((lastError < 0 && lastError > -50) || (lastError  < -415 && lastError > -450))  ? 2 : 1);

@@ -19,6 +19,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -34,6 +35,7 @@ import pedroPathing.constants.LConstants;
 
 @Config
 @Autonomous(name = "6SpecHopeyHopey", group = "Examples")
+@Disabled
 public class InWorkAutoFor6Spec extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -426,7 +428,7 @@ public class InWorkAutoFor6Spec extends OpMode {
         FollowerConstants.pathEndTimeoutConstraint = 0;
         Constants.setConstants(FConstants.class, LConstants.class);
         FollowerConstants.pathEndTimeoutConstraint = 0;
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);

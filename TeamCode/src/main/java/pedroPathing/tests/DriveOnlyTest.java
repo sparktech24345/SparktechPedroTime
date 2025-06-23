@@ -1,6 +1,11 @@
 package pedroPathing.tests;
 
 
+import static pedroPathing.ClassWithStates.initStates;
+import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
 import static pedroPathing.newOld.PositionStorage.backLeftPowerCat;
 import static pedroPathing.newOld.PositionStorage.backRightPowerCat;
 import static pedroPathing.newOld.PositionStorage.frontLeftPowerCat;
@@ -14,6 +19,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,20 +27,23 @@ import java.util.concurrent.Executors;
 import pedroPathing.AutoPIDS.ControlMotor;
 
 @TeleOp(name = "Only Drive Teleop", group = "Linear OpMode")
-@Disabled
 public class DriveOnlyTest extends LinearOpMode {
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     ControlMotor intakeControlMotor = new ControlMotor();
+    long current_time;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-       /* DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
+       DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("backleft");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontright");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backright");
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+
+        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
+        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
+        Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -42,45 +51,18 @@ public class DriveOnlyTest extends LinearOpMode {
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Set init position
+        initStates();
+        intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
+        outakeArmServo.setPosition(outtakePivotServoPos / 328);
+        outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
         if (isStopRequested()) return;
         waitForStart();
 
-        executorService.execute(new Runnable() {
-
-            @Override
-            public void run() {
-                DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
-                DcMotor backLeftMotor = hardwareMap.dcMotor.get("backleft");
-                DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontright");
-                DcMotor backRightMotor = hardwareMap.dcMotor.get("backright");
-                DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
-                intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
-
-                backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                while(opModeIsActive()){
-                    double intakeMotorPower = 0;
-                    intakeMotorPower = intakeControlMotor.PIDControl(intakeTargetPos+intakeActualZero+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-
-                    frontLeftMotor.setPower(frontLeftPowerCat);
-                    backLeftMotor.setPower(backLeftPowerCat);
-                    frontRightMotor.setPower(frontRightPowerCat);
-                    backRightMotor.setPower(backRightPowerCat);
-                    intakeMotor.setPower(intakeMotorPower);//*/
-                    telemetry.addLine("This is Motor "+Thread.currentThread().getId());
-                    updateTelemetry(telemetry);
-                }
-//*/
-            }
-        });
         while (opModeIsActive()) {
 
             // executorService.submit(Motors::new);
@@ -110,11 +92,19 @@ public class DriveOnlyTest extends LinearOpMode {
                 backLeftPowerCat /= 3;
             }
 
-            telemetry.addData("frontLeftPower",frontLeftPowerCat);
-            telemetry.addData("backLeftPowerCat",backLeftPowerCat);
-            telemetry.addData("frontRightPowerCat",frontRightPowerCat);
-            telemetry.addData("backRightPowerCat",backRightPowerCat);
-            telemetry.addLine("This is Main "+Thread.currentThread().getId());
+            frontLeftMotor.setPower(frontLeftPowerCat);
+            frontRightMotor.setPower(frontRightPowerCat);
+            backRightMotor.setPower(backRightPowerCat);
+            backLeftMotor.setPower(backLeftPowerCat);
+
+            intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
+            outakeArmServo.setPosition(outtakePivotServoPos / 328);
+            outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+
+            telemetry.addData("current time",System.nanoTime());
+
+            telemetry.addData("time diference",System.nanoTime() - current_time);
+            current_time = System.nanoTime();
             updateTelemetry(telemetry);
 
         }

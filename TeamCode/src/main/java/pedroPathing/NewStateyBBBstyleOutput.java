@@ -4,12 +4,10 @@ package pedroPathing;
 import static pedroPathing.OrganizedPositionStorage.*;
 import static pedroPathing.ClassWithStates.*;
 
-
 import android.graphics.Color;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,10 +15,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import pedroPathing.AutoPIDS.ControlMotor;
-import pedroPathing.newOld.Toggle;
-import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
@@ -31,9 +26,12 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
-    SparkFunOTOS myOtos;
     NormalizedColorSensor colorSensor;
+    NormalizedRGBA colors;
     MultipleTelemetry tel;
+    long current_time = System.nanoTime();
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -50,7 +48,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
         DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
         DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
-        myOtos = hardwareMap.get(SparkFunOTOS.class, "SparkFunSensor");
 
 
         //declare servos
@@ -74,7 +71,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
         tel =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Config.configureOtos(tel, myOtos);
 
 
         intakeControlMotor = new ControlMotor();
@@ -102,9 +98,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             ///gamepad2
             double intakeinput = gamepad2.left_stick_y;
-            SparkFunOTOS.Pose2D pos = myOtos.getPosition();
-            NormalizedRGBA colors = colorSensor.getNormalizedColors();
-            Color.colorToHSV(colors.toColor(), hsvValues);
+
 
 
             //Selectare Echipa
@@ -118,7 +112,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 vertical = - vertical;
             }
 
-
+            colors = colorSensor.getNormalizedColors();
+            Color.colorToHSV(colors.toColor(), hsvValues);
             currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
 
@@ -130,7 +125,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             double timeAtTransfer = 0;
             boolean isYetToGrab = false;
             */
-            if(gamepad1.a) isPressedA1 = true;
+            if(gamepad1.a){
+                isPressedA1 = true;
+            }
             if(!gamepad1.a && isPressedA1){
                 if(intakeCabinState == intakeCabinStates.intakeCabinFullInBot && (intakeState==intakeStates.intakeRetracted || intakeState == intakeStates.intakeExtended1out4)){
                     isInPositionToRaiseOuttakeInOrderToEvadeIntake = true;
@@ -205,7 +202,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //BASKET SCORING
-            if(gamepad1.x) isPressedX1 = true;
+            if(gamepad1.x) {
+                isPressedX1 = true;
+                hasPressedXTimer = System.currentTimeMillis();
+            }
             if(!gamepad1.x && isPressedX1){
                 if(!(outtakeState == outtakeStates.outtakeBasket)){
 
@@ -216,14 +216,14 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 else intakeRetracted();
                 isPressedX1 = false;
             }
-            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis()){
+            if(isAfterOuttakeClawClosedAfterTransfer && intakeAfterTransferClosedClawTimer + 300 < System.currentTimeMillis() ){
                 intakeRetracted();
                 intakeCabinTransferPosition();
                 outtakeBasket();
                 isAfterOuttakeClawClosedAfterTransfer = false;
             }
             //going down after, quite complicated cuz holding to let sample go
-            if(isAtStateOfLettingBasketSampleGo && gamepad1.x){
+            if(isAtStateOfLettingBasketSampleGo && gamepad1.x && outtakeState == outtakeStates.outtakeBasket){
                 outtakeClawServoPos = outtakeClawServoExtendedPos;
                 isAfterOuttakeScoredBasketSample = true;
                 isAtStateOfLettingBasketSampleGo = false;
@@ -278,6 +278,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 //makins sure sample enetered the intake fully with a small timer
                 isAfterIntakeBeenDownColecting = false;
                 isIntakeSpinMOtorAfterJustTaking = true;
+                basketStandbyState = 0;
                 intakeSpinMotorMorePowerAfterTakingTimer = System.currentTimeMillis();
 
 
@@ -475,7 +476,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             PIDincrement=1;
             double intakeExtendMotorPow;
             intakeExtendMotorPow = intakeControlMotor.PIDControl (intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.5;
+            //if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.3;
             double outtakeExtendMotorPow;
             outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;
@@ -490,28 +491,30 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //slowdown
-            double slowyDownyManal = 2.5;
-            double slowyDownyAuto = 1.5;
+            double slowyDownyManal = 0.4;
+            double slowyDownyAuto = 0.5;
 
             //manual slowdown
             if(gamepad1.right_bumper){
-                chassisFrontLeftPow /= slowyDownyManal;
-                chassisBackRightPow /= slowyDownyManal;
-                chassisFrontRightPow /= slowyDownyManal;
-                chassisBackLeftPow /= slowyDownyManal;
+                chassisFrontLeftPow *= slowyDownyManal;
+                chassisBackRightPow *= slowyDownyManal;
+                chassisFrontRightPow *= slowyDownyManal;
+                chassisBackLeftPow *= slowyDownyManal;
             }
             //auto slowdown
 
-            else if(// intakeState == intakeStates.intakeExtended1out4 ||
+            else if(// intakeState == intakeStates.intakeExtended1out4
+                 outtakeState == outtakeStates.outtakeBasket  ||
             intakeState == intakeStates.intakeExtended2out4 ||
             intakeState == intakeStates.intakeExtended3out4 ||
             intakeState == intakeStates.intakeExtended4out4 )
+
             //intakeCabinState == intakeCabinStates.intakeCabinDownCollecting
             {
-                chassisFrontLeftPow /= slowyDownyAuto;
-                chassisBackRightPow /= slowyDownyAuto;
-                chassisFrontRightPow /= slowyDownyAuto;
-                chassisBackLeftPow /= slowyDownyAuto;
+                chassisFrontLeftPow *= slowyDownyAuto;
+                chassisBackRightPow *= slowyDownyAuto;
+                chassisFrontRightPow *= slowyDownyAuto;
+                chassisBackLeftPow *= slowyDownyAuto;
             }//-------> FACUT DE LUCA VOICILA :)  check by Atloe
 
 
@@ -556,11 +559,18 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             tel.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
             tel.addData("intakeRotateServoPosition", intakePivotServoPos);
             tel.addData("intakeExtendMotorPow",intakeExtendMotorPow);
+            tel.addData("intake current pos",intakeMotor.getCurrentPosition());
             tel.addData("outakeMotorPow",outtakeExtendMotorPow);
             tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
             tel.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
             tel.addData("blue color",colors.blue);
             tel.addData("red color",colors.red);
+            tel.addData("is color not used", isColorSensorNotInUse);
+
+            tel.addData("current time",System.nanoTime());
+
+            tel.addData("time diference",System.nanoTime() - current_time);
+            current_time = System.nanoTime();
 
             updateTelemetry(tel);
         }

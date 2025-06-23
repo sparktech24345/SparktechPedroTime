@@ -78,7 +78,7 @@ import static pedroPathing.newOld.PositionStorage.wasBambuExtended;
 import static pedroPathing.newOld.PositionStorage.wasIntakeStateExtended;
 import static pedroPathing.newOld.PositionStorage.wasOutputHM;
 import static pedroPathing.newOld.PositionStorage.wasOutputHM2;
-import static pedroPathing.newOld.Toggle.toggle_var;
+import static pedroPathing.Toggle.toggle_var;
 
 import android.graphics.Color;
 
@@ -109,6 +109,7 @@ import pedroPathing.States.OuttakeStateSpecimen;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
+import pedroPathing.Toggle;
 import pedroPathing.tests.Config;
 
 

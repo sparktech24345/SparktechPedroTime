@@ -1,6 +1,39 @@
 package pedroPathing;
 
-import static pedroPathing.OrganizedPositionStorage.*;
+import static pedroPathing.OrganizedPositionStorage.autoOuttakeSliderSpecimenHangPos;
+import static pedroPathing.OrganizedPositionStorage.beforeOuttakeGoDownTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoOutputTruBotPos;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPickupPos;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoTransferPos;
+import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
+import static pedroPathing.OrganizedPositionStorage.isAfterTakingTakeySpiny;
+import static pedroPathing.OrganizedPositionStorage.isInLowerBasketState;
+import static pedroPathing.OrganizedPositionStorage.isInNeedToGoToSpecimenTransferPos;
+import static pedroPathing.OrganizedPositionStorage.isOuttakeInPositionToGoDown;
+import static pedroPathing.OrganizedPositionStorage.needsToExtraExtend;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtendedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoRetractedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeIsInNeedToExtraExtendClaw;
+import static pedroPathing.OrganizedPositionStorage.outtakeIsInNeedToExtraExtendClawTimer;
+import static pedroPathing.OrganizedPositionStorage.outtakeMotorActualZeroPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeMotorMaxPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeMotorMaxPosLowerBasket;
+import static pedroPathing.OrganizedPositionStorage.outtakeMotorStandByPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoBasketPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoHighRungHangPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoStandByPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoTransferPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoWallPickupPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeSliderSpecimenHangPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeSlidersWallPickPos;
+import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakig;
+import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakigTimer;
 
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
@@ -139,7 +172,7 @@ public class ClassWithStates {
         intakePivotServoPos = intakePivotServoTransferPos;
         shouldStopIntakeCabinSpinningAfterTakig = true;
         shouldStopIntakeCabinSpinningAfterTakigTimer = System.currentTimeMillis();
-        intakeSpinMotorPow = -1;
+        intakeSpinMotorPow = -0.7;
     }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;
