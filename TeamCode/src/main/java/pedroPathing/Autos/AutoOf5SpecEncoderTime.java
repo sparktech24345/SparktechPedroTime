@@ -91,29 +91,30 @@ public class AutoOf5SpecEncoderTime extends OpMode {
     private Pose calculatedFollowerPose = new Pose(0,0,Math.toRadians(90));
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
-    private final float scoringBarX = -6f;
-    private final float scoringBarY = 53f;
+    private final float scoringBarX = -2f;
+    private final float scoringBarY = 41.3f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY-1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
-    private final float wallPickUpX = -21.2f;
-    private final float wallPickUpY = 67.6f;
+    private final float wallPickUpX = -42f;
+    private final float wallPickUpY = 71f;
+    private final float wallAdderY = 2f;
 
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
-    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
-    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY-2, Math.toRadians(90)); //start
+    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
+    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY, Math.toRadians(90)); //start
+    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.2, Math.toRadians(90)); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.4, Math.toRadians(90)); //start
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-38,55,Math.toRadians(110)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-40, 57, Math.toRadians(90)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-41, 57, Math.toRadians(60)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-58.5,60,Math.toRadians(112)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59, 61, Math.toRadians(100)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-51, 64, Math.toRadians(64)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
@@ -449,7 +450,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
 
         //follower stuff
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap,FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);
