@@ -13,6 +13,7 @@ import static pedroPathing.ClassWithStates.intakeCabinFullInBotOutputting;
 import static pedroPathing.ClassWithStates.intakeExtended4out4;
 import static pedroPathing.ClassWithStates.intakeRetracted;
 import static pedroPathing.ClassWithStates.outtakeSpecimenHang;
+import static pedroPathing.ClassWithStates.outtakeStandByWithoutExtensions;
 import static pedroPathing.OrganizedPositionStorage.autoTimer;
 import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
 import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
@@ -60,26 +61,16 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "AutoOf5SpecEncoderTime", group = "Examples")
-public class AutoOf5SpecEncoderTime extends OpMode {
+@Autonomous(name = "AutoOf5SpecForBadOTos", group = "Examples")
+public class AutoOf5SpecForBadOTos extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
-    private Timer corectOtosTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
     final float[] hsvValues = new float[3];
     private DcMotor intakeMotor;
     private DcMotor outakeLeftMotor;
     private DcMotor outakeRightMotor;
     private DcMotor intakeSpinMotor;
-    private DcMotor frontLeftMotor;
-    private DcMotor backLeftMotor;
-    private DcMotor frontRightMotor;
-    private DcMotor backRightMotor;
-
-    double lastFL;
-    double lastFR;
-    double lastBL;
-    double lastBR;
     private Servo intakeRotateServo;
     private Servo outakeArmServo;
     private Servo outakeSampleServo;
@@ -88,21 +79,20 @@ public class AutoOf5SpecEncoderTime extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private Pose calculatedFollowerPose = new Pose(-10,70,Math.toRadians(90));
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -2f;
-    private final float scoringBarY = 41.3f;
+    private final float scoringBarY = 41f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY-1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY-1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY-1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY-1, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
     private final float wallPickUpY = 71f;
-    private final float wallAdderY = 2f;
+    private final float wallAdderY = 0.5f;
 
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
@@ -112,13 +102,12 @@ public class AutoOf5SpecEncoderTime extends OpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-58.5,60,Math.toRadians(112)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59, 61, Math.toRadians(100)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-58.5,60,Math.toRadians(110)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59, 61, Math.toRadians(98)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-51, 64, Math.toRadians(64)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
-
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
@@ -254,7 +243,8 @@ public class AutoOf5SpecEncoderTime extends OpMode {
                     intakeCabinDownCollecting();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -282,7 +272,9 @@ public class AutoOf5SpecEncoderTime extends OpMode {
                     intakeCabinDownCollecting();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -312,7 +304,9 @@ public class AutoOf5SpecEncoderTime extends OpMode {
                     intakeCabinDownCollecting();
                     waitWhile(300);
                     intakeExtended4out4();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)) robotDoStuff();
+
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(350);
@@ -418,6 +412,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(parking,true);
                     setPathState(-1);
+                    outtakeStandByWithoutExtensions();
                 }
                 break;
         }
@@ -435,37 +430,19 @@ public class AutoOf5SpecEncoderTime extends OpMode {
     public void init() {
         resetStuff();
         isRobotInAuto = true;
-        //reset timers
+
         pathTimer = new Timer();
         opmodeTimer = new Timer();
-        corectOtosTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        //follower stuff
         Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants.class, LConstants.class);
+        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);
 
 
         //our init
-
-
-        frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
-        backLeftMotor = hardwareMap.dcMotor.get("backleft");
-        frontRightMotor = hardwareMap.dcMotor.get("frontright");
-        backRightMotor = hardwareMap.dcMotor.get("backright");
-
-        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
-        lastFL = frontLeftMotor.getCurrentPosition();
-        lastFR = frontRightMotor.getCurrentPosition();
-        lastBL = backLeftMotor.getCurrentPosition();
-        lastBR = backRightMotor.getCurrentPosition();
-
         intakeMotor = hardwareMap.dcMotor.get("intakemotor");
         outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
@@ -506,7 +483,9 @@ public class AutoOf5SpecEncoderTime extends OpMode {
             needsToExtraExtend = false;
             outtakeClawServoPos = outtakeClawServoExtraExtendedPos;
         }
-
+        if (follower.getVelocity().getMagnitude() == 0 && follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5) {
+            follower.breakFollowing();
+        }
 
 
         //color stuff
@@ -532,60 +511,6 @@ public class AutoOf5SpecEncoderTime extends OpMode {
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
         robotTelemetry();
-    }
-
-
-    public void corectOtos(){
-
-        //this methoc should be called every 20 milisec for otos corection in paths
-        //for now 0 cuz motors not yet delcared
-        // FL = Front Left
-        // FR = Front Right
-        // BL = Back Left
-        // BR = Back Right
-        //motor positions in variables cuz easier this way
-        double frontLeftPos = frontLeftMotor.getCurrentPosition();
-        double frontRightPos = frontRightMotor.getCurrentPosition();
-        double backLeftPos = backLeftMotor.getCurrentPosition();
-        double backRightPos = backRightMotor.getCurrentPosition();
-
-        //calculate deltas
-        double deltaFL = frontLeftPos - lastFL;
-        double deltaFR = frontRightPos - lastFR;
-        double deltaBL = backLeftPos - lastBL;
-        double deltaBR = backRightPos - lastBR;
-
-        // calculate robot-relative movement
-        double deltaY = (deltaFL + deltaFR + deltaBL + deltaBR) / 4.0;   //devide by 4 cuz 4 wheels maybe, might change later
-        double deltaX = (-deltaFL + deltaFR + deltaBL - deltaBR) / 4.0;
-
-        // calculate stuff to field space using OTOS heading
-        double headingRad = follower.getPose().getHeading();  // from OTOS
-
-        headingRad -= Math.toRadians(90); // adding 90 degrees beacouse robot front in otos is actually robot tilted to the right thus this should fix the discrepancy
-
-        double deltaXField = deltaX * Math.cos(headingRad) - deltaY * Math.sin(headingRad);
-        double deltaYField = deltaX * Math.sin(headingRad) + deltaY * Math.cos(headingRad);
-
-        // last positions
-        lastFL = frontLeftPos;
-        lastFR = frontRightPos;
-        lastBL = backLeftPos;
-        lastBR = backRightPos;
-
-        double xToAddToPose  = deltaXField / -29.14609093153628908; //constants
-        double yToAddToPose  = deltaYField / 33.1189110622916;
-
-        //apply changes to calculated pose
-        calculatedFollowerPose.setX( calculatedFollowerPose.getX() + xToAddToPose);
-        calculatedFollowerPose.setY( calculatedFollowerPose.getY() + yToAddToPose);
-        calculatedFollowerPose.setHeading(follower.getPose().getHeading()); //follower heading from otos
-
-        tel.addData("calculated pos x ",calculatedFollowerPose.getX());
-        tel.addData("calculated pos y ",calculatedFollowerPose.getY());
-
-        //give the pose to follower
-        follower.setPose(calculatedFollowerPose);
     }
 
 
@@ -616,10 +541,6 @@ public class AutoOf5SpecEncoderTime extends OpMode {
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
     @Override
     public void loop() {
-
-        corectOtos();
-        corectOtosTimer.resetTimer();
-
 
         // These loop the movements of the robot
         follower.update();

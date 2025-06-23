@@ -62,7 +62,7 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "AutoTestPositions", group = "Examples")
+@Autonomous(name = "AutoTestPositionsForEncoders", group = "Examples")
 public class AutoTestPositionForEncoders extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -109,7 +109,7 @@ public class AutoTestPositionForEncoders extends OpMode {
 
 
 
-    private Pose calculatedFollowerPose = new Pose(0,0,Math.toRadians(90));
+    private Pose calculatedFollowerPose = new Pose(-10,70,Math.toRadians(90));
 
 
 
@@ -296,7 +296,7 @@ public class AutoTestPositionForEncoders extends OpMode {
         // calculate stuff to field space using OTOS heading
         double headingRad = follower.getPose().getHeading();  // from OTOS
 
-        headingRad += Math.toRadians(90); // adding 90 degrees beacouse robot front in otos is actually robot tilted to the right thus this should fix the discrepancy
+        headingRad -= Math.toRadians(90); // adding 90 degrees beacouse robot front in otos is actually robot tilted to the right thus this should fix the discrepancy
 
         double deltaXField = deltaX * Math.cos(headingRad) - deltaY * Math.sin(headingRad);
         double deltaYField = deltaX * Math.sin(headingRad) + deltaY * Math.cos(headingRad);
@@ -307,8 +307,8 @@ public class AutoTestPositionForEncoders extends OpMode {
         lastBL = backLeftPos;
         lastBR = backRightPos;
 
-        double xToAddToPose  = deltaXField * 1; //constants
-        double yToAddToPose  = deltaYField * 1;
+        double xToAddToPose  = deltaXField / -29.14609093153628908; //constants
+        double yToAddToPose  = deltaYField / 33.1189110622916;
 
         //apply changes to calculated pose
         calculatedFollowerPose.setX( calculatedFollowerPose.getX() + xToAddToPose);
@@ -319,7 +319,7 @@ public class AutoTestPositionForEncoders extends OpMode {
         tel.addData("calculated pos y ",calculatedFollowerPose.getY());
 
         //give the pose to follower
-        //follower.setPose(calculatedFollowerPose);
+        ///follower.setPose(calculatedFollowerPose);
     }
 
 
@@ -330,12 +330,6 @@ public class AutoTestPositionForEncoders extends OpMode {
     public void init() {
         resetStuff();
         isRobotInAuto = true;
-
-        //reset last encoder stuff
-        lastFL =0;
-        lastFR =0;
-        lastBL =0;
-        lastBR =0;
 
         pathTimer = new Timer();
         opmodeTimer = new Timer();
@@ -348,8 +342,6 @@ public class AutoTestPositionForEncoders extends OpMode {
         follower.setStartingPose(startPose);
         buildPaths();
 
-        //calculated pose well be modifiing with encoders
-        calculatedFollowerPose = follower.getPose();
 
 
         // our stuff
@@ -361,12 +353,27 @@ public class AutoTestPositionForEncoders extends OpMode {
 
                 double intakeMotorPower = 0;
                 double outakeMotorPower = 0;
+
+                frontLeftMotor = hardwareMap.dcMotor.get("frontleft");
+                backLeftMotor = hardwareMap.dcMotor.get("backleft");
+                frontRightMotor = hardwareMap.dcMotor.get("frontright");
+                backRightMotor = hardwareMap.dcMotor.get("backright");
+
+                backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+                frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
                 DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
                 DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
                 DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
                 DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
                 intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
                 outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+                lastFL = frontLeftMotor.getCurrentPosition();
+                lastFR = frontRightMotor.getCurrentPosition();
+                lastBL = backLeftMotor.getCurrentPosition();
+                lastBR = backRightMotor.getCurrentPosition();
 
                 intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -436,7 +443,9 @@ public class AutoTestPositionForEncoders extends OpMode {
         // Feedback to Driver Hub
         tel.addData("path state", pathState);
         tel.addData("x", follower.getPose().getX());
-        tel.addData("y", follower.getPose().getY());
+        tel.addData("y1", follower.getPose().getY());
+        tel.addData("y2", follower.getPose().getY());
+        tel.addData("y3", follower.getPose().getY());
         tel.addData("heading", Math.toDegrees(follower.getPose().getHeading()));
         tel.addData("intakerotate",intakeRotateServoPosition);
         tel.update();
