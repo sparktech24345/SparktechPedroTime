@@ -150,7 +150,7 @@ public class ClassWithStates {
         intakeCabinState = intakeCabinStates.intakeCabinDownCollecting;
         intakePivotServoPos = intakePivotServoPickupPos;
         isAfterTakingTakeySpiny = true;
-        intakeSpinMotorPow = -1;
+        intakeSpinMotorPow = -0.7;
     }
     public static void intakeCabinDownOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownOutputting;
@@ -172,7 +172,7 @@ public class ClassWithStates {
         intakePivotServoPos = intakePivotServoTransferPos;
         shouldStopIntakeCabinSpinningAfterTakig = true;
         shouldStopIntakeCabinSpinningAfterTakigTimer = System.currentTimeMillis();
-        intakeSpinMotorPow = -0.7;
+        intakeSpinMotorPow = -0.5;
     }
     public static void intakeCabinFullInBot(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBot;

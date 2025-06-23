@@ -444,7 +444,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
         //follower stuff
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap,FConstants.class, LConstants.class);
-        follower.setStartingPose(startPose);
+        follower.setStartingPose(calculatedFollowerPose);
         buildPaths();
         setPathState(0);
 
