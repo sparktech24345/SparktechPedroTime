@@ -474,13 +474,11 @@ slides pos on descent -223
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
-
         Constants.setConstants(FConstantsForBasket.class, LConstants.class);
         follower = new Follower(hardwareMap,FConstantsForBasket.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);
-
 
         //our init
         intakeMotor = hardwareMap.dcMotor.get("intakemotor");
@@ -488,12 +486,10 @@ slides pos on descent -223
         outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
         intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
 
-
         //declare servos
         intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
         outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
         outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
-
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
@@ -551,25 +547,19 @@ slides pos on descent -223
         autoOuttakeTransfer();
         waitWhile(300);
         intakeExtended3out4();
-
         while(intakeMotor.getCurrentPosition() < 150) {
             robotDoStuff();
         }
-
         intakeCabinDownCollecting();
-
-        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
+        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample ||
+                currentStateOfSampleInIntake == colorSensorOutty.correctSample)) {
             robotDoStuff();
         }
         intakeCabinTransferPositionWithPower();
         intakeRetracted();
         outtakeClawServoPos = outtakeClawServoExtendedPos + 20;
     }
-
-
-
     public void executeAutoTransfer() {
-
         autoOuttakeTransfer();
         while(intakeMotor.getCurrentPosition() > 30) {
             robotDoStuff();
