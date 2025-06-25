@@ -59,6 +59,7 @@ import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsEncoders;
 import pedroPathing.constants.LConstants;
 
 @Config
@@ -211,7 +212,7 @@ public class AutoTestPositionForEncoders extends OpMode {
                     outtakeFSM.executeCurrentState();
                     while(autoTimer + 500 > System.currentTimeMillis()){}
                     follower.followPath(forward,true);
-                    setPathState(1);
+                    setPathState(-1);
 
                 }
                 break;
@@ -294,7 +295,7 @@ public class AutoTestPositionForEncoders extends OpMode {
         double deltaX = (-deltaFL + deltaFR + deltaBL - deltaBR) / 4.0;
 
         // calculate stuff to field space using OTOS heading
-        double headingRad = follower.getPose().getHeading();  // from OTOS
+        double headingRad = Math.toRadians(90);  // from OTOS
 
         headingRad -= Math.toRadians(90); // adding 90 degrees beacouse robot front in otos is actually robot tilted to the right thus this should fix the discrepancy
 
@@ -313,7 +314,7 @@ public class AutoTestPositionForEncoders extends OpMode {
         //apply changes to calculated pose
         calculatedFollowerPose.setX( calculatedFollowerPose.getX() + xToAddToPose);
         calculatedFollowerPose.setY( calculatedFollowerPose.getY() + yToAddToPose);
-        calculatedFollowerPose.setHeading(follower.getPose().getHeading()); //follower heading from otos
+        calculatedFollowerPose.setHeading(Math.toRadians(90)); //follower heading from otos
 
         tel.addData("calculated pos x ",calculatedFollowerPose.getX());
         tel.addData("calculated pos y ",calculatedFollowerPose.getY());
@@ -337,8 +338,8 @@ public class AutoTestPositionForEncoders extends OpMode {
 
         corectOtosTimer = new Timer();
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants.class, LConstants.class);
+        Constants.setConstants(FConstantsEncoders.class, LConstants.class);
+        follower = new Follower(hardwareMap,FConstantsEncoders.class, LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
 

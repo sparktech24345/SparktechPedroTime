@@ -30,8 +30,9 @@ public class ControlMotor { //FINAL AUTOTUNED STUFF
         /*if(pid<0 && curentPosition<40) pid = -0.3;
         if(pid<0 && curentPosition<10) pid = -0.25;
         if(pid<0 && curentPosition<=3) pid = 0;//*/
-        if(pid<0 && curentPosition<40) pid = pid*1.4;
-        if(pid<0 && curentPosition<5) pid *= 0.4;
+        if(pid<0 && curentPosition<40) pid = pid*1.3;
+        if(pid<0 && curentPosition<20) pid = pid*0.7;
+        if(pid<0 && curentPosition<5) pid *= 0.2;
         return pid;
 
         //return (error*kp+derivative*kd) * (((lastError < 0 && lastError > -50) || (lastError  < -415 && lastError > -450))  ? 2 : 1);

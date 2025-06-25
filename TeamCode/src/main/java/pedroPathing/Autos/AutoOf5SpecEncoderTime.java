@@ -57,8 +57,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.AutoPIDS.ControlMotor;
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsEncoders;
 import pedroPathing.constants.LConstants;
 
+
+// TODO
 @Config
 @Autonomous(name = "AutoOf5SpecEncoderTime", group = "Examples")
 public class AutoOf5SpecEncoderTime extends OpMode {
@@ -92,7 +95,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
     private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -2f;
-    private final float scoringBarY = 41.3f;
+    private final float scoringBarY = 41.3f - 2f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
@@ -112,9 +115,9 @@ public class AutoOf5SpecEncoderTime extends OpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-58.5,60,Math.toRadians(112)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59, 61, Math.toRadians(100)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-51, 64, Math.toRadians(64)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-58.5,60,Math.toRadians(90)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59, 61, Math.toRadians(90)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-51, 64, Math.toRadians(90)); //start
 
     //PARK
     private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
@@ -151,27 +154,15 @@ public class AutoOf5SpecEncoderTime extends OpMode {
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
         startPath = new Path(new BezierLine(new Point(startPose), new Point(scoringBarPosePreloadSpecimen)));
         startPath.setLinearHeadingInterpolation(startPose.getHeading(), scoringBarPosePreloadSpecimen.getHeading());
-
-        /*goToPickUpFirstSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(firstSamplePickUpPos)))
-                .setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), firstSamplePickUpPos.getHeading())
-                .build();
-
-        goToPickUpSecondSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(firstSamplePickUpPos), new Point(secondSamplePickUpPos)))
-                .setLinearHeadingInterpolation(firstSamplePickUpPos.getHeading(), secondSamplePickUpPos.getHeading())
-                .build();
-
-        goToPickUpThirdSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(secondSamplePickUpPos), new Point(thirdSamplePickUpPos)))
-                .setLinearHeadingInterpolation(secondSamplePickUpPos.getHeading(), thirdSamplePickUpPos.getHeading())
-                .build();
-*/  // 3 2 1 logic
+  // 3 2 1 logic
+        pickUpFirst = new Path(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(thirdSamplePickUpPos)));
+        pickUpFirst.setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), thirdSamplePickUpPos.getHeading());
+        /*
         goToPickUpFirstSample=follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(thirdSamplePickUpPos)))
                 .setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), thirdSamplePickUpPos.getHeading())
                 .build();
-
+        */
         goToPickUpSecondSample=follower.pathBuilder()
                 .addPath(new BezierLine(new Point(thirdSamplePickUpPos), new Point(secondSamplePickUpPos)))
                 .setLinearHeadingInterpolation(thirdSamplePickUpPos.getHeading(), secondSamplePickUpPos.getHeading())
@@ -244,7 +235,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(goToPickUpFirstSample,true);
-                    setPathState(3);
+                    setPathState(-3);
                 }
                 break;
 
@@ -560,7 +551,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
         double deltaX = (-deltaFL + deltaFR + deltaBL - deltaBR) / 4.0;
 
         // calculate stuff to field space using OTOS heading
-        double headingRad = follower.getPose().getHeading();  // from OTOS
+        double headingRad = Math.toRadians(90);  // from OTOS
 
         headingRad -= Math.toRadians(90); // adding 90 degrees beacouse robot front in otos is actually robot tilted to the right thus this should fix the discrepancy
 
@@ -579,7 +570,7 @@ public class AutoOf5SpecEncoderTime extends OpMode {
         //apply changes to calculated pose
         calculatedFollowerPose.setX( calculatedFollowerPose.getX() + xToAddToPose);
         calculatedFollowerPose.setY( calculatedFollowerPose.getY() + yToAddToPose);
-        calculatedFollowerPose.setHeading(follower.getPose().getHeading()); //follower heading from otos
+        calculatedFollowerPose.setHeading(Math.toRadians(90)); //follower heading from otos
 
         tel.addData("calculated pos x ",calculatedFollowerPose.getX());
         tel.addData("calculated pos y ",calculatedFollowerPose.getY());
