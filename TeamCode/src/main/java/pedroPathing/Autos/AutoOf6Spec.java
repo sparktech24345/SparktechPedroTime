@@ -115,7 +115,7 @@ public class AutoOf6Spec extends OpMode {
     private final Pose secondSamplePickUpPos = new Pose(-59 - 2, 61, Math.toRadians(100)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-51 - 2, 64, Math.toRadians(64)); //start
 
-    private final Pose initOutputPose = new Pose(-14.88, 62.54, Math.toRadians(129.64));
+    private final Pose initOutputPose = new Pose(-14.88-3, 62.54, Math.toRadians(129.64));
     private final double collectStep = 0.5;
     private double collectStepsCount = 0;
     private int collectSlidesLength = 1;
@@ -323,12 +323,12 @@ public class AutoOf6Spec extends OpMode {
             case 1000:
                 if(!follower.isBusy()){
                     intakeCabinFullInBotOutputting();
-                    waitWhile(300);
+                    waitWhile(150);
                     setPathState(2);
                 }
             case 2:
                 if(!follower.isBusy()) {
-                    waitWhile(150);
+                    //waitWhile(150);
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(goToPickUpFirstSample,true);
                     setPathState(3);
