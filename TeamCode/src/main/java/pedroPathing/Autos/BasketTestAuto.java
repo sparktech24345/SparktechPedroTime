@@ -47,6 +47,7 @@ public class BasketTestAuto extends OpMode {
     private Servo outakeArmServo;
     private Servo outakeSampleServo;
     private NormalizedColorSensor colorSensor;
+    private colorList currentTeam = colorList.red;
 
     /**                         Our Paths!                          */
     private int pathState = 0;
@@ -407,7 +408,7 @@ slides pos on descent -223
                     NormalizedRGBA colors;
                     colors = colorSensor.getNormalizedColors();
                     Color.colorToHSV(colors.toColor(), hsvValues);
-                    currentStateOfSampleInIntake = ColorCompare(colors,colorList.red,false);
+                    currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,false);
                     if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
                         setPathState(16);
                     }
@@ -464,7 +465,7 @@ slides pos on descent -223
                     NormalizedRGBA colors;
                     colors = colorSensor.getNormalizedColors();
                     Color.colorToHSV(colors.toColor(), hsvValues);
-                    currentStateOfSampleInIntake = ColorCompare(colors,colorList.red,false);
+                    currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,false);
                     if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
                         setPathState(21);
                     }
@@ -623,7 +624,7 @@ slides pos on descent -223
         NormalizedRGBA colors;
         colors = colorSensor.getNormalizedColors();
         Color.colorToHSV(colors.toColor(), hsvValues);
-        currentStateOfSampleInIntake = ColorCompare(colors,colorList.red,false);
+        currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,false);
         if (firstTry){
             if(currentStateOfSampleInIntake==colorSensorOutty.wrongSample){
                 intakeExtended2out4();
