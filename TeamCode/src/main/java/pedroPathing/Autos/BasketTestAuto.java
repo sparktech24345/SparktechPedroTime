@@ -70,7 +70,7 @@ public class BasketTestAuto extends OpMode {
     // collect first 3 from floor
     private final Pose firstSampleCollect = new Pose( 16.69 + 2, 36.92, Math.toRadians(158.69));
     private final Pose secondSampleCollect = new Pose(20.25 + 2, 37.95, Math.toRadians(175.76));
-    private final Pose thirdSampleCollect = new Pose( 30.56, 36.74, Math.toRadians(208.27));
+    private final Pose thirdSampleCollect = new Pose( 30.56 - 1.5, 36.74, Math.toRadians(208.27));
 
     // collect from submersible
 
@@ -215,7 +215,7 @@ slides pos on descent -223
 
         /// SECOND TRY AT SUBMESRIBLE
 
-        signOffPath = follower.pathBuilder()
+        secondTrySubPath = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(firstSubmersibleStdCollect),
                         new Point(secondTrySub)))
                 .setLinearHeadingInterpolation(firstSubmersibleStdCollect.getHeading(), secondTrySub.getHeading())
@@ -403,18 +403,17 @@ slides pos on descent -223
                 break;
             case 15:
                 if(!follower.isBusy()){
-                    executeSubmersibleCollect();
-                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample){
+                    executeSubmersibleCollect(true);
+                    NormalizedRGBA colors;
+                    colors = colorSensor.getNormalizedColors();
+                    Color.colorToHSV(colors.toColor(), hsvValues);
+                    currentStateOfSampleInIntake = ColorCompare(colors,colorList.red,false);
+                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
                         setPathState(16);
                     }
-                    else if(currentStateOfSampleInIntake == colorSensorOutty.noSample){
-                        setPathState(100);
-                    }
                     else{
-                        somethingFailed = true;
                         setPathState(100);
                     }
-                    setPathState(16);
                 }
                 break;
             case 100:
@@ -425,7 +424,7 @@ slides pos on descent -223
                 break;
             case 101:
                 if(!follower.isBusy()){
-                    executeSubmersibleCollect();
+                    executeSubmersibleCollect(false);
                     setPathState(16);
                 }
                 break;
@@ -447,7 +446,7 @@ slides pos on descent -223
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
-                    setPathState(24);
+                    setPathState(19);
                 }
                 break;
             /// SECOND
@@ -461,8 +460,29 @@ slides pos on descent -223
                 break;
             case 20:
                 if(!follower.isBusy()){
-                    executeSubmersibleCollect();
-                    setPathState(21);
+                    executeSubmersibleCollect(true);
+                    NormalizedRGBA colors;
+                    colors = colorSensor.getNormalizedColors();
+                    Color.colorToHSV(colors.toColor(), hsvValues);
+                    currentStateOfSampleInIntake = ColorCompare(colors,colorList.red,false);
+                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+                        setPathState(21);
+                    }
+                    else {
+                        setPathState(102);
+                    }
+                }
+                break;
+            case 102:
+                if(!follower.isBusy()){
+                    follower.followPath(secondTrySubPath);
+                    setPathState(103);
+                }
+                break;
+            case 103:
+                if(!follower.isBusy()){
+                    executeSubmersibleCollect(false);
+                    setPathState(20);
                 }
                 break;
             case 21:
@@ -584,7 +604,7 @@ slides pos on descent -223
 
 
 
-    public void executeSubmersibleCollect() {
+    public void executeSubmersibleCollect(boolean firstTry) {
         autoTimer = System.currentTimeMillis();
         autoOuttakeTransfer();
         waitWhile(300);
@@ -600,9 +620,30 @@ slides pos on descent -223
                 && autoTimer + 2000 > System.currentTimeMillis()) {
             robotDoStuff();
         }
-        intakeCabinTransferPositionWithPower();
-        intakeRetracted();
-        outtakeClawServoPos = outtakeClawServoExtendedPos + 20;
+        NormalizedRGBA colors;
+        colors = colorSensor.getNormalizedColors();
+        Color.colorToHSV(colors.toColor(), hsvValues);
+        currentStateOfSampleInIntake = ColorCompare(colors,colorList.red,false);
+        if (firstTry){
+            if(currentStateOfSampleInIntake==colorSensorOutty.wrongSample){
+                intakeExtended2out4();
+                intakeSpinMotorPow = 1;
+                waitWhile(500);
+            } else if(currentStateOfSampleInIntake==colorSensorOutty.correctSample){
+                intakeCabinTransferPositionWithPower();
+                intakeRetracted();
+                outtakeClawServoPos = outtakeClawServoExtendedPos + 20;
+            }
+        } else {
+            if(currentStateOfSampleInIntake==colorSensorOutty.wrongSample){
+                intakeSpinMotorPow = 1;
+                waitWhile(500);
+            }
+            intakeCabinTransferPositionWithPower();
+            intakeRetracted();
+            outtakeClawServoPos = outtakeClawServoExtendedPos + 20;
+        }
+
     }
     public void executeAutoTransfer() {
         autoOuttakeTransfer();
