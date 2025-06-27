@@ -23,9 +23,11 @@ import static pedroPathing.OrganizedPositionStorage.outtakeIsInNeedToExtraExtend
 import static pedroPathing.OrganizedPositionStorage.outtakeMotorActualZeroPos;
 import static pedroPathing.OrganizedPositionStorage.outtakeMotorMaxPos;
 import static pedroPathing.OrganizedPositionStorage.outtakeMotorMaxPosLowerBasket;
+import static pedroPathing.OrganizedPositionStorage.outtakeMotorParkedPos;
 import static pedroPathing.OrganizedPositionStorage.outtakeMotorStandByPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoBasketPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoHighRungHangPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoParkedPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoStandByPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoTransferPos;
@@ -83,6 +85,7 @@ public class ClassWithStates {
         outtakeTransfer,
         outtakeStandBy,
         outtakeStandByWithoutExtensions,
+        autoPark
     }
     public static outtakeStates outtakeState = outtakeStates.noStateSet;
 
@@ -192,6 +195,12 @@ public class ClassWithStates {
 
     //Outtake States
 
+    public static void outtakePark(){
+        outtakeState = outtakeStates.autoPark;
+        outtakePivotServoPos = outtakePivotServoParkedPos;
+        outtakeClawServoPos = outtakeClawServoRetractedPos;
+        outtakeExtendMotorTargetPos = outtakeMotorParkedPos;
+    }
 
     public static void outtakeSpecimenHang(){
         outtakeState = outtakeStates.outtakeSpecimenHang;
