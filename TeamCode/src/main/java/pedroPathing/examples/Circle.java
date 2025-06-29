@@ -29,6 +29,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous (name = "Circle", group = "Examples")
+@Disabled
 
 public class Circle extends OpMode {
     private Telemetry telemetryA;

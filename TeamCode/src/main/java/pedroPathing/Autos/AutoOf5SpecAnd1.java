@@ -67,7 +67,7 @@ import pedroPathing.constants.FConstants5And1;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "AutoOf5Spec+1", group = "Examples")
+@Autonomous(name = "5 Spec + 1 Sample Auto ALLIANCE INDEPENDENT", group = "Examples")
 public class AutoOf5SpecAnd1 extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;

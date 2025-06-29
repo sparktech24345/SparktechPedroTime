@@ -28,13 +28,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.AutoPIDS.ControlMotor;
-import pedroPathing.constants.FConstants;
 import pedroPathing.constants.FConstantsForBasket;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "BasketTestAuto", group = "Examples")
-public class BasketTestAuto extends OpMode {
+@Autonomous(name = "Basket Auto Mateis (nu va exploda)", group = "Examples")
+public class AutoForBasket extends OpMode {
+    /// FOARTE IMPORTANT: CULOAREA ALIANTEI!
+    private colorList teamColor = colorList.red;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -47,7 +48,7 @@ public class BasketTestAuto extends OpMode {
     private Servo outakeArmServo;
     private Servo outakeSampleServo;
     private NormalizedColorSensor colorSensor;
-    private colorList currentTeam = colorList.red;
+
 
     /**                         Our Paths!                          */
     private int pathState = 0;
@@ -408,7 +409,7 @@ slides pos on descent -223
                     NormalizedRGBA colors;
                     colors = colorSensor.getNormalizedColors();
                     Color.colorToHSV(colors.toColor(), hsvValues);
-                    currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,false);
+                    currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
                     if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
                         setPathState(16);
                     }
@@ -465,7 +466,7 @@ slides pos on descent -223
                     NormalizedRGBA colors;
                     colors = colorSensor.getNormalizedColors();
                     Color.colorToHSV(colors.toColor(), hsvValues);
-                    currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,false);
+                    currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
                     if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
                         setPathState(21);
                     }
@@ -624,7 +625,7 @@ slides pos on descent -223
         NormalizedRGBA colors;
         colors = colorSensor.getNormalizedColors();
         Color.colorToHSV(colors.toColor(), hsvValues);
-        currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,false);
+        currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
         if (firstTry){
             if(currentStateOfSampleInIntake==colorSensorOutty.wrongSample){
                 intakeExtended2out4();
@@ -687,7 +688,7 @@ slides pos on descent -223
         //color stuff
         NormalizedRGBA colors = colorSensor.getNormalizedColors();
         Color.colorToHSV(colors.toColor(), hsvValues);
-        currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
+        currentStateOfSampleInIntake = ColorCompare(colors,teamColor,isYellowSampleNotGood);
 
         //PID Stuff
 

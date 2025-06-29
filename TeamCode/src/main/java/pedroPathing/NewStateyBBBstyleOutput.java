@@ -327,7 +327,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                 hasSmolOutputedTimer = System.currentTimeMillis();
             }
             //and then stop the power stuff
-            if(hasSmolOutputed && hasSmolOutputedTimer + 50 <System.currentTimeMillis()){
+            if(hasSmolOutputed && hasSmolOutputedTimer + 35 <System.currentTimeMillis()){
                 intakeCabinTransferPosition();
                 if(isInSpecimenState){
                     intakeCabinFullInBot();

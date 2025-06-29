@@ -27,7 +27,7 @@ import pedroPathing.constants.LConstants;
  * @version 1.0, 12/30/2024
  */
 @Autonomous(name = "Triangle", group = "Examples")
-
+@Disabled
 public class Triangle extends OpMode {
     private Follower follower;
 
