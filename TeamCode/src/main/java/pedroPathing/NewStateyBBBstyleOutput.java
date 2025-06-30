@@ -30,6 +30,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
     NormalizedRGBA colors;
     MultipleTelemetry tel;
     long current_time = System.nanoTime();
+    double slowyDownyManal = 0.4;
+    double slowyDownyAuto = 0.5;
 
 
 
@@ -116,6 +118,16 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             Color.colorToHSV(colors.toColor(), hsvValues);
             currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
+
+
+            //interesting slowdown
+
+            if(intakeState == intakeStates.intakeExtended2out4 ||
+                    intakeState == intakeStates.intakeExtended3out4 ||
+                    intakeState == intakeStates.intakeExtended4out4
+            ){
+                pivot = pivot * slowyDownyAuto;
+            }
 
 
             ///CONTROLS
@@ -491,8 +503,6 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //slowdown
-            double slowyDownyManal = 0.4;
-            double slowyDownyAuto = 0.5;
 
             //manual slowdown
             if(gamepad1.right_bumper){
@@ -504,10 +514,11 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //auto slowdown
 
             else if(// intakeState == intakeStates.intakeExtended1out4
-                 outtakeState == outtakeStates.outtakeBasket  ||
-            intakeState == intakeStates.intakeExtended2out4 ||
-            intakeState == intakeStates.intakeExtended3out4 ||
-            intakeState == intakeStates.intakeExtended4out4 )
+                 outtakeState == outtakeStates.outtakeBasket
+            //intakeState == intakeStates.intakeExtended2out4 ||
+            //intakeState == intakeStates.intakeExtended3out4 ||
+            //intakeState == intakeStates.intakeExtended4out4
+            )
 
             //intakeCabinState == intakeCabinStates.intakeCabinDownCollecting
             {
