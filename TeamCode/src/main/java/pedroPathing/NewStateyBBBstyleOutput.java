@@ -566,13 +566,13 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             tel.addData("blue color",colors.blue);
             tel.addData("red color",colors.red);
             tel.addData("is color not used", isColorSensorNotInUse);
+            tel.addData("curent team color",currentTeam);
 
-            tel.addData("current time",System.nanoTime());
+            //tel.addData("current time",System.nanoTime());
+            //tel.addData("time diference",System.nanoTime() - current_time);
+            //current_time = System.nanoTime();
 
-            tel.addData("time diference",System.nanoTime() - current_time);
-            current_time = System.nanoTime();
-
-            updateTelemetry(tel);
+            tel.update();
         }
 
     }

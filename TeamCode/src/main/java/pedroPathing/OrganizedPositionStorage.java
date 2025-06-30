@@ -187,6 +187,7 @@ public class OrganizedPositionStorage {
         isRobotInAuto = false;
         isInLowerBasketState = false;
         somethingFailed = false;
+        isColorSensorNotInUse = false;
 
         // MISC
         PIDincrement = 0;
