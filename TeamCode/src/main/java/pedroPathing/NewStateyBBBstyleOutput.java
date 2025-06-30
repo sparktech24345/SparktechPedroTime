@@ -85,6 +85,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
+        tel.addData("current team color",currentTeam);
+        tel.update();
 
         waitForStart();
 
@@ -562,18 +564,19 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
-            tel.addData("intakeSliderState",intakeState);
-            tel.addData("intakeCabinState",intakeCabinState);
-            tel.addData("outtakeState",outtakeState);
+            //tel.addData("intakeSliderState",intakeState);
+            //tel.addData("intakeCabinState",intakeCabinState);
+            //tel.addData("outtakeState",outtakeState);
+            //tel.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
+            //tel.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
+            //tel.addData("intakeRotateServoPosition", intakePivotServoPos);
+            //tel.addData("intakeExtendMotorPow",intakeExtendMotorPow);
+            //tel.addData("intake current pos",intakeMotor.getCurrentPosition());
+            //tel.addData("outakeMotorPow",outtakeExtendMotorPow);
+            //tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+            //tel.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
+
             tel.addData("color stuff",currentStateOfSampleInIntake);
-            tel.addData("outakeArmServoPOS GO TO", outtakePivotServoPos);
-            tel.addData("outakeSamplePOS GO TO ", outtakeClawServoPos);
-            tel.addData("intakeRotateServoPosition", intakePivotServoPos);
-            tel.addData("intakeExtendMotorPow",intakeExtendMotorPow);
-            tel.addData("intake current pos",intakeMotor.getCurrentPosition());
-            tel.addData("outakeMotorPow",outtakeExtendMotorPow);
-            tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-            tel.addData("outtake current pos",outakeLeftMotor.getCurrentPosition());
             tel.addData("blue color",colors.blue);
             tel.addData("red color",colors.red);
             tel.addData("is color not used", isColorSensorNotInUse);
