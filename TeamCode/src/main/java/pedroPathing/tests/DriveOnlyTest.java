@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 import pedroPathing.AutoPIDS.ControlMotor;
 
 @TeleOp(name = "Only Drive Teleop", group = "Linear OpMode")
+@Disabled
 public class DriveOnlyTest extends LinearOpMode {
 
     ControlMotor intakeControlMotor = new ControlMotor();

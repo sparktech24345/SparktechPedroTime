@@ -63,6 +63,7 @@ import java.util.List;
 
 
 @TeleOp(name = "Vision Color-Locator CAMERA WITHOUT VISION", group = "Concept")
+@Disabled
 public class ConceptVisionColorLocator extends LinearOpMode
 {
     @Override

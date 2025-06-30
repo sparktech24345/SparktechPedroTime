@@ -7,6 +7,7 @@ import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,6 +25,7 @@ import java.util.Date;
 
 @TeleOp(name = "AutoPIDSTrainer", group = "Tools")
 @com.acmerobotics.dashboard.config.Config
+@Disabled
 public class AutoPIDSTrainer extends LinearOpMode {
 
     ///-------------------------------------\\\

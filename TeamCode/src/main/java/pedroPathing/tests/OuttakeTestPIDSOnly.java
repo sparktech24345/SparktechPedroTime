@@ -3,6 +3,7 @@ package pedroPathing.tests;
 
 import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,6 +16,7 @@ import pedroPathing.AutoPIDS.NewPidsController;
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Outtake Test", group = "Linear OpMode")
+@Disabled
 public class OuttakeTestPIDSOnly extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
         DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");

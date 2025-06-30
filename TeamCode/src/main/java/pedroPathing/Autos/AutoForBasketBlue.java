@@ -1,7 +1,42 @@
 package pedroPathing.Autos;
 
-import static pedroPathing.ClassWithStates.*;
-import static pedroPathing.OrganizedPositionStorage.*;
+import static pedroPathing.ClassWithStates.ColorCompare;
+import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
+import static pedroPathing.ClassWithStates.colorList;
+import static pedroPathing.ClassWithStates.colorSensorOutty;
+import static pedroPathing.ClassWithStates.currentStateOfSampleInIntake;
+import static pedroPathing.ClassWithStates.currentTeam;
+import static pedroPathing.ClassWithStates.initStates;
+import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
+import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
+import static pedroPathing.ClassWithStates.intakeCabinTransferPosition;
+import static pedroPathing.ClassWithStates.intakeCabinTransferPositionWithPower;
+import static pedroPathing.ClassWithStates.intakeExtended1out4;
+import static pedroPathing.ClassWithStates.intakeExtended2out4;
+import static pedroPathing.ClassWithStates.intakeExtended4out4;
+import static pedroPathing.ClassWithStates.intakeRetracted;
+import static pedroPathing.ClassWithStates.outtakeBasket;
+import static pedroPathing.ClassWithStates.outtakePark;
+import static pedroPathing.OrganizedPositionStorage.autoTimer;
+import static pedroPathing.OrganizedPositionStorage.hasSmolOutputed;
+import static pedroPathing.OrganizedPositionStorage.hasSmolOutputedTimer;
+import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
+import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
+import static pedroPathing.OrganizedPositionStorage.intakeTargetPosAdder;
+import static pedroPathing.OrganizedPositionStorage.isInSpecimenState;
+import static pedroPathing.OrganizedPositionStorage.isRobotInAuto;
+import static pedroPathing.OrganizedPositionStorage.isYellowSampleNotGood;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtendedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeClawServoRetractedPos;
+import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
+import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
+import static pedroPathing.OrganizedPositionStorage.resetStuff;
+import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakig;
+import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakigTimer;
+import static pedroPathing.OrganizedPositionStorage.somethingFailed;
 
 import android.graphics.Color;
 
@@ -32,10 +67,10 @@ import pedroPathing.constants.FConstantsForBasket;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "Basket Auto Mateis (nu va exploda)", group = "Examples")
-public class AutoForBasket extends OpMode {
+@Autonomous(name = "Basket Auto BLUE ALLIANCE Mateis (nu va exploda)", group = "Examples")
+public class AutoForBasketBlue extends OpMode {
     /// FOARTE IMPORTANT: CULOAREA ALIANTEI!
-    private colorList teamColor = colorList.red;
+    private colorList teamColor = colorList.blue;
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());

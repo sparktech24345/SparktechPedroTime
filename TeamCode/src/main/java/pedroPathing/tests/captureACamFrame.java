@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,6 +24,7 @@ import java.io.IOException;
 
 @TeleOp(name = "Dashboard Photo Capture", group = "Linear Opmode")
 @Config
+@Disabled
 public class captureACamFrame extends LinearOpMode {
 
     OpenCvWebcam camera;

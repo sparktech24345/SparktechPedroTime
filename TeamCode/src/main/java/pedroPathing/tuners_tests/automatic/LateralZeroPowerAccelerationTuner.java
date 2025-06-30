@@ -50,7 +50,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Lateral Zero Power Acceleration Tuner DANGER", group = "Automatic Tuners")
-//@Disabled
+@Disabled
 public class LateralZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 

@@ -78,6 +78,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="testServo", group="Linear OpMode")
+@Disabled
     public class TestServos extends LinearOpMode {
     Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
     Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");

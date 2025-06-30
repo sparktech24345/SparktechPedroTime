@@ -31,7 +31,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Lateral Localizer Tuner", group = ".Localization")
-//@Disabled
+@Disabled
 public class LateralTuner extends OpMode {
     private PoseUpdater poseUpdater;
     private DashboardPoseTracker dashboardPoseTracker;

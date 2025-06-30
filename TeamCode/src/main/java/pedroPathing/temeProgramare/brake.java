@@ -4,6 +4,7 @@ package pedroPathing.temeProgramare;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,7 +16,7 @@ enum Direction {Front, LeftFront, RightFront, Left, Right, LeftBack, Back, Right
 enum Rotation {Left, Right, Stopped};
 
 @TeleOp(name="TeleOP brake", group="Test")
-
+@Disabled
 public class brake extends LinearOpMode {
 
     private static double BrakeMultiplier = -1;
