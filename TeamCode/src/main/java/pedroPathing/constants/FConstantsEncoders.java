@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class FConstantsEncoders {
     static {
-        //FollowerConstants.localizers = Localizers.OTOS;
+        FollowerConstants.localizers = Localizers.OTOS;
 
         FollowerConstants.leftFrontMotorName = "frontleft";
         FollowerConstants.leftRearMotorName = "backleft";
