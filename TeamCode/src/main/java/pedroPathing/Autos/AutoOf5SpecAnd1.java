@@ -99,11 +99,11 @@ public class AutoOf5SpecAnd1 extends OpMode {
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 71f;
+    private final float wallPickUpY = 75f;
     private final float wallAdderY = 2f;
 
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
+    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY + 1, Math.toRadians(90)); //start
     private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY, Math.toRadians(90)); //start
     private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.2, Math.toRadians(90)); //start
     private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.4, Math.toRadians(90)); //start
