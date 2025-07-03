@@ -1,6 +1,5 @@
 package pedroPathing;
 
-import static pedroPathing.OrganizedPositionStorage.autoOuttakeSliderSpecimenHangPos;
 import static pedroPathing.OrganizedPositionStorage.beforeOuttakeGoDownTimer;
 import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
 import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
@@ -160,11 +159,11 @@ public class ClassWithStates {
         intakePivotServoPos = intakePivotServoPickupPos;
         intakeSpinMotorPow = 1;
     }
-    public static void intakeCabinDownStandStill(){
+    /*public static void intakeCabinDownStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
         intakePivotServoPos = intakePivotServoPickupPos;
         intakeSpinMotorPow = 0;
-    }
+    }//*/
     public static void intakeCabinTransferPosition(){
         intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
         intakePivotServoPos = intakePivotServoTransferPos;
@@ -208,12 +207,12 @@ public class ClassWithStates {
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakeExtendMotorTargetPos = outtakeSliderSpecimenHangPos;
     }
-    public static void autoOuttakeSpecimenHang(){
+    /*public static void autoOuttakeSpecimenHang(){
         outtakeState = outtakeStates.outtakeSpecimenHang;
         outtakePivotServoPos = outtakePivotServoHighRungHangPos;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
         outtakeExtendMotorTargetPos = autoOuttakeSliderSpecimenHangPos;
-    }
+    }//*/
     public static void outtakeBasket(){
         outtakeState = outtakeStates.outtakeBasket;
         outtakeClawServoPos = outtakeClawServoRetractedPos;
@@ -228,12 +227,12 @@ public class ClassWithStates {
         outtakePivotServoPos = outtakePivotServoBasketPos;
         outtakeExtendMotorTargetPos = outtakeMotorMaxPosLowerBasket;
     }
-    public static void outtakeWallPickUpNormal(){ //old one
+    /*public static void outtakeWallPickUpNormal(){ //old one
         outtakeState = outtakeStates.outtakeWallPickUpNormal;
         outtakePivotServoPos = 0;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
         outtakeExtendMotorTargetPos = outtakeMotorActualZeroPos;
-    }
+    }//*/
     public static void outtakeWallPickUpNew(){
         outtakeState = outtakeStates.outtakeWallPickUpNew;
         //outtakePivotServoPos = outtakePivotServoWallPickupPos;  //wire interference
@@ -254,7 +253,7 @@ public class ClassWithStates {
         outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
     }
-    public static void outtakeWallPickUpNewNoWireProtection(){
+    /*public static void outtakeWallPickUpNewNoWireProtection(){
         outtakeState = outtakeStates.outtakeWallPickUpNew;
         outtakePivotServoPos = outtakePivotServoWallPickupPos; //wire interfereance
         isInNeedToGoToSpecimenTransferPos = true;
@@ -262,7 +261,7 @@ public class ClassWithStates {
         outtakeIsInNeedToExtraExtendClaw = true;
         outtakeIsInNeedToExtraExtendClawTimer = System.currentTimeMillis();
         outtakeExtendMotorTargetPos = outtakeSlidersWallPickPos;
-    }
+    }//*/
     public static void outtakeTransfer(){
         outtakeState = outtakeStates.outtakeTransfer;
         outtakeClawServoPos = outtakeClawServoExtendedPos;
@@ -279,12 +278,12 @@ public class ClassWithStates {
         isOuttakeInPositionToGoDown = true;
         beforeOuttakeGoDownTimer = System.currentTimeMillis();
     }
-    public static void outtakeStandByBasket(){
+    /*public static void outtakeStandByBasket(){
         outtakeState = outtakeStates.outtakeStandBy;
         outtakePivotServoPos = outtakePivotServoStandByPos;
         outtakeExtendMotorTargetPos = outtakeMotorStandByPos;
         //TO BE MEASURED
-    }
+    }//*/
 
     public static void outtakeStandByWithoutExtensions(){
         outtakeState = outtakeStates.outtakeStandByWithoutExtensions;
