@@ -43,8 +43,8 @@ public class OrganizedPositionStorage {
 
 
     // outtake pivot
-    public static double outtakePivotServoWallPickupPos = 299;
-    public static double outtakePivotServoHighRungHangPos = 178;
+    public static double outtakePivotServoWallPickupPos = 298;
+    public static double outtakePivotServoHighRungHangPos = 185;
     public static double outtakePivotServoBasketPos = 52;
     public static double outtakePivotServoTransferPos = 210;
     public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
@@ -58,7 +58,7 @@ public class OrganizedPositionStorage {
     public static double outtakeMotorMaxPosLowerBasket = 800;
     public static double outtakeSliderSpecimenHangPos = 1100;
     public static double autoOuttakeSliderSpecimenHangPos = 950;
-    public static double outtakeSlidersWallPickPos = 715;  //from 690
+    public static double outtakeSlidersWallPickPos = 710;  //from 690
     public static double outtakeMotorActualZeroPos = 0;
     public static double outtakeMotorStandByPos = 1000;
     public static double tempOuttakeAPosition = 0;
