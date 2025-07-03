@@ -1,4 +1,4 @@
-package pedroPathing.Autos;
+package pedroPathing.Autos.Linear;
 
 import static pedroPathing.ClassWithStates.ColorCompare;
 import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
@@ -52,7 +52,6 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -108,9 +107,9 @@ public class AutoForBasketMainFileLinear extends LinearOpMode {
     private final Pose behindBasketThirdSample = new Pose(basketX, basketY , Math.toRadians(basketHeading));
 
     // collect first 3 from floor
-    private final Pose firstSampleCollect = new Pose( 16.69 + 2, 36.92, Math.toRadians(158.69));
-    private final Pose secondSampleCollect = new Pose(20.25 + 2, 37.95, Math.toRadians(175.76));
-    private final Pose thirdSampleCollect = new Pose( 30.56 - 1.5, 36.74, Math.toRadians(208.27));
+    private final Pose firstSampleCollect = new Pose( 16.69, 36.92, Math.toRadians(158.69));
+    private final Pose secondSampleCollect = new Pose(20.25, 37.95, Math.toRadians(175.76));
+    private final Pose thirdSampleCollect = new Pose( 30.56 - 2.5, 36.74, Math.toRadians(208.27));
 
     // collect from submersible
 
@@ -119,7 +118,7 @@ public class AutoForBasketMainFileLinear extends LinearOpMode {
     private final Pose firstSubmersibleStdBehindBasket = new Pose(17.40 - 2, 35.36 + 2, Math.toRadians(145.66));
 
     // second
-    private final Pose secondSubmersibleStdCollect = new Pose(53, 7.86+0.5, Math.toRadians(90.64));
+    private final Pose secondSubmersibleStdCollect = new Pose(49, 7.86+0.5, Math.toRadians(90.64));
     private final Pose secondSubmersibleStdBehindBasket = new Pose(17.40 - 1, 35.36 + 1, Math.toRadians(145.66));
     // sign off
     private final Pose endingPosition = new Pose(53, 7.86, Math.toRadians(90.64));
@@ -581,7 +580,8 @@ slides pos on descent -223
         autoTimer = System.currentTimeMillis();
         while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample
                 || currentStateOfSampleInIntake == colorSensorOutty.correctSample)
-                && autoTimer + 2000 > System.currentTimeMillis()) {
+                && autoTimer + 2000 > System.currentTimeMillis()
+                && !isStopRequested()) {
             robotDoStuff();
         }
         intakeCabinTransferPositionWithPower();
@@ -680,7 +680,9 @@ slides pos on descent -223
         intakeExtended4out4();
         while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample ||
                 currentStateOfSampleInIntake == colorSensorOutty.correctSample)
-                && autoTimer + 2000 > System.currentTimeMillis()) {
+                && autoTimer + 2000 > System.currentTimeMillis()
+                && !isStopRequested()
+        ) {
             robotDoStuff();
         }
         NormalizedRGBA colors;
@@ -710,7 +712,8 @@ slides pos on descent -223
     }
     public void executeAutoTransfer() {
         autoOuttakeTransfer();
-        while(intakeMotor.getCurrentPosition() > 30) {
+        while(intakeMotor.getCurrentPosition() > 30
+                && !isStopRequested()) {
             robotDoStuff();
         }
         waitWhile(75);
@@ -725,18 +728,20 @@ slides pos on descent -223
     public void robotDoStuff(){
         //risky
         //follower.update();
-
+        if(isStopRequested()) requestOpModeStop();
         //ifs
 
         //intake stop spinning
-        if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()){
+        if(shouldStopIntakeCabinSpinningAfterTakig && shouldStopIntakeCabinSpinningAfterTakigTimer + 500 < System.currentTimeMillis()
+                && !isStopRequested()){
             intakeSpinMotorPow = -0.8;
             shouldStopIntakeCabinSpinningAfterTakig = false;
             hasSmolOutputed = true;
             hasSmolOutputedTimer = System.currentTimeMillis();
         }
         //and then stop the power stuff
-        if(hasSmolOutputed && hasSmolOutputedTimer + 50 <System.currentTimeMillis()){
+        if(hasSmolOutputed && hasSmolOutputedTimer + 50 <System.currentTimeMillis()
+                && !isStopRequested()){
             intakeCabinTransferPosition();
             if(isInSpecimenState){
                 intakeCabinFullInBot();
@@ -777,7 +782,7 @@ slides pos on descent -223
 
     public void waitWhile(int timeToWait) {
         long iniTime = System.currentTimeMillis();
-        while(iniTime + timeToWait > System.currentTimeMillis()){
+        while(iniTime + timeToWait > System.currentTimeMillis() && !isStopRequested()){
             robotDoStuff();
         }
     }

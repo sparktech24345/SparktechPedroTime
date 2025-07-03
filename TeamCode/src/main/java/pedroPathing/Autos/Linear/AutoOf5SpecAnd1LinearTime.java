@@ -1,9 +1,8 @@
-package pedroPathing.Autos;
+package pedroPathing.Autos.Linear;
 
 import static pedroPathing.ClassWithStates.ColorCompare;
 import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
 import static pedroPathing.ClassWithStates.autoOuttakeWallPickUpNew;
-import static pedroPathing.ClassWithStates.colorList;
 import static pedroPathing.ClassWithStates.colorSensorOutty;
 import static pedroPathing.ClassWithStates.currentStateOfSampleInIntake;
 import static pedroPathing.ClassWithStates.currentTeam;
@@ -52,7 +51,6 @@ import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
@@ -66,7 +64,7 @@ import pedroPathing.constants.FConstants5And1;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "5 Spec + 1 Sample Auto ALLIANCE INDEPENDENT", group = "Examples")
+@Autonomous(name = "5 Spec + 1 Sample Linear Auto ALLIANCE INDEPENDENT", group = "Examples")
 public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -268,7 +266,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                     waitWhile(300);
                     intakeExtended4out4();
                     autoTimer = System.currentTimeMillis();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested())  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -284,7 +282,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                 if(!follower.isBusy()) {
 
                     intakeCabinFullInBotOutputting();
-                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
 
                     waitWhile(300);
                     //output first picked upaka 3rd sample counting from subermsible
@@ -298,7 +296,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                     intakeExtended4out4();
 
                     autoTimer = System.currentTimeMillis();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+                    while(!isStopRequested() && !(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(300);
@@ -318,7 +316,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                 if(!follower.isBusy()) {
                     //trow out second sample
                     intakeCabinFullInBotOutputting();
-                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
 
                     waitWhile(300);
 
@@ -330,12 +328,12 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                     intakeExtended4out4();
 
                     autoTimer = System.currentTimeMillis();
-                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested())  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
                     intakeRetracted();
                     intakeCabinFullInBot();
                     waitWhile(350);
                     intakeCabinFullInBotOutputting();
-                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
 
 
 
@@ -453,7 +451,8 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                     autoTimer = System.currentTimeMillis();
                     while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample
                             || currentStateOfSampleInIntake == colorSensorOutty.correctSample)
-                            && autoTimer + 2000 > System.currentTimeMillis()) {
+                            && autoTimer + 2000 > System.currentTimeMillis()
+                            && !isStopRequested()) {
                         robotDoStuff();
                     }
                     intakeCabinTransferPositionWithPower();
@@ -472,7 +471,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                     follower.followPath(scoreInBasket);
                     waitWhile(100);
                     autoOuttakeTransfer();
-                    while(intakeMotor.getCurrentPosition() > 30) {
+                    while(intakeMotor.getCurrentPosition() > 30 && !isStopRequested()) {
                         robotDoStuff();
                     }
                     waitWhile(75);
@@ -605,6 +604,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
 
     public void robotDoStuff(){
+        if(isStopRequested()) requestOpModeStop();
         follower.update();
         //ifs
         if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis()){
@@ -644,7 +644,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
     public void waitWhile(int timeToWait) {
         long iniTime = System.currentTimeMillis();
-        while(iniTime + timeToWait > System.currentTimeMillis()){
+        while(iniTime + timeToWait > System.currentTimeMillis() && !isStopRequested()){
             robotDoStuff();
         }
     }

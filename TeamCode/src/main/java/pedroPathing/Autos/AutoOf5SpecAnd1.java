@@ -52,6 +52,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -68,6 +69,7 @@ import pedroPathing.constants.LConstants;
 
 @Config
 @Autonomous(name = "5 Spec + 1 Sample Auto ALLIANCE INDEPENDENT", group = "Examples")
+@Disabled
 public class AutoOf5SpecAnd1 extends OpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
