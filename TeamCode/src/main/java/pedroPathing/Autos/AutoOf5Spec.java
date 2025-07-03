@@ -563,6 +563,8 @@ public class AutoOf5Spec extends OpMode {
             currentTeam = colorList.blue;
         if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
             currentTeam = colorList.red;
+        tel.addData("COLOR SELECTED",currentTeam);
+        tel.update();
     }
 
     /** This method is called once at the start of the OpMode.
