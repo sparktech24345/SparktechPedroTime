@@ -1,6 +1,7 @@
 package pedroPathing.Autos;
 
 import static pedroPathing.ClassWithStates.ColorCompare;
+import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
 import static pedroPathing.ClassWithStates.autoOuttakeWallPickUpNew;
 import static pedroPathing.ClassWithStates.colorList;
 import static pedroPathing.ClassWithStates.colorSensorOutty;
@@ -10,10 +11,13 @@ import static pedroPathing.ClassWithStates.initStates;
 import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
 import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
 import static pedroPathing.ClassWithStates.intakeCabinFullInBotOutputting;
+import static pedroPathing.ClassWithStates.intakeCabinTransferPosition;
+import static pedroPathing.ClassWithStates.intakeCabinTransferPositionWithPower;
+import static pedroPathing.ClassWithStates.intakeExtended1out4;
 import static pedroPathing.ClassWithStates.intakeExtended4out4;
 import static pedroPathing.ClassWithStates.intakeRetracted;
+import static pedroPathing.ClassWithStates.outtakeBasket;
 import static pedroPathing.ClassWithStates.outtakeSpecimenHang;
-import static pedroPathing.ClassWithStates.outtakeStandByWithoutExtensions;
 import static pedroPathing.OrganizedPositionStorage.autoTimer;
 import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
 import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
@@ -47,7 +51,7 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -58,12 +62,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.AutoPIDS.ControlMotor;
-import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstants5And1;
 import pedroPathing.constants.LConstants;
 
 @Config
-@Autonomous(name = "5 Spec Auto ALLIANCE INDEPENDENT", group = "Examples")
-public class AutoOf5Spec extends OpMode {
+@Autonomous(name = "5 Spec + 1 Sample Auto ALLIANCE INDEPENDENT", group = "Examples")
+public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -80,11 +84,11 @@ public class AutoOf5Spec extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
+    private final Pose startPose = new Pose(-10, 70.5, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -2f;
-    private final float scoringBarY = 40.6f;
-    private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, Math.toRadians(90)); //start
+    private final float scoringBarY = 40.6f+0.5f+0.5f;
+    private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX+1, scoringBarY+0.5, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
@@ -92,7 +96,7 @@ public class AutoOf5Spec extends OpMode {
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 71f;
+    private final float wallPickUpY = 71f-0.5f;
     private final float wallAdderY = 2f;
 
     //specimen pick up positions
@@ -103,20 +107,24 @@ public class AutoOf5Spec extends OpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-58.5 - 2,60,Math.toRadians(112)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59 - 2, 61, Math.toRadians(100)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-51 - 2, 64, Math.toRadians(64)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(112)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(100)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
+
+    // --------- + 1 ------------- \\
+    private final Pose basketPickUp = new Pose(-0.87 - 9,-3.24+70,Math.toRadians(325.41));
+    private final Pose basketScore = new Pose(56.38 - 10, 11.83+70+1.5 + 3, Math.toRadians(16.86));
 
     //PARK
-    private final Pose parkingPose=new Pose(-55,70 - 0.5,Math.toRadians(90)); //parking
+    private final Pose parkingPose=new Pose(-10,71,Math.toRadians(0)); //parking
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
-    private Path startPath,pickUpFirst,pickUpSecond,pickUpThird,pickUpFourth,pickUpFifth,scoreFirst,scoreSecond,scoreThird,scoreFourth,scoreFifth,parking;
-    private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample;
+    private Path startPath,pickUpFirst,pickUpSecond,pickUpThird,pickUpFourth,pickUpFifth,scoreFirst,scoreSecond,scoreThird,scoreFourth,scoreFifth,parking,scoreInBasket;
+    private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample,goToPickUpForBasket;
 
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
@@ -204,10 +212,25 @@ public class AutoOf5Spec extends OpMode {
         scoreFourth = new Path(new BezierLine(new Point(fourthSpecimenPickUpPose), new Point(scoringBarPoseFourthSpecimen)));
         scoreFourth.setLinearHeadingInterpolation(fourthSpecimenPickUpPose.getHeading(), scoringBarPoseFourthSpecimen.getHeading());
 
+        ///  + 1
+        goToPickUpForBasket = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(scoringBarPoseFourthSpecimen), new Point(basketPickUp)))
+                .setLinearHeadingInterpolation(scoringBarPoseFourthSpecimen.getHeading(), basketPickUp.getHeading())
+                .build();
 
+        scoreInBasket = new Path(new BezierLine(new Point(basketPickUp), new Point(basketScore)));
+        scoreInBasket.setLinearHeadingInterpolation(basketPickUp.getHeading(), basketScore.getHeading());
+
+
+//        scoreInBasket = follower.pathBuilder()
+//                .addPath(new BezierLine(new Point(basketPickUp), new Point(basketScore)))
+//                .setLinearHeadingInterpolation(basketPickUp.getHeading(), basketScore.getHeading())
+//                .build();
+
+        ///  NO PARKING
         //parking
-        parking = new Path(new BezierLine(new Point(scoringBarPoseFourthSpecimen), new Point(parkingPose)));
-        parking.setLinearHeadingInterpolation(scoringBarPoseFourthSpecimen.getHeading(), parkingPose.getHeading());
+        parking = new Path(new BezierLine(new Point(basketScore), new Point(parkingPose)));
+        parking.setLinearHeadingInterpolation(basketScore.getHeading(), parkingPose.getHeading());
 
     }
 
@@ -411,9 +434,72 @@ public class AutoOf5Spec extends OpMode {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
-                    follower.followPath(parking,true);
+                    follower.followPath(goToPickUpForBasket,true);
+                    setPathState(114);
+                }
+                break;
+            ///  COLLECTING FROM OBSERVATION ZONE
+            case 114:
+                if(!follower.isBusy()) {
+                    intakeCabinDownCollecting();
+                    intakeExtended1out4();
+
+                    //waitWhile(200);
+                    autoOuttakeTransfer();
+
+                    //waitWhile(300);
+                    intakeExtended4out4();
+
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample
+                            || currentStateOfSampleInIntake == colorSensorOutty.correctSample)
+                            && autoTimer + 2000 > System.currentTimeMillis()) {
+                        robotDoStuff();
+                    }
+                    intakeCabinTransferPositionWithPower();
+                    waitWhile(200);
+                    //if (currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+                    //    intakeSpinMotorPow = 0;
+                    //}
+                    intakeRetracted();
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(115);
+                }
+                break;
+            /// TRANSFER
+            case 115:
+                if(!follower.isBusy()) {
+                    follower.followPath(scoreInBasket);
+                    waitWhile(100);
+                    autoOuttakeTransfer();
+                    while(intakeMotor.getCurrentPosition() > 30) {
+                        robotDoStuff();
+                    }
+                    waitWhile(75);
+                    outtakeClawServoPos = outtakeClawServoRetractedPos;
+                    waitWhile(200);
+                    intakeSpinMotorPow = 0;
+                    outtakeBasket();
+                    waitWhile(1500);
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    setPathState(117);
+                }
+                break;
+            case 117:
+                if(!follower.isBusy()){
+                    outtakeClawServoPos = outtakeClawServoExtendedPos;
+                    waitWhile(100);
+                    follower.followPath(parking);
+                    waitWhile(500);
+                    intakeExtended4out4();
+                    intakeCabinTransferPosition();
+                    autoOuttakeTransfer();
+                    setPathState(118);
+                }
+                break;
+            case 118:
+                if(!follower.isBusy()){
                     setPathState(-1);
-                    outtakeStandByWithoutExtensions();
                 }
                 break;
         }
@@ -426,9 +512,13 @@ public class AutoOf5Spec extends OpMode {
         pathTimer.resetTimer();
     }
 
-    /** This method is called once at the init of the OpMode. **/
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
+
+
+        //init
+
+
         resetStuff();
         isRobotInAuto = true;
 
@@ -436,8 +526,8 @@ public class AutoOf5Spec extends OpMode {
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
+        Constants.setConstants(FConstants5And1.class, LConstants.class);
+        follower = new Follower(hardwareMap,FConstants5And1.class,LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);
@@ -475,10 +565,47 @@ public class AutoOf5Spec extends OpMode {
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
         //end of our stuff
+        //end of init
+
+        //boolean shouldDoStart = true;
+
+        waitForStart();
+
+        if (isStopRequested()){
+            return;
+        }
+
+
+        opmodeTimer.resetTimer();
+        setPathState(0);
+
+
+        while(opModeIsActive()){
+            //one time thing
+            //if(shouldDoStart){
+            //    shouldDoStart = false;
+            //}
+
+            // These loop the movements of the robot
+            follower.update();
+            autonomousPathUpdate();
+
+            robotDoStuff();
+
+
+            // Feedback to Driver Hub
+            robotTelemetry();
+
+        }
+
+
+
     }
 
 
+
     public void robotDoStuff(){
+        follower.update();
         //ifs
         if(needsToExtraExtend && outtakeIsInNeedToExtraExtendClawTimer + 400 < System.currentTimeMillis()){
             needsToExtraExtend = false;
@@ -537,49 +664,6 @@ public class AutoOf5Spec extends OpMode {
         Drawing.drawDebug(follower);
         tel.update();
     }
-
-
-    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
-    @Override
-    public void loop() {
-
-        // These loop the movements of the robot
-        follower.update();
-        autonomousPathUpdate();
-
-        robotDoStuff();
-
-
-        // Feedback to Driver Hub
-        robotTelemetry();
-    }
-
-
-
-    /** This method is called continuously after Init while waiting for "play". **/
-    @Override
-    public void init_loop() {
-        if ((gamepad2.left_bumper && gamepad2.start) || (gamepad1.left_bumper && gamepad1.start))
-            currentTeam = colorList.blue;
-        if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
-            currentTeam = colorList.red;
-        tel.addData("COLOR SELECTED",currentTeam);
-        tel.update();
-    }
-
-    /** This method is called once at the start of the OpMode.
-     * It runs all the setup actions, including building paths and starting the path system **/
-    @Override
-    public void start() {
-        opmodeTimer.resetTimer();
-        setPathState(0);
-    }
-
-    /** We do not use this because everything should automatically disable **/
-    @Override
-    public void stop() {
-    }
-
 
 
 

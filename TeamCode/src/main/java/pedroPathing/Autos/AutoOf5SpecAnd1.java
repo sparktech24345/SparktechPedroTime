@@ -85,7 +85,7 @@ public class AutoOf5SpecAnd1 extends OpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(-10, 70, Math.toRadians(90)); //start
+    private final Pose startPose = new Pose(-10, 70.5, Math.toRadians(90)); //start
     //scoring bar positions
     private final float scoringBarX = -2f;
     private final float scoringBarY = 40.6f+0.5f+0.5f;
@@ -108,9 +108,9 @@ public class AutoOf5SpecAnd1 extends OpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-58.5 - 2,60,Math.toRadians(112)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59 - 2, 61, Math.toRadians(100)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-51 - 2, 64, Math.toRadians(64)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(112)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(100)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
 
     // --------- + 1 ------------- \\
     private final Pose basketPickUp = new Pose(-0.87 - 9,-3.24+70,Math.toRadians(325.41));
@@ -651,6 +651,9 @@ public class AutoOf5SpecAnd1 extends OpMode {
             currentTeam = colorList.blue;
         if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
             currentTeam = colorList.red;
+
+        tel.addData("COLOR SELECTED",currentTeam);
+        tel.update();
     }
 
     /** This method is called once at the start of the OpMode.

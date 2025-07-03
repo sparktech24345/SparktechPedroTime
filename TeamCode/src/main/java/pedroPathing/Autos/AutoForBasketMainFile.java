@@ -769,10 +769,7 @@ slides pos on descent -223
     /** This method is called continuously after Init while waiting for "play". **/
     @Override
     public void init_loop() {
-        if ((gamepad2.left_bumper && gamepad2.start) || (gamepad1.left_bumper && gamepad1.start))
-            currentTeam = colorList.blue;
-        if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
-            currentTeam = colorList.red;
+        //some color code went here
     }
 
     /** This method is called once at the start of the OpMode.
