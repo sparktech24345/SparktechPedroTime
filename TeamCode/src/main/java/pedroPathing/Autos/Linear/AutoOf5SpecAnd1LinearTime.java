@@ -94,7 +94,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 71f-0.5f;
+    private final float wallPickUpY = 71f+0.5f;
     private final float wallAdderY = 2f;
 
     //specimen pick up positions
@@ -105,7 +105,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(112)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(110)); //start
     private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(100)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
 
