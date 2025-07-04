@@ -227,8 +227,8 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
         ///  NO PARKING
         //parking
-        parking = new Path(new BezierLine(new Point(basketScore), new Point(parkingPose)));
-        parking.setLinearHeadingInterpolation(basketScore.getHeading(), parkingPose.getHeading());
+        parking = new Path(new BezierLine(new Point(scoringBarPoseFourthSpecimen), new Point(parkingPose)));
+        parking.setLinearHeadingInterpolation(scoringBarPoseFourthSpecimen.getHeading(), parkingPose.getHeading());
 
     }
 
@@ -430,10 +430,10 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
             case 113:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    waitWhile(150);
+                    //waitWhile(150);
                     autoTimer = System.currentTimeMillis();
-                    follower.followPath(goToPickUpForBasket,true);
-                    setPathState(114);
+                    //follower.followPath(goToPickUpForBasket,true);
+                    setPathState(117);
                 }
                 break;
             ///  COLLECTING FROM OBSERVATION ZONE
