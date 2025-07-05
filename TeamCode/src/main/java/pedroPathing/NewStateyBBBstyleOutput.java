@@ -121,6 +121,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
 
+            outtakeTargetPosAdder += gamepad2.left_stick_y;
+
+
+
 
             //interesting slowdown
 
@@ -581,6 +585,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             tel.addData("red color",colors.red);
             tel.addData("is color not used", isColorSensorNotInUse);
             tel.addData("curent team color",currentTeam);
+            tel.addData("Outtake Target Pos Adder",outtakeTargetPosAdder);
 
             //tel.addData("current time",System.nanoTime());
             //tel.addData("time diference",System.nanoTime() - current_time);
