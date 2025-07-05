@@ -121,7 +121,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
 
-            outtakeTargetPosAdder += gamepad2.left_stick_y;
+            outtakeTargetPosAdder -= 1.5*gamepad2.left_stick_y;
 
 
 
