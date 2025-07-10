@@ -31,7 +31,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import pedroPathing.AutoPIDS.ControlMotor;
+import pedroPathing.PIDStorageAndUse.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateExtendedRo2v2Auto;

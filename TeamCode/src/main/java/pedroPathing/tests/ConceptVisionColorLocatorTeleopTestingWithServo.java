@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import pedroPathing.AutoPIDS.ControlMotor;
+import pedroPathing.PIDStorageAndUse.ControlMotor;
 
 /*
  * This OpMode illustrates how to use a video source (camera) to locate specifically colored regions

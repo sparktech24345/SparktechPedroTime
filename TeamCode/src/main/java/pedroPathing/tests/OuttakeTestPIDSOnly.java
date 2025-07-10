@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-import pedroPathing.AutoPIDS.NewPidsController;
+import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 
 @com.acmerobotics.dashboard.config.Config

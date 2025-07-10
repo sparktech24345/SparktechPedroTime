@@ -1,20 +1,12 @@
-package pedroPathing.AutoPIDS;
-
-import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
-import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
-import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
+package pedroPathing.AutoPIDTuner;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -162,7 +154,7 @@ public class AutoPIDSTrainer extends LinearOpMode {
 
     void fullPowerRun() {
         //presets
-        motorsSetPower(1);
+        motorsSetPower(0.7); //not actually full power
         long startTime = System.currentTimeMillis();
         long lastMoveTime = startTime;
         int lastPosition = 0;

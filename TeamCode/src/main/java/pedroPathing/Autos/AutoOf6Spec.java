@@ -1,7 +1,6 @@
 package pedroPathing.Autos;
 
 import static pedroPathing.ClassWithStates.ColorCompare;
-import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
 import static pedroPathing.ClassWithStates.autoOuttakeWallPickUpNew;
 import static pedroPathing.ClassWithStates.colorList;
 import static pedroPathing.ClassWithStates.colorSensorOutty;
@@ -11,7 +10,6 @@ import static pedroPathing.ClassWithStates.initStates;
 import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
 import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
 import static pedroPathing.ClassWithStates.intakeCabinFullInBotOutputting;
-import static pedroPathing.ClassWithStates.intakeCabinTransferPositionWithPower;
 import static pedroPathing.ClassWithStates.intakeExtended1out4;
 import static pedroPathing.ClassWithStates.intakeExtended2out4;
 import static pedroPathing.ClassWithStates.intakeExtended3out4;
@@ -66,7 +64,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import pedroPathing.AutoPIDS.ControlMotor;
+import pedroPathing.PIDStorageAndUse.ControlMotor;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 

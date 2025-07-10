@@ -1,4 +1,4 @@
-package pedroPathing.AutoPIDS;
+package pedroPathing.PIDStorageAndUse;
 import com.qualcomm.robotcore.util.ElapsedTime;
 @com.acmerobotics.dashboard.config.Config
 public class ControlMotor { //FINAL AUTOTUNED STUFF

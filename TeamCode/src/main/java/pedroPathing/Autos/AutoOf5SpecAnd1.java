@@ -18,7 +18,6 @@ import static pedroPathing.ClassWithStates.intakeExtended4out4;
 import static pedroPathing.ClassWithStates.intakeRetracted;
 import static pedroPathing.ClassWithStates.outtakeBasket;
 import static pedroPathing.ClassWithStates.outtakeSpecimenHang;
-import static pedroPathing.ClassWithStates.outtakeStandByWithoutExtensions;
 import static pedroPathing.OrganizedPositionStorage.autoTimer;
 import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
 import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
@@ -62,8 +61,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import pedroPathing.AutoPIDS.ControlMotor;
-import pedroPathing.constants.FConstants;
+import pedroPathing.PIDStorageAndUse.ControlMotor;
 import pedroPathing.constants.FConstants5And1;
 import pedroPathing.constants.LConstants;
 

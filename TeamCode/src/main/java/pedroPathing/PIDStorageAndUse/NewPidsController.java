@@ -1,4 +1,4 @@
-package pedroPathing.AutoPIDS;
+package pedroPathing.PIDStorageAndUse;
 
 public class NewPidsController {
     // Persistent variables for PID calculation

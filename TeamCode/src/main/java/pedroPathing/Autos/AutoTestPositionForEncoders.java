@@ -42,7 +42,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import pedroPathing.AutoPIDS.ControlMotor;
+import pedroPathing.PIDStorageAndUse.ControlMotor;
 import pedroPathing.States.IntakeFSM;
 import pedroPathing.States.IntakeStateExtendedHM;
 import pedroPathing.States.IntakeStateExtendedRo2v2Auto;
@@ -59,7 +59,6 @@ import pedroPathing.States.OuttakeStateSpecimenAuto;
 import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
-import pedroPathing.constants.FConstants;
 import pedroPathing.constants.FConstantsEncoders;
 import pedroPathing.constants.LConstants;
 
