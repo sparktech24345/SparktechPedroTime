@@ -94,38 +94,38 @@ public class AutoForBasketMainFileLinear extends LinearOpMode {
     double outakeMotorPower=0;
 
     // BASKET
-    private final Pose startPose = new Pose(0, 0, Math.toRadians(90)); //start
+    private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); //start
 
     // place in basket
-    public final double basketY = 38.24 - 1.5;
-    public final double basketX = 17.68 - 1.3;
+    public final double basketY = -9.299;//45097194883;
+    public final double basketX = 34.686;//71182947835;
 
-    double basketHeading = 153.86;
-    private final Pose behindBasketPreload = new Pose(basketX + 0.3 - 1, basketY - 2, Math.toRadians(basketHeading));
-    private final Pose behindBasketFirstSample = new Pose(basketX, basketY, Math.toRadians(basketHeading));
-    private final Pose behindBasketSecondSample = new Pose(basketX, basketY, Math.toRadians(basketHeading));
-    private final Pose behindBasketThirdSample = new Pose(basketX, basketY , Math.toRadians(basketHeading));
+    double basketHeading = 0.7404333515525504;
+    private final Pose behindBasketPreload = new Pose(basketX, basketY, (basketHeading));
+    private final Pose behindBasketFirstSample = new Pose(basketX, basketY, (basketHeading));
+    private final Pose behindBasketSecondSample = new Pose(basketX, basketY, (basketHeading));
+    private final Pose behindBasketThirdSample = new Pose(basketX, basketY , (basketHeading));
 
     // collect first 3 from floor
-    private final Pose firstSampleCollect = new Pose( 16.69, 36.92, Math.toRadians(158.69));
-    private final Pose secondSampleCollect = new Pose(20.25, 37.95, Math.toRadians(175.76));
-    private final Pose thirdSampleCollect = new Pose( 30.56 - 2.5, 36.74, Math.toRadians(208.27));
+    private final Pose firstSampleCollect = new Pose( 27.886338121309056, -18.538827971210633, (1.5539225381281545));
+    private final Pose secondSampleCollect = new Pose(37.97876553272637, -24.005559485728355, (1.5475948673781261));
+    private final Pose thirdSampleCollect = new Pose( 36.873404435285416, -30.709814837598447, (2.168761212672568));
 
     // collect from submersible
 
     // first
-    private final Pose firstSubmersibleStdCollect = new Pose(53, 7.86+0.5, Math.toRadians(90.64));
-    private final Pose firstSubmersibleStdBehindBasket = new Pose(17.40 - 2, 35.36 + 2, Math.toRadians(145.66));
+    private final Pose firstSubmersibleStdCollect = new Pose(6.043441652312993, -49.70520500123031, 6.203226558611047);
+    private final Pose firstSubmersibleStdBehindBasket = new Pose(basketX, basketY, basketHeading);
 
     // second
-    private final Pose secondSubmersibleStdCollect = new Pose(49, 7.86+0.5, Math.toRadians(90.64));
-    private final Pose secondSubmersibleStdBehindBasket = new Pose(17.40 - 1, 35.36 + 1, Math.toRadians(145.66));
+    private final Pose secondSubmersibleStdCollect = new Pose(6.043441652312993, -49.70520500123031, 6.203226558611047);
+    private final Pose secondSubmersibleStdBehindBasket = new Pose(basketX, basketY, basketHeading);
     // sign off
-    private final Pose endingPosition = new Pose(53, 7.86, Math.toRadians(90.64));
+    private final Pose endingPosition = new Pose(0, 0, Math.toRadians(0));
 
-    private final Pose secondTrySub = new Pose(53, 7.86+0.5 + 1, Math.toRadians(90.64));
+    private final Pose secondTrySub = new Pose(6.043441652312993 + 1, -49.70520500123031, 6.203226558611047);
 
-    private final Point intermediaryExtraPoseForCurves = new Point( 51.35 ,20.48);
+    private final Point intermediaryExtraPoseForCurves = new Point( 40 ,-59);
 
     /*
     heading: 4.0289046655823935
@@ -671,8 +671,8 @@ slides pos on descent -223
         autoTimer = System.currentTimeMillis();
         autoOuttakeTransfer();
         waitWhile(300);
-        intakeExtended2out4();
-        while(intakeMotor.getCurrentPosition() < 150) {
+        intakeExtended1out4();
+        while(intakeMotor.getCurrentPosition() < 100) {
             robotDoStuff();
         }
         intakeCabinDownCollecting();

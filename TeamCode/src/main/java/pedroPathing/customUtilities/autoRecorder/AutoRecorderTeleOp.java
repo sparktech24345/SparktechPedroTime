@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 @TeleOp(name="Autonomy Recorder", group="Linear OpMode")
 public class AutoRecorderTeleOp extends LinearOpMode {
-    private final Pose startPose = new Pose(0, 0, 0);
+    private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
 
     @SuppressLint("SdCardPath")
     @Override
@@ -44,7 +44,7 @@ public class AutoRecorderTeleOp extends LinearOpMode {
         boolean wasA1Pressed=false;
         boolean wasB1Pressed=false;
         boolean wasY1Pressed=false;
-        PoseData lastPose = new PoseData(0,0,0);
+        PoseData lastPose = new PoseData(0,0,Math.toRadians(0));
 
         int index = 0;
         ArrayList<PoseSequence> paths = new ArrayList<>();

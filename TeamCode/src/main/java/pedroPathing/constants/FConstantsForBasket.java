@@ -34,14 +34,14 @@ public class FConstantsForBasket {
         FollowerConstants.useSecondaryHeadingPID = false;
         FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(2,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
 
-        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.006,0,0.0023,0.6,0);
+        FollowerConstants.drivePIDFCoefficients.setCoefficients(0.007,0,0.002,0.6,0);
         FollowerConstants.useSecondaryDrivePID = false;
         FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
 
         FollowerConstants.zeroPowerAccelerationMultiplier = 3 / 1.5;
         FollowerConstants.centripetalScaling = 0.0005;
 
-        FollowerConstants.pathEndTimeoutConstraint = 350;
+        FollowerConstants.pathEndTimeoutConstraint = 0;
         FollowerConstants.pathEndTValueConstraint = 0.995;
         FollowerConstants.pathEndVelocityConstraint = 0.1;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
