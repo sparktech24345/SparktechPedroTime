@@ -15,10 +15,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@TeleOp(name = "AutoPIDSTrainer", group = "Tools")
+@TeleOp(name = "OLDAutoPIDSTrainer", group = "Tools")
 @com.acmerobotics.dashboard.config.Config
 @Disabled
-public class AutoPIDSTrainer extends LinearOpMode {
+public class OLDAutoPIDSTrainer extends LinearOpMode {
 
     ///-------------------------------------\\\
     /// PRESET VALUES MUST BE GIVEN BY HAND \\\
@@ -386,61 +386,6 @@ public class AutoPIDSTrainer extends LinearOpMode {
             tel.update();
         }
     }
-
-    void runAggressivePIDTraining() {
-        double target = maxDistanceTicks / 2.0;
-        if (target == 0) {
-            emergencyReturned = true;
-            return;
-        }
-
-        motorsSetPower(0);
-        sleep(250);
-
-        long startTime = System.currentTimeMillis();
-        double maxError = 0;
-        boolean reachedTarget = false;
-
-        while (System.currentTimeMillis() - startTime < 5000 && opModeIsActive()) {
-            double pos = testMotor.getCurrentPosition();
-            double error = target - pos;
-
-
-            if (pos >= target) {
-                reachedTarget = true;
-                if (Math.abs(error) > maxError) {
-                    maxError = Math.abs(error);
-                }
-            }
-
-            double power = pos < target ? 1.0 : -1.0;
-            motorsSetPower(power);
-
-            if(reachedTarget) break;
-        }
-
-        motorsSetPower(0);
-
-        if (!reachedTarget) {
-            tel.addLine("Target not reached, defaulting Kp");
-            tel.update();
-            return;
-        }
-
-        // Calculate kp such that kp * maxError = 1.0 (full power)
-        double calculatedKp = 1.0 / maxError;
-
-        // Clamp Kp to reasonable range
-        calculatedKp = Math.max(0.0001, Math.min(1.0, calculatedKp));
-
-        tel.addLine("Bang-Bang Reverse-Engineered Kp");
-        tel.addData("Max Overshoot Error", maxError);
-        tel.addData("Calculated Kp", calculatedKp);
-        tel.update();
-
-        stopTelemetryUpdate = true;
-    }
-
 
     void runOscillationAutotuneBrutal() {
         double p = 0.01;

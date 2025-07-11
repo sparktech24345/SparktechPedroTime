@@ -3,6 +3,8 @@ package pedroPathing.tests;
 
 import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,14 +18,16 @@ import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 @com.acmerobotics.dashboard.config.Config
 @TeleOp(name = "Outtake Test", group = "Linear OpMode")
-@Disabled
+
 public class OuttakeTestPIDSOnly extends LinearOpMode{
+    MultipleTelemetry tel;
     public void runOpMode() throws InterruptedException {
         DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
 
+        tel =  new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
+        outakeRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
 
         waitForStart();
 
@@ -52,9 +56,10 @@ public class OuttakeTestPIDSOnly extends LinearOpMode{
             outakeRightMotor.setPower(outtakeMotorPower);
             outakeLeftMotor.setPower(outtakeMotorPower);
 
-            telemetry.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
-            telemetry.addData("outtake current pos",outtakeMotorCurrentPos);
-            updateTelemetry(telemetry);
+            tel.addData("outtakeTargetPos",outtakeExtendMotorTargetPos);
+            tel.addData("outtake current pos",outtakeMotorCurrentPos);
+            tel.addData("motor power ",outtakeMotorPower);
+            tel.update();
 
         }
 

@@ -11,9 +11,9 @@ public class NewPidsController {
     public static double kp = 0.009;
     public static double ki = 0.06691449814126393;
     public static double kd = 0.000302625;
-    public static double kpUppy = 0.030336479999999996;
+    public static double kpUppy = 0.0105;
     public static double kiUppy = 0.06691449814126393;
-    public static double kdUppy = 0.0001137618;
+    public static double kdUppy = 0.000112875;
 
 
     public static double pidControllerOuttake(double targetUppy, double currentUppy) {
