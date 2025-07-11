@@ -61,7 +61,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensorColor");
 
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);//*/
+        outakeLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

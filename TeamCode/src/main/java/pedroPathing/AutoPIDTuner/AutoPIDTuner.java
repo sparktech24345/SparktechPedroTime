@@ -29,7 +29,7 @@ public class AutoPIDTuner {
     //motors should have a positive power for extending, thi can be modified by REVERSING the motor like above
     void motorsSetPower(double power) {
         mainMotor.setPower(power);
-        auxMotor1.setPower(power);
+        auxMotor1.setPower(power); //optional motors if you have more connected to the same system
     }
 
 
