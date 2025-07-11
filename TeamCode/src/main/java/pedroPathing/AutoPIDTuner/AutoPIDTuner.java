@@ -1,6 +1,7 @@
 package pedroPathing.AutoPIDTuner;
 
-import com.acmerobotics.dashboard.FtcDashboard;
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -36,13 +37,14 @@ public class AutoPIDTuner {
     //-------------SERVO STUFF ( OPTIONAL )-----------------\\
     void setServos(){
         Servo servo1 = hardwareMap.get(Servo.class, "outakeArmServo");
-        servo1.setPosition(150 / 328);
+        servo1.setPosition((double) 150 / 328);
         Servo servo2 = hardwareMap.get(Servo.class, "intakeRotateServo");
-        servo2.setPosition((30) / 228);
+        servo2.setPosition((double) (30) / 228);
     }
 
 //-------------FILE SAVING STUFF ( OPTIONAL )-----------------\\
 
+    @SuppressLint("SdCardPath")
     String pidFilename = "/sdcard/FIRST/pid_values.txt";
 
 
@@ -58,22 +60,13 @@ public class AutoPIDTuner {
 
     //-------------CONSTANTS ( MOSTLY )-----------------\\
     
-    public double stillThresholdTicks = 2;
+    public double stillThresholdTicks = 2; // Minimum tick change to count as motion
     public long stillTimeoutMs = 20;
-    public double settleErrorThreshold = 10;
     public int maxOscillationCycles = 400;
-    public double completionTimePercent = 0.85;
-    public long stuckTimeoutMs = 2000;  // 2 seconds without motion is considered stuck
-    public double stuckThresholdTicks = 3;  // Minimum tick change to count as motion
     public final double numberOfCycles = 20;  // Training cycles, default is 20
-    public boolean wasPressedBegging = false;
-    public boolean canAutoTrain = false;
-    public boolean hasNotFullPowered = true;
     public boolean emergencyReturned = false;
     public boolean autoTrainingFailed = false;
-    public boolean wasBPressed = false;
     public boolean hasTrained = false;
-    public double gravityCompensation = 0;
     double maxDistanceTicks = 0;
     long maxSpeedTimeMs = 0;
 
@@ -85,6 +78,7 @@ public class AutoPIDTuner {
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(pidFile,true))) {
             writer.write("\n\n");
+            @SuppressLint("SimpleDateFormat")
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); // date and time might crash
             writer.write(sdf.format(new Date()));
             writer.newLine();
