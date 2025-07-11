@@ -20,5 +20,5 @@ public class PoseSequence {
     }
 
     public List<PoseData> getPoseSequence() {return poseSequence;}
-    public void setPoseSequence(ArrayList<PoseData> poseSequence) {this.poseSequence = poseSequence;};
+    public void setPoseSequence(ArrayList<PoseData> poseSequence) {this.poseSequence = poseSequence;}
 }

@@ -1,15 +1,14 @@
 package pedroPathing.customUtilities.autoRecorder;
 
+import android.annotation.SuppressLint;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -19,31 +18,17 @@ import pedroPathing.constants.LConstants;
 import com.pedropathing.localization.Pose;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 @TeleOp(name="Autonomy Recorder", group="Linear OpMode")
 public class AutoRecorderTeleOp extends LinearOpMode {
-    private Pose startPose = new Pose(0, 0, 0);
+    private final Pose startPose = new Pose(0, 0, 0);
 
+    @SuppressLint("SdCardPath")
     @Override
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
-        Servo intakeRotateServo = hardwareMap.get(Servo.class, "intakeRotateServo");
-        Servo outakeArmServo = hardwareMap.get(Servo.class, "outakeArmServo");
-        Servo outakeSampleServo = hardwareMap.get(Servo.class, "outakeSampleServo");
-        //Servo outakeRotateServo = hardwareMap.get(Servo.class, "outakeRotateServo");
-        DcMotor outakeLeftMotor = hardwareMap.dcMotor.get("outakeleftmotor");
-        DcMotor outakeRightMotor = hardwareMap.dcMotor.get("outakerightmotor");
-        DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
-        DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
-
-//        VisionPortal portal = new VisionPortal.Builder()
-//                .setCameraResolution(new Size(640, 480))
-//                .setCamera(hardwareMap.get(WebcamName.class, "camera"))
-//                .setShowStatsOverlay(false)
-//                .build();
         dashboardTelemetry.setMsTransmissionInterval(50);
 
         Constants.setConstants(FConstants.class, LConstants.class);
@@ -121,11 +106,15 @@ public class AutoRecorderTeleOp extends LinearOpMode {
                     while(true){
                         tel.addLine("File generated");
                         tel.update();
+                        requestOpModeStop();
+                        return;
                     }
                 } catch (Exception e) {
                     while (true) {
                         tel.addLine("Error in generating");
                         tel.update();
+                        requestOpModeStop();
+                        return;
                     }
                     //e.printStackTrace();
                 }
