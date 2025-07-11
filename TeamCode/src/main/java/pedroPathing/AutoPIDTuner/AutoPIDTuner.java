@@ -9,6 +9,7 @@ public class AutoPIDTuner {
     //---------------MOTOR METHOD DECLARATION----------------------\\
 
     DcMotor mainMotor,auxMotor1;
+    TrainAutoPIDBaseTeleopHandler baseOPMode;
     void setMotors(){
         this.mainMotor = hardwareMap.dcMotor.get("outakeleftmotor");
         this.auxMotor1 = hardwareMap.dcMotor.get("outakerightmotor");
@@ -32,8 +33,9 @@ public class AutoPIDTuner {
 
 
     HardwareMap hardwareMap;
-    public AutoPIDTuner(HardwareMap hardwareMap){
+    public AutoPIDTuner(HardwareMap hardwareMap,TrainAutoPIDBaseTeleopHandler baseOPMode){
         this.hardwareMap = hardwareMap;
+        this.baseOPMode = baseOPMode;
         setMotors();
     }
 

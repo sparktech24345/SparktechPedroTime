@@ -21,7 +21,7 @@ public class TrainAutoPIDBaseTeleopHandler extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        autoPIDTuner = new AutoPIDTuner(hardwareMap);
+        autoPIDTuner = new AutoPIDTuner(hardwareMap, this);
 
         waitForStart();
 
