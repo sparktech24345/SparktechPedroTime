@@ -14,6 +14,7 @@ import static pedroPathing.OrganizedPositionStorage.chassisFrontRightPow;
 import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
 import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
 import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
+import static pedroPathing.OrganizedPositionStorage.isPressedA1;
 import static pedroPathing.OrganizedPositionStorage.isYellowSampleNotGood;
 import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
 import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
@@ -31,7 +32,6 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import kotlin._Assertions;
 import pedroPathing.PIDStorageAndUse.ControlMotor;
 
 
@@ -41,9 +41,9 @@ public class DrivetrainBrake extends LinearOpMode {
 
     /// CONFIGS
     ///
-    double SPEED_CALC_TIME = 150;
-    double Y_BRAKE_COEFF = 0.00015;
-    double X_BRAKE_COEFF = 0.00015;
+    public static double SPEED_CALC_TIME = 100;
+    public static double Y_BRAKE_COEFF = 0.00013;
+    public static double X_BRAKE_COEFF = 0.00013;
 
     final float[] hsvValues = new float[3];
 
@@ -69,6 +69,7 @@ public class DrivetrainBrake extends LinearOpMode {
     double ySpeed = 0;
     double xSpeed = 0;
     double turnSpeed = 0;
+    long timeUntilBreak;
 
     public void calculateSpeeds(){
         double tickTime = System.currentTimeMillis();
@@ -169,6 +170,14 @@ public class DrivetrainBrake extends LinearOpMode {
             double horizontal = gamepad1.left_stick_x;
             double pivot = -gamepad1.right_stick_x;
 
+            if(gamepad1.a) isPressedA1 = true;
+            if(!gamepad1.a && isPressedA1){
+                isPressedA1 = false;
+                timeUntilBreak = System.currentTimeMillis();
+            }
+            if(timeUntilBreak + 600 > System.currentTimeMillis())
+                vertical += 1;
+
             brakeMode = horizontal*horizontal + vertical*vertical <= 0.225;
 
             if(!brakeMode){
@@ -182,6 +191,9 @@ public class DrivetrainBrake extends LinearOpMode {
                 chassisFrontLeftPow = (pivot + ySpeed*Y_BRAKE_COEFF - xSpeed*X_BRAKE_COEFF);
                 chassisBackLeftPow = (pivot + ySpeed*Y_BRAKE_COEFF + xSpeed*X_BRAKE_COEFF);
             }
+
+
+
 
 
             // set motor power
