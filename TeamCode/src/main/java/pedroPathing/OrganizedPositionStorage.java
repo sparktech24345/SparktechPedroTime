@@ -48,7 +48,7 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoBasketPos = 43;
     public static double outtakePivotServoTransferPos = 201;
     public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
-    public static double outtakePivotServoParkedPos = 0.53*328 - 9;
+    public static double outtakePivotServoParkedPos = 164.84; //0.53*328 - 9
 
 
     // outtake sliders

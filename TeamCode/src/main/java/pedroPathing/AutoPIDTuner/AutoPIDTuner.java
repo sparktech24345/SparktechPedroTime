@@ -119,7 +119,7 @@ public class AutoPIDTuner {
             }  //ran for 10 seconds
 
             tel.addData("Max Power Running",true);
-            tel.addData("Curent Motor Position",mainMotor.getCurrentPosition());
+            tel.addData("Current Motor Position",mainMotor.getCurrentPosition());
             tel.update();
         }
 
@@ -290,10 +290,10 @@ public class AutoPIDTuner {
         if (!pidCalculated || ku == 0 || tu == 0) {
             autoTrainingFailed = true;
             tel.addLine("Auto training failed — no stable oscillation detected.");
-            tel.addLine("This might be  problem beacouse of motors beeing too slow / precise for oscilation");
-            tel.addLine("Use Bang Bang Control or the Given P factor to control you motors");
+            tel.addLine("This might be  problem because of motors being too slow / precise for oscillation");
+            tel.addLine("Use Bang Bang Control or the Given P factor to control your motors");
             tel.addLine("You can also try giving it more cycles for another attempt");
-            tel.update();//already finished and its not great
+            tel.update(); //already finished and its not great
             return;
         }
 
@@ -307,7 +307,7 @@ public class AutoPIDTuner {
         tel.addData("Ku ( ignore ) ", ku);
         tel.addData("Tu ( ignore )", tu);
         tel.addData("Kp", kp);
-        tel.addData("Ki NOT RECOMENDED FOR USE", ki);
+        tel.addData("Ki NOT RECOMMENDED FOR USE", ki);
         tel.addData("Kd", kd);
         tel.update();
     }
@@ -449,7 +449,7 @@ public class AutoPIDTuner {
         tel.addData("Ku ( ignore ) ", ku);
         tel.addData("Tu ( ignore )", tu);
         tel.addData("Kp", kp);
-        tel.addData("Ki VERY VERY VERY MUCH NOT RECOMENDED FOR USE", ki);
+        tel.addData("Ki VERY VERY VERY MUCH NOT RECOMMENDED FOR USE", ki);
         tel.addData("Kd", kd);
         tel.update();
     }
