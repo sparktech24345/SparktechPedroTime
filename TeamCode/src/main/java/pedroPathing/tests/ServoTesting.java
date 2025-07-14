@@ -20,7 +20,6 @@ import static pedroPathing.newOld.PositionStorage.*;
 import android.util.Size;
 
 @TeleOp(name = "ServoTesting", group = "Linear OpMode")
-@Disabled
 public class ServoTesting extends LinearOpMode {
     double intakeRotateServoPosition = 90;
     double outakeArmServoPosition = 90;
@@ -29,7 +28,7 @@ public class ServoTesting extends LinearOpMode {
     double intakeServoPower = 0;
     boolean downIsPressed = false;
 
-    SparkFunOTOS myOtos;
+    //SparkFunOTOS myOtos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -44,11 +43,11 @@ public class ServoTesting extends LinearOpMode {
         DcMotor intakeMotor = hardwareMap.dcMotor.get("intakemotor");
         DcMotor intakeSpinMotor = hardwareMap.dcMotor.get("intakespin");
 
-        VisionPortal portal = new VisionPortal.Builder()
-                .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "camera"))
-                .setShowStatsOverlay(false)
-                .build();
+//        VisionPortal portal = new VisionPortal.Builder()
+//                .setCameraResolution(new Size(640, 480))
+//                .setCamera(hardwareMap.get(WebcamName.class, "camera"))
+//                .setShowStatsOverlay(false)
+//                .build();
         dashboardTelemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
 
 
@@ -99,16 +98,16 @@ public class ServoTesting extends LinearOpMode {
             dashboardTelemetry.addData("intakeRotateServoPos(TBS)", intakeRotateServo.getPosition());
             dashboardTelemetry.addData("outake motor pos ", outakeLeftMotor.getCurrentPosition());
             dashboardTelemetry.addData("intake motor pos ", intakeMotor.getCurrentPosition());
-            FtcDashboard.getInstance().startCameraStream(portal, 10);
-            portal.saveNextFrameRaw("savedFramed");
+            //FtcDashboard.getInstance().startCameraStream(portal, 10);
+            //portal.saveNextFrameRaw("savedFramed");
             dashboardTelemetry.update();
             telemetry.update();
 
-            if(gamepad1.dpad_down) downIsPressed = true;
-            if(downIsPressed && !gamepad1.dpad_down) {
-                portal.saveNextFrameRaw("savedPhotoServoTesting");
-                downIsPressed = false;
-            }
+//            if(gamepad1.dpad_down) downIsPressed = true;
+//            if(downIsPressed && !gamepad1.dpad_down) {
+//                portal.saveNextFrameRaw("savedPhotoServoTesting");
+//                downIsPressed = false;
+//            }
 
 
             //tester.setPosition(0);
