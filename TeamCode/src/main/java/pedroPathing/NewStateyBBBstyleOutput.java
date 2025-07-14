@@ -314,7 +314,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
 
-                if(!isInSpecimenState && outakeLeftMotor.getCurrentPosition()> -20) {
+                if(!isInSpecimenState && outakeLeftMotor.getCurrentPosition() + outtakeTargetPosAdder> -20) {
                     outtakeTransfer();
                     basketStandbyState++;
                 }
@@ -393,7 +393,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //getting to specimen pick up pos without messing cables
-            if(isInNeedToGoToSpecimenTransferPos && outakeLeftMotor.getCurrentPosition()<-500){
+            if(isInNeedToGoToSpecimenTransferPos && outakeLeftMotor.getCurrentPosition() + outtakeTargetPosAdder<-500){
                 outtakePivotServoPos = outtakePivotServoWallPickupPos;
                 isInNeedToGoToSpecimenTransferPos = false;
             }
@@ -501,6 +501,25 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             outtakeExtendMotorPow *= PIDincrement;
 
 
+
+            if(gamepad2.dpad_down) isPressedD2Down = true;
+            if(isPressedD2Down && !gamepad2.dpad_down){
+                zeroesRetuneTimer = System.currentTimeMillis();
+                shouldBeginZeroesRetune = true;
+                isTimeToReset = true;
+                isPressedD2Down = false;
+            }
+            //overwriting power
+            if(shouldBeginZeroesRetune && zeroesRetuneTimer + 1000 > System.currentTimeMillis()){
+                intakeExtendMotorPow = -0.8;
+                outtakeExtendMotorPow = 0.7;
+                if(isTimeToReset && zeroesRetuneTimer + 950 < System.currentTimeMillis()){
+                    intakeTargetPosAdder += intakeMotor.getCurrentPosition();
+                    //outtakeTargetPosAdder += outakeLeftMotor.getCurrentPosition();
+                    isTimeToReset = false;
+                    shouldBeginZeroesRetune = false;
+                }
+            }
 
 
             chassisFrontRightPow = (pivot - vertical - horizontal);

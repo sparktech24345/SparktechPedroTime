@@ -113,6 +113,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import pedroPathing.PIDStorageAndUse.ControlMotor;
+import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 
 @com.acmerobotics.dashboard.config.Config
@@ -170,6 +171,8 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
     DcMotor backLeftMotor;
     DcMotor frontRightMotor;
     DcMotor backRightMotor;
+    private volatile boolean telemetryThreadRunning = true;
+
 
 
     public void calculateSpeeds(){
@@ -263,6 +266,30 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
         intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
         outakeArmServo.setPosition(outtakePivotServoPos / 328);
         outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+
+
+        Thread telemetryThread = new Thread(() -> {
+            while (telemetryThreadRunning && !isStopRequested()) {
+                tel.addData("isAlive", true);
+                tel.update();
+
+
+                //Set servo Positions
+                intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
+                outakeArmServo.setPosition(outtakePivotServoPos / 328);
+                outakeSampleServo.setPosition(outtakeClawServoPos / 360);
+
+                try {
+                    Thread.sleep(200); // update every 200ms
+                } catch (InterruptedException e) {
+                    // optional: break on interrupt
+                    break;
+                }
+            }
+        });
+
+        telemetryThread.start();
+
 
 
         tel.addData("current team color",currentTeam);
@@ -687,7 +714,7 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
             intakeExtendMotorPow = intakeControlMotor.PIDControl (intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
             //if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.3;
             double outtakeExtendMotorPow;
-            outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
+            outtakeExtendMotorPow = NewPidsController.pidControllerOuttake(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;
 
 
@@ -784,10 +811,6 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
             intakeSpinMotor.setPower(intakeSpinMotorPow);
 
 
-            //Set servo Positions
-            intakeRotateServo.setPosition((intakePivotServoPos-intakeGravitySubtractor) / 228);
-            outakeArmServo.setPosition(outtakePivotServoPos / 328);
-            outakeSampleServo.setPosition(outtakeClawServoPos / 360);
 
 
             //tel.addData("intakeSliderState",intakeState);
@@ -811,12 +834,15 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
             tel.addData("is holding", holdMode);
             tel.addData("is braking", brakeMode);
 
-            //tel.addData("current time",System.nanoTime());
-            //tel.addData("time diference",System.nanoTime() - current_time);
-            //current_time = System.nanoTime();
+            tel.addData("current time",System.nanoTime());
+            tel.addData("time diference",System.nanoTime() - current_time);
+            current_time = System.nanoTime();
 
             tel.update();
         }
+
+        telemetryThreadRunning = false;
+        telemetryThread.join(); // wait for the thread to finish
 
     }
 
