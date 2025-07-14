@@ -125,13 +125,24 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
     /// BRAKE CONFIGS
     ///
     public static double SPEED_CALC_TIME = 100;
-    public static double Y_BRAKE_COEFF = 0.00013;
-    public static double X_BRAKE_COEFF = 0.00013;
+    public static double Y_BRAKE_COEFF_P = 0.00013;
+    public static double X_BRAKE_COEFF_P = 0.00013;
+    public static double Y_BRAKE_COEFF_D = 0.00013 / 8;
+    public static double X_BRAKE_COEFF_D = 0.00013 / 8;
+    public static double X_HOLD_COEFF_P = 0.00100;
+    public static double Y_HOLD_COEFF_P = 0.00100;
 
     /// CALC VALUES
 
     double ySpeed = 0;
     double xSpeed = 0;
+
+    double lastYSpeed = 0;
+    double lastXSpeed = 0;
+
+    double yAccel = 0;
+    double xAccel = 0;
+
     double turnSpeed = 0;
     long timeUntilBreak;
 
@@ -179,6 +190,14 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
         ySpeed = (dFL + dFR + dBL + dBR) / 4.0 / dt;
         xSpeed = (-dFL + dFR + dBL - dBR) / 4.0 / dt;
 
+        yAccel = (ySpeed - lastYSpeed) / dt;
+        xAccel = (xSpeed - lastXSpeed) / dt;
+
+        if (ySpeed < 65)
+            ySpeed = 0;
+        if(xSpeed < 65)
+            xSpeed = 0;
+
         // Optional: rotation speed
         turnSpeed = (-dFL + dFR - dBL + dBR) / 4.0 / dt;
 
@@ -188,6 +207,9 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
         lastFrontRightPos = frontRightPos;
         lastBackLeftPos = backLeftPos;
         lastBackRightPos = backRightPos;
+
+        lastXSpeed = xSpeed;
+        lastYSpeed = ySpeed;
 
     }
 
@@ -727,10 +749,25 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
                 chassisFrontLeftPow = (pivot + vertical - horizontal);
                 chassisBackLeftPow = (pivot + vertical + horizontal);
             } else {
-                chassisFrontRightPow = (pivot - ySpeed*Y_BRAKE_COEFF - xSpeed*X_BRAKE_COEFF);
-                chassisBackRightPow = (pivot - ySpeed*Y_BRAKE_COEFF + xSpeed*X_BRAKE_COEFF);
-                chassisFrontLeftPow = (pivot + ySpeed*Y_BRAKE_COEFF - xSpeed*X_BRAKE_COEFF);
-                chassisBackLeftPow = (pivot + ySpeed*Y_BRAKE_COEFF + xSpeed*X_BRAKE_COEFF);
+                chassisFrontRightPow = (pivot - ySpeed* Y_BRAKE_COEFF_P - xSpeed* X_BRAKE_COEFF_P
+                                                - yAccel * Y_BRAKE_COEFF_D - xAccel * X_BRAKE_COEFF_D);
+                chassisBackRightPow = (pivot - ySpeed* Y_BRAKE_COEFF_P + xSpeed* X_BRAKE_COEFF_P
+                                                - yAccel * Y_BRAKE_COEFF_D + xAccel * X_BRAKE_COEFF_D);
+                chassisFrontLeftPow = (pivot + ySpeed* Y_BRAKE_COEFF_P - xSpeed* X_BRAKE_COEFF_P
+                                                + yAccel * Y_BRAKE_COEFF_D - xAccel * X_BRAKE_COEFF_D);
+                chassisBackLeftPow = (pivot + ySpeed* Y_BRAKE_COEFF_P + xSpeed* X_BRAKE_COEFF_P
+                                                + yAccel * Y_BRAKE_COEFF_D + xAccel * X_BRAKE_COEFF_D);
+
+            }
+
+            boolean holdMode = horizontal*horizontal + vertical*vertical <= 0.001 &&
+                    Math.abs(xSpeed) < 550 && Math.abs(ySpeed) < 550;
+
+            if(holdMode){
+                chassisFrontRightPow = (pivot - ySpeed* Y_HOLD_COEFF_P - xSpeed* X_HOLD_COEFF_P);
+                chassisBackRightPow = (pivot - ySpeed* Y_HOLD_COEFF_P + xSpeed* X_HOLD_COEFF_P);
+                chassisFrontLeftPow = (pivot + ySpeed* Y_HOLD_COEFF_P - xSpeed* X_HOLD_COEFF_P);
+                chassisBackLeftPow = (pivot + ySpeed* Y_HOLD_COEFF_P + xSpeed* X_HOLD_COEFF_P);
             }
 
             if (System.currentTimeMillis() >= lastTickTime + SPEED_CALC_TIME)
@@ -771,6 +808,8 @@ public class NewStateyBBBstyleOutputWithBreak extends LinearOpMode {
             tel.addData("is color not used", isColorSensorNotInUse);
             tel.addData("curent team color",currentTeam);
             tel.addData("Outtake Target Pos Adder",outtakeTargetPosAdder);
+            tel.addData("is holding", holdMode);
+            tel.addData("is braking", brakeMode);
 
             //tel.addData("current time",System.nanoTime());
             //tel.addData("time diference",System.nanoTime() - current_time);
