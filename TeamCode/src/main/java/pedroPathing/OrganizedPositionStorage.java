@@ -39,7 +39,7 @@ public class OrganizedPositionStorage {
     //outtake claw
     public static double outtakeClawServoExtendedPos = 128;
     public static double outtakeClawServoExtraExtendedPos = 208;
-    public static double outtakeClawServoRetractedPos = 15;
+    public static double outtakeClawServoRetractedPos = 43;
 
 
     // outtake pivot

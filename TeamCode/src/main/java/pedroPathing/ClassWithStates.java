@@ -157,7 +157,7 @@ public class ClassWithStates {
     public static void intakeCabinDownOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownOutputting;
         intakePivotServoPos = intakePivotServoPickupPos;
-        intakeSpinMotorPow = 0.7;
+        intakeSpinMotorPow = 0.6;
     }
     /*public static void intakeCabinDownStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
@@ -184,7 +184,7 @@ public class ClassWithStates {
     public static void intakeCabinFullInBotOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBotOutputting;
         intakePivotServoPos = intakePivotServoOutputTruBotPos;
-        intakeSpinMotorPow = 1;
+        intakeSpinMotorPow = 0.7;
     }
 
 

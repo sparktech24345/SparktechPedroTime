@@ -107,9 +107,9 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
 
             //Selectare Echipa
-            if ((gamepad2.left_bumper && gamepad2.start) || (gamepad1.left_bumper && gamepad1.start))
+            if ((gamepad2.dpad_left) || (gamepad1.left_bumper && gamepad1.start))
                 currentTeam = colorList.blue;
-            if ((gamepad2.right_bumper && gamepad2.start) || (gamepad1.right_bumper && gamepad1.start))
+            if ((gamepad2.dpad_right) || (gamepad1.right_bumper && gamepad1.start))
                 currentTeam = colorList.red;
 
             if(Toggle.FirsToggle(gamepad1.left_trigger >= 0.4 && gamepad1.right_trigger >=0.4)){
@@ -606,6 +606,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             tel.addData("is color not used", isColorSensorNotInUse);
             tel.addData("curent team color",currentTeam);
             tel.addData("Outtake Target Pos Adder",outtakeTargetPosAdder);
+            tel.addData("IS IN LOW BASKET",isInLowerBasketState);
 
             //tel.addData("current time",System.nanoTime());
             //tel.addData("time diference",System.nanoTime() - current_time);
