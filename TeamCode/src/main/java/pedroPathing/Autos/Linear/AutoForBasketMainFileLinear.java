@@ -17,7 +17,9 @@ import static pedroPathing.ClassWithStates.intakeExtended4out4;
 import static pedroPathing.ClassWithStates.intakeRetracted;
 import static pedroPathing.ClassWithStates.outtakeBasket;
 import static pedroPathing.ClassWithStates.outtakePark;
+import static pedroPathing.ClassWithStates.outtakeStandByWithoutExtensions;
 import static pedroPathing.OrganizedPositionStorage.autoTimer;
+import static pedroPathing.OrganizedPositionStorage.basketStandbyState;
 import static pedroPathing.OrganizedPositionStorage.hasSmolOutputed;
 import static pedroPathing.OrganizedPositionStorage.hasSmolOutputedTimer;
 import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
@@ -107,18 +109,18 @@ public class AutoForBasketMainFileLinear extends LinearOpMode {
     private final Pose behindBasketThirdSample = new Pose(basketX, basketY , (basketHeading));
 
     // collect first 3 from floor
-    private final Pose firstSampleCollect = new Pose( 27.886338121309056, -18.538827971210633, (1.5539225381281545));
-    private final Pose secondSampleCollect = new Pose(37.97876553272637, -24.005559485728355, (1.5475948673781261));
-    private final Pose thirdSampleCollect = new Pose( 36.873404435285416, -30.709814837598447, (2.168761212672568));
+    private final Pose firstSampleCollect = new Pose( 27.886338121309056-2, -18.538827971210633, (1.5539225381281545));
+    private final Pose secondSampleCollect = new Pose(37.97876553272637 - 2.5, -24.005559485728355, (1.5475948673781261));
+    private final Pose thirdSampleCollect = new Pose( 36.873404435285416, -30.709814837598447 -1, (2.168761212672568));
 
     // collect from submersible
 
     // first
-    private final Pose firstSubmersibleStdCollect = new Pose(6.043441652312993, -49.70520500123031, 6.203226558611047);
+    private final Pose firstSubmersibleStdCollect = new Pose(6.043441652312993, -49.70520500123031 + 1, 6.203226558611047);
     private final Pose firstSubmersibleStdBehindBasket = new Pose(basketX, basketY, basketHeading);
 
     // second
-    private final Pose secondSubmersibleStdCollect = new Pose(6.043441652312993, -49.70520500123031, 6.203226558611047);
+    private final Pose secondSubmersibleStdCollect = new Pose(6.043441652312993, -49.70520500123031 - 1, 6.203226558611047);
     private final Pose secondSubmersibleStdBehindBasket = new Pose(basketX, basketY, basketHeading);
     // sign off
     private final Pose endingPosition = new Pose(0, 0, Math.toRadians(0));
@@ -282,9 +284,9 @@ slides pos on descent -223
         switch (pathState) {
             // PRELOAD
             case 0:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     outtakeBasket();
-                    follower.followPath(preloadScorePath,true);
+                    follower.followPath(preloadScorePath, true);
 
 
                     setPathState(2);
@@ -293,30 +295,28 @@ slides pos on descent -223
                 break;
             // FIRST SAMPLE
             case 2:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
 
-                    follower.followPath(firstSampleCollectPath,true);
+                    follower.followPath(firstSampleCollectPath, true);
                     setPathState(3);
                 }
                 break;
             case 3:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     //skipBasket =  executeAutoCollect();
                     // skipBasket = false;
                     executeAutoCollect();
 
                     //checking after the method finished in case it barely caught it
-                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample){
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample) {
                         setPathState(4);
-                    }
-                    else if(currentStateOfSampleInIntake == colorSensorOutty.noSample){
+                    } else if (currentStateOfSampleInIntake == colorSensorOutty.noSample) {
                         setPathState(6);
-                    }
-                    else{
+                    } else {
                         somethingFailed = true;
                         setPathState(6);
                     }
@@ -324,7 +324,7 @@ slides pos on descent -223
                 }
                 break;
             case 4:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     executeAutoTransfer();
                     waitWhile(300);
                     follower.followPath(firstSampleScorePath);
@@ -333,37 +333,35 @@ slides pos on descent -223
                 }
                 break;
             case 6:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
 
-                    follower.followPath(secondSampleCollectPath,true);
+                    follower.followPath(secondSampleCollectPath, true);
                     setPathState(7);
                 }
                 break;
             case 7:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     //skipBasket =  executeAutoCollect();
                     // skipBasket = false;
                     executeAutoCollect();
 
                     //checking after the method finished in case it barely caught it
-                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample){
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample) {
                         setPathState(8);
-                    }
-                    else if(currentStateOfSampleInIntake == colorSensorOutty.noSample){
+                    } else if (currentStateOfSampleInIntake == colorSensorOutty.noSample) {
                         setPathState(10);
-                    }
-                    else{
+                    } else {
                         somethingFailed = true;
                         setPathState(10);
                     }
                 }
                 break;
             case 8:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     executeAutoTransfer();
                     waitWhile(300);
                     follower.followPath(secondSampleScorePath);
@@ -373,7 +371,7 @@ slides pos on descent -223
                 break;
 
             case 9:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
@@ -382,29 +380,27 @@ slides pos on descent -223
                 break;
 
 
-                // THIRD SAMPLE
+            // THIRD SAMPLE
 
             case 10:
-                if(!follower.isBusy()){
-                    follower.followPath(thirdSampleCollectPath,true);
+                if (!follower.isBusy()) {
+                    follower.followPath(thirdSampleCollectPath, true);
                     setPathState(11);
                 }
                 break;
             case 11:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     //skipBasket =  executeAutoCollect();
                     // skipBasket = false;
                     executeAutoCollect();
 
                     //checking after the method finished in case it barely caught it
-                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample){
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample) {
                         setPathState(12);
-                    }
-                    else if(currentStateOfSampleInIntake == colorSensorOutty.noSample){
+                    } else if (currentStateOfSampleInIntake == colorSensorOutty.noSample) {
                         setPathState(14);
-                    }
-                    else{
+                    } else {
                         somethingFailed = true;
                         setPathState(14);
                     }
@@ -412,7 +408,7 @@ slides pos on descent -223
                 }
                 break;
             case 12:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     executeAutoTransfer();
                     //waitWhile(500);
@@ -422,7 +418,7 @@ slides pos on descent -223
                 }
                 break;
             case 13:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
@@ -433,7 +429,7 @@ slides pos on descent -223
             /// SUBMERSIBLE COLLECT
             /// FIRST
             case 14:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     autoOuttakeTransfer();
                     follower.followPath(firstSubmersibleCollectPath);
@@ -441,47 +437,52 @@ slides pos on descent -223
                 }
                 break;
             case 15:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     executeSubmersibleCollect(true);
                     NormalizedRGBA colors;
                     colors = colorSensor.getNormalizedColors();
                     Color.colorToHSV(colors.toColor(), hsvValues);
-                    currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
-                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+                    currentStateOfSampleInIntake = ColorCompare(colors, teamColor, false);
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample) {
                         setPathState(16);
-                    }
-                    else{
+                    } else {
                         setPathState(100);
                     }
                 }
                 break;
             case 100:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     follower.followPath(secondTrySubPath);
-                    setPathState(101);
-                }
-                break;
-            case 101:
-                if(!follower.isBusy()){
                     executeSubmersibleCollect(false);
-                    setPathState(16);
+                    NormalizedRGBA colors;
+                    colors = colorSensor.getNormalizedColors();
+                    Color.colorToHSV(colors.toColor(), hsvValues);
+                    currentStateOfSampleInIntake = ColorCompare(colors, teamColor, false);
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample) {
+                        setPathState(16);
+                    } else {
+                        setPathState(100);
+                    }
                 }
                 break;
 
             case 16:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     executeAutoTransfer();
+                    outtakeStandByWithoutExtensions();
                     setPathState(17);
                 }
                 break;
             case 17:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     follower.followPath(firstSubmersibleScorePath);
+                    waitWhile(300);
+                    outtakeBasket();
                     setPathState(18);
                 }
                 break;
             case 18:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
@@ -490,7 +491,7 @@ slides pos on descent -223
                 break;
             /// SECOND
             case 19:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     autoOuttakeTransfer();
                     follower.followPath(secondSubmersibleCollectPath);
@@ -498,46 +499,51 @@ slides pos on descent -223
                 }
                 break;
             case 20:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     executeSubmersibleCollect(true);
                     NormalizedRGBA colors;
                     colors = colorSensor.getNormalizedColors();
                     Color.colorToHSV(colors.toColor(), hsvValues);
-                    currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
-                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+                    currentStateOfSampleInIntake = ColorCompare(colors, teamColor, false);
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample) {
                         setPathState(21);
-                    }
-                    else {
+                    } else {
                         setPathState(102);
                     }
                 }
                 break;
             case 102:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     follower.followPath(secondTrySubPath);
-                    setPathState(103);
-                }
-                break;
-            case 103:
-                if(!follower.isBusy()){
                     executeSubmersibleCollect(false);
-                    setPathState(20);
+                    NormalizedRGBA colors;
+                    colors = colorSensor.getNormalizedColors();
+                    Color.colorToHSV(colors.toColor(), hsvValues);
+                    currentStateOfSampleInIntake = ColorCompare(colors, teamColor, false);
+                    if (currentStateOfSampleInIntake == colorSensorOutty.correctSample) {
+                        setPathState(21);
+                    } else {
+                        setPathState(102);
+                    }
                 }
                 break;
             case 21:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     executeAutoTransfer();
+                    outtakeStandByWithoutExtensions();
                     setPathState(22);
                 }
                 break;
             case 22:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     follower.followPath(secondSubmersibleScorePath);
+                    waitWhile(300);
+                    outtakeBasket();
                     setPathState(23);
                 }
                 break;
             case 23:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
@@ -546,7 +552,7 @@ slides pos on descent -223
                 break;
             // sign off
             case 24:
-                if(!follower.isBusy()){
+                if (!follower.isBusy()) {
                     follower.followPath(signOffPath);
                     waitWhile(50);
                     outtakePark();

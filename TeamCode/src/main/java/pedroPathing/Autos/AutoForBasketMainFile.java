@@ -72,18 +72,18 @@ public class AutoForBasketMainFile extends OpMode {
     private final Pose behindBasketThirdSample = new Pose(basketX, basketY , Math.toRadians(basketHeading));
 
     // collect first 3 from floor
-    private final Pose firstSampleCollect = new Pose( 16.69 + 2, 36.92, Math.toRadians(158.69));
+    private final Pose firstSampleCollect = new Pose( 16.69, 36.92, Math.toRadians(158.69));
     private final Pose secondSampleCollect = new Pose(20.25 + 2, 37.95, Math.toRadians(175.76));
     private final Pose thirdSampleCollect = new Pose( 30.56 - 1.5, 36.74, Math.toRadians(208.27));
 
     // collect from submersible
 
     // first
-    private final Pose firstSubmersibleStdCollect = new Pose(53, 7.86+0.5, Math.toRadians(90.64));
+    private final Pose firstSubmersibleStdCollect = new Pose(53, 7.86-0.5, Math.toRadians(90.64));
     private final Pose firstSubmersibleStdBehindBasket = new Pose(17.40 - 2, 35.36 + 2, Math.toRadians(145.66));
 
     // second
-    private final Pose secondSubmersibleStdCollect = new Pose(53, 7.86+0.5, Math.toRadians(90.64));
+    private final Pose secondSubmersibleStdCollect = new Pose(53, 7.86+1.5, Math.toRadians(90.64));
     private final Pose secondSubmersibleStdBehindBasket = new Pose(17.40 - 1, 35.36 + 1, Math.toRadians(145.66));
     // sign off
     private final Pose endingPosition = new Pose(53, 7.86, Math.toRadians(90.64));
@@ -423,13 +423,17 @@ slides pos on descent -223
             case 100:
                 if(!follower.isBusy()){
                     follower.followPath(secondTrySubPath);
-                    setPathState(101);
-                }
-                break;
-            case 101:
-                if(!follower.isBusy()){
                     executeSubmersibleCollect(false);
-                    setPathState(16);
+                    NormalizedRGBA colors;
+                    colors = colorSensor.getNormalizedColors();
+                    Color.colorToHSV(colors.toColor(), hsvValues);
+                    currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
+                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+                        setPathState(16);
+                    }
+                    else{
+                        setPathState(100);
+                    }
                 }
                 break;
 
@@ -480,13 +484,17 @@ slides pos on descent -223
             case 102:
                 if(!follower.isBusy()){
                     follower.followPath(secondTrySubPath);
-                    setPathState(103);
-                }
-                break;
-            case 103:
-                if(!follower.isBusy()){
                     executeSubmersibleCollect(false);
-                    setPathState(20);
+                    NormalizedRGBA colors;
+                    colors = colorSensor.getNormalizedColors();
+                    Color.colorToHSV(colors.toColor(), hsvValues);
+                    currentStateOfSampleInIntake = ColorCompare(colors,teamColor,false);
+                    if(currentStateOfSampleInIntake == colorSensorOutty.correctSample){
+                        setPathState(21);
+                    }
+                    else {
+                        setPathState(102);
+                    }
                 }
                 break;
             case 21:

@@ -540,7 +540,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //auto slowdown
 
             else if(// intakeState == intakeStates.intakeExtended1out4
-                 outtakeState == outtakeStates.outtakeBasket
+                (outtakeState == outtakeStates.outtakeBasket && !isInLowerBasketState)
             //intakeState == intakeStates.intakeExtended2out4 ||
             //intakeState == intakeStates.intakeExtended3out4 ||
             //intakeState == intakeStates.intakeExtended4out4

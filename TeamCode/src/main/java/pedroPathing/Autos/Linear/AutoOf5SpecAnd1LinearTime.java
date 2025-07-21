@@ -105,7 +105,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(110)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(107)); //start
     private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(100)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
 
@@ -114,7 +114,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private final Pose basketScore = new Pose(56.38 - 10, 11.83+70+1.5 + 3, Math.toRadians(16.86));
 
     //PARK
-    private final Pose parkingPose=new Pose(-10,71,Math.toRadians(0)); //parking
+    private final Pose parkingPose=new Pose(-15,76,Math.toRadians(0)); //parking
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
