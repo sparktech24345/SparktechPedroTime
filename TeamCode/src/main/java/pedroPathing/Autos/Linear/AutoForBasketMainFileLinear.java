@@ -701,6 +701,8 @@ slides pos on descent -223
                 intakeSpinMotorPow = 1;
                 waitWhile(500);
             } else if(currentStateOfSampleInIntake==colorSensorOutty.correctSample){
+                intakeSpinMotorPow = 0.8;
+                waitWhile(35);
                 intakeCabinTransferPositionWithPower();
                 intakeRetracted();
                 outtakeClawServoPos = outtakeClawServoExtendedPos + 20;
@@ -710,6 +712,8 @@ slides pos on descent -223
                 intakeSpinMotorPow = 1;
                 waitWhile(500);
             }
+            intakeSpinMotorPow = 0.8;
+            waitWhile(35);
             intakeCabinTransferPositionWithPower();
             intakeRetracted();
             outtakeClawServoPos = outtakeClawServoExtendedPos + 20;

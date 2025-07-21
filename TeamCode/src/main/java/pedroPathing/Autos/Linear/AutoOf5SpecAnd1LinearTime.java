@@ -87,14 +87,14 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private final float scoringBarX = -2f;
     private final float scoringBarY = 40.6f+0.5f+0.5f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX+1, scoringBarY+0.5, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY+1, Math.toRadians(90)); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY-0.5, Math.toRadians(90)); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
     private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 71f+0.5f;
+    private final float wallPickUpY = 71f+1f;
     private final float wallAdderY = 2f;
 
     //specimen pick up positions
@@ -105,8 +105,8 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(107)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(100)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(106)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(98)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
 
     // --------- + 1 ------------- \\
@@ -114,7 +114,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private final Pose basketScore = new Pose(56.38 - 10, 11.83+70+1.5 + 3, Math.toRadians(16.86));
 
     //PARK
-    private final Pose parkingPose=new Pose(-15,76,Math.toRadians(0)); //parking
+    private final Pose parkingPose=new Pose(-17,77.5,Math.toRadians(0)); //parking
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
