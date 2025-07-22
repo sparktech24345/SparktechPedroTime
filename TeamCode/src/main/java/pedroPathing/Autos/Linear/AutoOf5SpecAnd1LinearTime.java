@@ -106,7 +106,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
     private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(106)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(98)); //start
+    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(98 - 2)); //start
     private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
 
     // --------- + 1 ------------- \\
