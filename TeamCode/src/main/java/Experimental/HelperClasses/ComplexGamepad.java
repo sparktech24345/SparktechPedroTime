@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class ComplexGamepad {
 
-    private Gamepad gamepad1;
-    private Gamepad gamepad2;
+    public Gamepad gamepad1;
+    public Gamepad gamepad2;
 
     public ComplexGamepad() {}
     public ComplexGamepad(Gamepad gpad1, Gamepad gpad2) {

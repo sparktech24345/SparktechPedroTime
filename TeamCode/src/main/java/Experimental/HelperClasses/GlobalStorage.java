@@ -1,7 +1,8 @@
 package Experimental.HelperClasses;
 
-import Experimental.HelperClasses.RobotState;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import Experimental.StatesAndPositions.ColorSet;
 import Experimental.StatesAndPositions.IntakeExtension;
 import Experimental.StatesAndPositions.IntakePosition;
 import Experimental.StatesAndPositions.OuttakeArmPosition;
@@ -10,9 +11,53 @@ import Experimental.StatesAndPositions.OuttakeExtension;
 
 public class GlobalStorage {
 
+    public static double eval(boolean bool) {
+        return (bool ? 1 : 0);
+    }
+
+    public static void resetTimers() {
+        intakeExtTimer.reset();
+        intakePosTimer.reset();
+        outtakeExtTimer.reset();
+        outtakeArmPosTimer.reset();
+        outtakeClawPosTimer.reset();
+    }
+
+    // HARDWARE TIMERS
+
+    public static ElapsedTime intakeExtTimer = new ElapsedTime();
+    public static ElapsedTime intakePosTimer = new ElapsedTime();
+    public static ElapsedTime outtakeExtTimer = new ElapsedTime();
+    public static ElapsedTime outtakeArmPosTimer = new ElapsedTime();
+    public static ElapsedTime outtakeClawPosTimer = new ElapsedTime();
+
+
+    // TIME TO MOVE TO POS IN MILLISECONDS
+
+    public static double intakeExtMoveTime = 300;
+    public static double intakePosMoveTime = 200;
+    public static double outtakeExtMoveTime = 200;
+    public static double outtakeArmPosMoveTime = 250;
+    public static double outtakeClawPosMoveTime = 250;
+
+    // HARDWARE NAMES
+
+    public static String intakeSpinName         = "intakespin";
+    public static String intakeExtendName       = "intakemotor";
+    public static String intakePosName          = "intakeRotateServo";
+    public static String outtakeExtendLeftName  = "outakeleftmotor";
+    public static String outtakeExtendRightName = "outakerightmotor";
+    public static String outtakeArmName         = "outakeArmServo";
+    public static String outtakeClawName        = "outakeSampleServo";
+    public static String frontRightName         = "frontright";
+    public static String frontLeftName          = "frontleft";
+    public static String backRightName          = "backright";
+    public static String backLeftName           = "backleft";
+    public static String colorSensorName        = "sensorColor";
+
     // OTHER STUFF
+    public static ColorSet currentTeam = null;
     public static OpMode currentOpMode;
-    public static boolean waitForIntakeExtSet = false;
     public static boolean shouldContinue = false;
     public static boolean followerShouldContinue = false;
 

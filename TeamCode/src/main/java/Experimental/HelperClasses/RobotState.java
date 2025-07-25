@@ -36,14 +36,14 @@ public enum RobotState {
             OuttakeClawPosition.RetractedPos
     ),
     SamplePickupReadyState(
-            IntakeExtension.UndefinedPos,
+            IntakeExtension.IGNORE,
             IntakePosition.TransferPos,
             OuttakeExtension.TransferPos,
             OuttakeArmPosition.TransferPos,
             OuttakeClawPosition.RetractedPos
     ),
-    SamplePickupState(
-            IntakeExtension.UndefinedPos,
+    SamplePickupDoneState(
+            IntakeExtension.IGNORE,
             IntakePosition.PickupSamplePos,
             OuttakeExtension.TransferPos,
             OuttakeArmPosition.TransferPos,
@@ -113,6 +113,14 @@ public enum RobotState {
             OuttakeClawPosition.RetractedPos
     ),
     HangDoneState(
+            IntakeExtension.Retracted,
+            IntakePosition.TransferPos,
+            OuttakeExtension.SpecimenHangPos,
+            OuttakeArmPosition.StandbyPos,
+            OuttakeClawPosition.RetractedPos
+    ),
+
+    StandbyState(
             IntakeExtension.Retracted,
             IntakePosition.TransferPos,
             OuttakeExtension.SpecimenHangPos,
