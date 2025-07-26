@@ -13,7 +13,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstants;
+import pedroPathing.constants.LConstantsForPinpoint;
 
 import com.pedropathing.localization.Pose;
 
@@ -31,8 +33,8 @@ public class AutoRecorderTeleOp extends LinearOpMode {
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
         dashboardTelemetry.setMsTransmissionInterval(50);
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        Follower follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
+        Follower follower = new Follower(hardwareMap, FConstantsForPinpoint.class,LConstantsForPinpoint.class);
         follower.setStartingPose(startPose);
 
         Telemetry tel = new MultipleTelemetry(this.telemetry, dashboardTelemetry);

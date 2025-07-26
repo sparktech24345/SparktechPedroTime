@@ -15,7 +15,9 @@ import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
 
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstants;
+import pedroPathing.constants.LConstantsForPinpoint;
 
 /**
  * This is the StraightBackAndForth autonomous OpMode. It runs the robot in a specified distance
@@ -32,7 +34,6 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous (name = "Straight Back And Forth", group = "PIDF Tuning")
-@Disabled
 public class StraightBackAndForth extends OpMode {
     private Telemetry telemetryA;
 
@@ -51,8 +52,8 @@ public class StraightBackAndForth extends OpMode {
      */
     @Override
     public void init() {
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
+        follower = new Follower(hardwareMap,FConstantsForPinpoint.class, LConstantsForPinpoint.class);
 
         forwards = new Path(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(DISTANCE,0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);

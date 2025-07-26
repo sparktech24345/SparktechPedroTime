@@ -56,7 +56,9 @@ import pedroPathing.States.OuttakeStateStandbyDownWithSample;
 import pedroPathing.States.OuttakeStateStandbyWithSampleUp;
 import pedroPathing.States.OuttakeStateTranfer;
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstants;
+import pedroPathing.constants.LConstantsForPinpoint;
 
 @Config
 @Autonomous(name = "AutoTestPositions", group = "Examples")
@@ -264,8 +266,8 @@ public class AutoTestPositions extends OpMode {
         opmodeTimer.resetTimer();
 
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
+        follower = new Follower(hardwareMap,FConstantsForPinpoint.class,LConstantsForPinpoint.class);
         follower.setStartingPose(startPose);
         buildPaths();
 
