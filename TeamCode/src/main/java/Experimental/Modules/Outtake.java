@@ -16,22 +16,24 @@ public class Outtake extends BaseModule {
     private Servo outtakeClawPos;
     private ControlMotor outtakeController = new ControlMotor();
 
+    private double outtakeExtendOffset = 0;
+
     public void init() {
         outtakeExtendRight  = hardwareMap.get(DcMotor.class, outtakeExtendRightName);
         outtakeExtendLeft   = hardwareMap.get(DcMotor.class, outtakeExtendLeftName);
         outtakeArmRotation  = hardwareMap.get(Servo.class, outtakeArmName);
         outtakeClawPos      = hardwareMap.get(Servo.class, outtakeClawName);
 
-        outtakeExtendLeft.setDirection(DcMotor.Direction.REVERSE);
+        outtakeExtendRight.setDirection(DcMotor.Direction.REVERSE);
         outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);
         outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
     }
 
     public void loop() {
-        double extensionPow = outtakeController.PIDControlUppy(-currentOuttakeExt.get(), outtakeExtendLeft.getCurrentPosition());
+        double extensionPow = outtakeController.PIDControlUppy((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
         outtakeExtendRight.setPower(extensionPow);
         outtakeExtendLeft.setPower(extensionPow);
-        outtakeClawPos.setPosition(currentOuttakeClawPos.get());
-        outtakeArmRotation.setPosition(currentOuttakeArmPos.get());
+        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 328);
+        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 360);
     }
 }

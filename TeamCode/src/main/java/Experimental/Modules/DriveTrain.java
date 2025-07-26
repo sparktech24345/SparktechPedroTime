@@ -34,7 +34,7 @@ public class DriveTrain extends BaseModule {
     private DcMotor LFDrive;
     private DcMotor RBDrive;
     private DcMotor LBDrive;
-    private Follower follower;
+//    private Follower follower;
     private boolean directionFlip = false;
 
     public void init() {
@@ -48,9 +48,9 @@ public class DriveTrain extends BaseModule {
         LBDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         }
         else {
-            follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
-            follower.setStartingPose(startPose);
-            follower.update();
+//            follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
+//            follower.setStartingPose(startPose);
+//            follower.update();
         }
     }
 

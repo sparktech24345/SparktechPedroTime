@@ -42,6 +42,7 @@ public class RobotController {
             currentTeam = ColorSet.Blue;
         if (gamepad.RIGHT_BUMPER2.IsHeld && gamepad.START2.IsHeld)
             currentTeam = ColorSet.Red;
+        showTelemetry();
     }
 
     public void loop() {
@@ -62,6 +63,15 @@ public class RobotController {
     }
 
     private void showTelemetry() {
+        intake.showTelemetry();
+        telemetry.addData("State", currentRobotState);
+        telemetry.addData("intakeExt", currentIntakeExt);
+        telemetry.addData("intakePos", currentIntakePos);
+        telemetry.addData("outtakeExt", currentOuttakeExt);
+        telemetry.addData("outtakeArm", currentOuttakeArmPos);
+        telemetry.addData("outtakeClaw", currentOuttakeClawPos);
         telemetry.addData("OpMode", currentOpMode);
+        telemetry.addData("Team", currentTeam);
+        telemetry.update();
     }
 }

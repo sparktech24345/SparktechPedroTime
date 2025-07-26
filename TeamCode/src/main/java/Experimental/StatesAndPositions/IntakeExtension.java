@@ -16,5 +16,6 @@ public enum IntakeExtension {
         this.gravitySubtractor = gravity_subtractor; 
     }
     public double get() { return this.value; }
+    public double gravity() { return this.gravitySubtractor; }
     public void set(double val) { this.value = val; }
 }

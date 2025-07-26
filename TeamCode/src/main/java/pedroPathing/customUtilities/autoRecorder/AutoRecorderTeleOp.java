@@ -103,19 +103,17 @@ public class AutoRecorderTeleOp extends LinearOpMode {
                     mapper.writerWithDefaultPrettyPrinter() // pretty-print
                             .writeValue(new File("/sdcard/FIRST/path.json"), paths);
 
-                    while(true){
+
                         tel.addLine("File generated");
                         tel.update();
                         requestOpModeStop();
-                        return;
-                    }
+
                 } catch (Exception e) {
-                    while (true) {
+
                         tel.addLine("Error in generating");
                         tel.update();
                         requestOpModeStop();
-                        return;
-                    }
+                    
                     //e.printStackTrace();
                 }
 

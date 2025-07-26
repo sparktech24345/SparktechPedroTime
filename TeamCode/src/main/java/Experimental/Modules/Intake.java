@@ -35,7 +35,7 @@ public class Intake extends BaseModule {
 
         IntakeExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        IntakeRotation.setPosition(currentIntakePos.get() / 228);
+        IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
         currentColor = getColor(colorSensor.getNormalizedColors());
     }
 
@@ -52,6 +52,13 @@ public class Intake extends BaseModule {
         IntakeExtendPower = IntakeControlMotor.PIDControl(currentIntakeExt.get(), IntakeExtend.getCurrentPosition());
         IntakeExtend.setPower(IntakeExtendPower);
         IntakeSpin.setPower(IntakeSpinPower);
-        IntakeRotation.setPosition(currentIntakePos.get());
+        IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
+    }
+
+    public void showTelemetry() {
+        NormalizedRGBA color = colorSensor.getNormalizedColors();
+        telemetry.addData("color r", color.red);
+        telemetry.addData("color r", color.green);
+        telemetry.addData("color r", color.blue);
     }
 }
