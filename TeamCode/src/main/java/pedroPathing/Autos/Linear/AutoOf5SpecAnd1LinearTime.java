@@ -61,7 +61,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.PIDStorageAndUse.ControlMotor;
 import pedroPathing.constants.FConstants5And1;
+import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstants;
+import pedroPathing.constants.LConstantsForPinpoint;
 
 @Config
 @Autonomous(name = "5 Spec + 1 Sample Linear Auto ALLIANCE INDEPENDENT", group = "Examples")
@@ -82,39 +84,38 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     /**                         Our Paths!                          */
     private int pathState;
 
-    private final Pose startPose = new Pose(-10, 70.5, Math.toRadians(90)); //start
+    private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); //start
     //scoring bar positions
-    private final float scoringBarX = -2f;
-    private final float scoringBarY = 40.6f+0.5f+0.5f;
-    private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX+1, scoringBarY+0.5, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX-2, scoringBarY-0.5, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX-3, scoringBarY+1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX-4, scoringBarY+1, Math.toRadians(90)); //start
+    private final float scoringBarX = -31f;
+    private final float scoringBarY = -4.84f;
+    private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
-    private final float wallPickUpX = -42f;
-    private final float wallPickUpY = 71f+1f;
-    private final float wallAdderY = 2f;
+    private final float wallPickUpX = 2f;
+    private final float wallPickUpY = 31f;
 
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, Math.toRadians(90)); //start
-    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY, Math.toRadians(90)); //start
-    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.2, Math.toRadians(90)); //start
-    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY+wallAdderY+0.4, Math.toRadians(90)); //start
+    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX+1, wallPickUpY, 0); //start
+    private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
+    private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
+    private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-55.5 - 2,60,Math.toRadians(106)); //start
-    private final Pose secondSamplePickUpPos = new Pose(-59 - 2.5, 61, Math.toRadians(98 - 2)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-51 - 2 - 2.5, 64, Math.toRadians(64)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-8.230515127106914, 53.49810262364665, 0.3864225149154663); //start
+    private final Pose secondSamplePickUpPos = new Pose(-9, 52,Math.toRadians(2)); //start
+    private final Pose thirdSamplePickUpPos = new Pose(-10, 49, Math.toRadians(332)); //start
 
     // --------- + 1 ------------- \\
-    private final Pose basketPickUp = new Pose(-0.87 - 9,-3.24+70,Math.toRadians(325.41));
-    private final Pose basketScore = new Pose(56.38 - 10, 11.83+70+1.5 + 3, Math.toRadians(16.86));
+    private final Pose basketPickUp = new Pose(-7, 11, 4.672053639088766);
+    private final Pose basketScore = new Pose(-10, -60, 5.327179614697592);
 
     //PARK
-    private final Pose parkingPose=new Pose(-17,77.5,Math.toRadians(0)); //parking
+    private final Pose parkingPose=new Pose(-6.625476146307517, 8.210622832531065, 4.672053639088766); //parking
     double intakeMotorPower=0;
     double outakeMotorPower=0;
 
@@ -227,8 +228,8 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
         ///  NO PARKING
         //parking
-        parking = new Path(new BezierLine(new Point(scoringBarPoseFourthSpecimen), new Point(parkingPose)));
-        parking.setLinearHeadingInterpolation(scoringBarPoseFourthSpecimen.getHeading(), parkingPose.getHeading());
+        parking = new Path(new BezierLine(new Point(basketScore), new Point(parkingPose)));
+        parking.setLinearHeadingInterpolation(basketScore.getHeading(), parkingPose.getHeading());
 
     }
 
@@ -263,7 +264,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    waitWhile(300);
+                    waitWhile(350);
                     intakeExtended4out4();
                     autoTimer = System.currentTimeMillis();
                     while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested())  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
@@ -430,10 +431,10 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
             case 113:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    //waitWhile(150);
+                    waitWhile(150);
                     autoTimer = System.currentTimeMillis();
-                    //follower.followPath(goToPickUpForBasket,true);
-                    setPathState(117);
+                    follower.followPath(goToPickUpForBasket,true);
+                    setPathState(114);
                 }
                 break;
             ///  COLLECTING FROM OBSERVATION ZONE
@@ -456,7 +457,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                         robotDoStuff();
                     }
                     intakeCabinTransferPositionWithPower();
-                    waitWhile(200);
+                    waitWhile(100);
                     //if (currentStateOfSampleInIntake == colorSensorOutty.wrongSample || currentStateOfSampleInIntake == colorSensorOutty.correctSample){
                     //    intakeSpinMotorPow = 0;
                     //}
@@ -469,7 +470,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
             case 115:
                 if(!follower.isBusy()) {
                     follower.followPath(scoreInBasket);
-                    waitWhile(100);
+                    waitWhile(0);
                     autoOuttakeTransfer();
                     while(intakeMotor.getCurrentPosition() > 30 && !isStopRequested()) {
                         robotDoStuff();
@@ -525,8 +526,8 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        Constants.setConstants(FConstants5And1.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants5And1.class,LConstants.class);
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
+        follower = new Follower(hardwareMap, FConstantsForPinpoint.class,LConstantsForPinpoint.class);
         follower.setStartingPose(startPose);
         buildPaths();
         setPathState(0);

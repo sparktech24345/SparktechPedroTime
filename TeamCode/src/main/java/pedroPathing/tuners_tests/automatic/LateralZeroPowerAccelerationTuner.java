@@ -31,7 +31,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstants;
+import pedroPathing.constants.LConstantsForPinpoint;
 
 /**
  * This is the LateralZeroPowerAccelerationTuner autonomous follower OpMode. This runs the robot
@@ -50,7 +52,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous(name = "Lateral Zero Power Acceleration Tuner DANGER", group = "Automatic Tuners")
-@Disabled
+
 public class LateralZeroPowerAccelerationTuner extends OpMode {
     private ArrayList<Double> accelerations = new ArrayList<>();
 
@@ -78,7 +80,7 @@ public class LateralZeroPowerAccelerationTuner extends OpMode {
      */
     @Override
     public void init() {
-        Constants.setConstants(FConstants.class, LConstants.class);
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
         poseUpdater = new PoseUpdater(hardwareMap);
 
         leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);

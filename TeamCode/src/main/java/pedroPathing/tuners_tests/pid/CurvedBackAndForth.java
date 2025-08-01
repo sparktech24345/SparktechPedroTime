@@ -15,7 +15,9 @@ import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.Point;
 
 import pedroPathing.constants.FConstants;
+import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstants;
+import pedroPathing.constants.LConstantsForPinpoint;
 
 /**
  * This is the CurvedBackAndForth autonomous OpMode. It runs the robot in a specified distance
@@ -32,7 +34,7 @@ import pedroPathing.constants.LConstants;
  */
 @Config
 @Autonomous (name = "Curved Back And Forth", group = "PIDF Testing")
-@Disabled
+
 public class CurvedBackAndForth extends OpMode {
     private Telemetry telemetryA;
 
@@ -51,8 +53,8 @@ public class CurvedBackAndForth extends OpMode {
      */
     @Override
     public void init() {
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap,FConstants.class,LConstants.class);
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
+        follower = new Follower(hardwareMap, FConstantsForPinpoint.class,LConstantsForPinpoint.class);
 
         forwards = new Path(new BezierCurve(new Point(0,0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN)));
         backwards = new Path(new BezierCurve(new Point(Math.abs(DISTANCE),DISTANCE, Point.CARTESIAN), new Point(Math.abs(DISTANCE),0, Point.CARTESIAN), new Point(0,0, Point.CARTESIAN)));

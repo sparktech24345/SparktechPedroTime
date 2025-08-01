@@ -52,14 +52,14 @@ public class AutoRecorderTeleOp extends LinearOpMode {
         ArrayList<PoseSequence> paths = new ArrayList<>();
         paths.add(new PoseSequence());
         PoseSequence poseSequence = paths.get(index);
-        poseSequence.addPose(new PoseData(startPose.getX(), startPose.getX(), startPose.getHeading()));
+        poseSequence.addPose(new PoseData(startPose.getX(), startPose.getX(), Math.toDegrees(startPose.getHeading())));
 
         while (opModeIsActive())
         {
             if(gamepad1.a){
                 wasA1Pressed = true;
             }if(!gamepad1.a && wasA1Pressed){
-                lastPose = new PoseData(follower.getPose().getX(), follower.getPose().getY(), follower.getPose().getHeading());
+                lastPose = new PoseData(follower.getPose().getX(), follower.getPose().getY(), Math.toDegrees(follower.getPose().getHeading()));
 
                 poseSequence = paths.get(index);
                 poseSequence.addPose(lastPose);
@@ -73,7 +73,7 @@ public class AutoRecorderTeleOp extends LinearOpMode {
             if(gamepad1.b){
                 wasB1Pressed = true;
             }if(!gamepad1.b && wasB1Pressed){
-                lastPose = new PoseData(follower.getPose().getX(), follower.getPose().getY(), follower.getPose().getHeading());
+                lastPose = new PoseData(follower.getPose().getX(), follower.getPose().getY(), Math.toDegrees(follower.getPose().getHeading()));
 
                 poseSequence = paths.get(index);
                 poseSequence.addPose(lastPose);
@@ -91,7 +91,7 @@ public class AutoRecorderTeleOp extends LinearOpMode {
             tel.addLine("Last recorded position: ");
             tel.addData("x", lastPose.getX());
             tel.addData("y", lastPose.getY());
-            tel.addData("heading", lastPose.getHeading());
+            tel.addData("heading", Math.toDegrees(lastPose.getHeading()));
             follower.update();
             tel.update();
 
