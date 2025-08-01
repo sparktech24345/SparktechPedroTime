@@ -8,7 +8,7 @@ import pedroPathing.ClassWithStates;
 
 @Config
 @Autonomous(name = "BlueBasketExtendAutoLinear", group = "Examples")
-public class BlueBasketExtendAutoLinear extends AutoForBasketMainFileLinear {
+public class BlueBasketExtendAutoLinear extends AutoForBasketMainFileLinearV2 {
     public BlueBasketExtendAutoLinear() {
         super(ClassWithStates.colorList.blue);
     }
