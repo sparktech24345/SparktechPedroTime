@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import pedroPathing.PIDStorageAndUse.ControlMotor;
+import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 
 @com.acmerobotics.dashboard.config.Config
@@ -494,10 +495,10 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             //PIDs
             PIDincrement=1;
             double intakeExtendMotorPow;
-            intakeExtendMotorPow = intakeControlMotor.PIDControl (intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+            intakeExtendMotorPow = NewPidsController.pidControllerIntake(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
             //if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.3;
             double outtakeExtendMotorPow;
-            outtakeExtendMotorPow = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos-outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
+            outtakeExtendMotorPow = NewPidsController.pidControllerOuttake(-outtakeExtendMotorTargetPos - outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;
 
 
@@ -607,6 +608,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             tel.addData("curent team color",currentTeam);
             tel.addData("Outtake Target Pos Adder",outtakeTargetPosAdder);
             tel.addData("IS IN LOW BASKET",isInLowerBasketState);
+            tel.addData("outtake power", outtakeExtendMotorPow);
+            tel.addData("intake power", intakeExtendMotorPow);
 
             //tel.addData("current time",System.nanoTime());
             //tel.addData("time diference",System.nanoTime() - current_time);
