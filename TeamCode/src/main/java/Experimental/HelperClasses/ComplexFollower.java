@@ -26,7 +26,7 @@ public class ComplexFollower {
         this.follower = follower;
         currentPos = follower.getPose();
         currentX = currentPos.getX();
-        currentX = currentPos.getY();
+        currentY = currentPos.getY();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
