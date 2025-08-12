@@ -2,23 +2,32 @@ package Experimental.HelperClasses;
 
 import static Experimental.HelperClasses.GlobalStorage.*;
 
-import Experimental.StatesAndPositions.IntakeExtension;
+import java.util.ArrayDeque;
+import java.util.Queue;
+
+import Experimental.HelperClasses.Actions.Action;
 
 public class StateQueuer {
 
-    private RobotState loadedState = RobotState.StartState;
-    public void setState(RobotState state) {
-        loadedState = state;
+    private final Queue<Action> actionQueue = new ArrayDeque();
+    boolean prevDone = true;
+
+    public void addAction(Action action) {
+        actionQueue.add(action);
     }
 
-    public void loadState() {
-        currentRobotState = loadedState;
-        if (currentRobotState.intakeExtension != IntakeExtension.IGNORE)
-            currentIntakeExt = currentRobotState.intakeExtension;
-        currentIntakePos = currentRobotState.intakePosition;
-        currentOuttakeExt = currentRobotState.outtakeExtension;
-        currentOuttakeArmPos = currentRobotState.outtakeArmPosition;
-        currentOuttakeClawPos = currentRobotState.outtakeClawPosition;
+    public void update() {
+        prevDone = true;
+        for (Action action : actionQueue) {
+            if (action.started && !action.done)
+                action.update();
+            if (!action.started && (prevDone || !action.waitForPrevious)) {
+                action.execute();
+            }
+            if (action.waitForPrevious && !prevDone) {
+                break;
+            }
+            prevDone = action.done;
+        }
     }
-
 }

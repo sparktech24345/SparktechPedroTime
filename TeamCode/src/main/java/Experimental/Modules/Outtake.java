@@ -1,10 +1,9 @@
 package Experimental.Modules;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import pedroPathing.PIDStorageAndUse.ControlMotor;
+import pedroPathing.PIDStorageAndUse.NewPidsController;
 import static Experimental.HelperClasses.GlobalStorage.*;
 
 public class Outtake extends BaseModule {
@@ -14,7 +13,8 @@ public class Outtake extends BaseModule {
 
     private Servo outtakeArmRotation;
     private Servo outtakeClawPos;
-    private ControlMotor outtakeController = new ControlMotor();
+    private NewPidsController outtakePIDControl = new NewPidsController();
+    private double extensionPow = 0;
 
     private double outtakeExtendOffset = 0;
 
@@ -30,10 +30,16 @@ public class Outtake extends BaseModule {
     }
 
     public void loop() {
-        double extensionPow = outtakeController.PIDControlUppy((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
+        extensionPow = outtakePIDControl.pidControllerOuttake((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
         outtakeExtendRight.setPower(extensionPow);
         outtakeExtendLeft.setPower(extensionPow);
-        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 328);
-        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 360);
+        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);
+        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
+    }
+
+    public void showTelemetry() {
+        telemetry.addData("OuttakeArmPos?", currentOuttakeArmPos.get());
+        telemetry.addData("OuttakeClawPos?", currentOuttakeClawPos.get());
+        telemetry.addData("Extension power", extensionPow);
     }
 }

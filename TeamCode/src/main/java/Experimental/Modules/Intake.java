@@ -6,16 +6,17 @@ import static Experimental.StatesAndPositions.ColorSet.*;
 
 import Experimental.HelperClasses.GlobalStorage;
 import Experimental.StatesAndPositions.ColorSet;
-import pedroPathing.PIDStorageAndUse.ControlMotor;
+import Experimental.StatesAndPositions.IntakeExtension;
+import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 public class Intake extends BaseModule {
 
+    private NormalizedRGBA currentColorObj;
     private DcMotor IntakeSpin;
     private DcMotor IntakeExtend;
     private Servo IntakeRotation;
-    private ControlMotor IntakeControlMotor;
+    private NewPidsController IntakeControlMotor;
     private NormalizedColorSensor colorSensor;
-
     private ColorSet currentColor;
 
     private double IntakeSpinPower = 0;
@@ -25,10 +26,11 @@ public class Intake extends BaseModule {
         IntakeSpin = hardwareMap.get(DcMotor.class, intakeSpinName);
         IntakeExtend = hardwareMap.get(DcMotor.class, intakeExtendName);
         IntakeRotation = hardwareMap.get(Servo.class, intakePosName);
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, GlobalStorage.colorSensorName);
-        IntakeControlMotor = new ControlMotor();
+//        colorSensor = hardwareMap.get(NormalizedColorSensor.class, GlobalStorage.colorSensorName);
+        IntakeControlMotor = new NewPidsController();
 
-        IntakeExtend.setDirection(DcMotor.Direction.REVERSE);
+        IntakeSpin.setDirection(DcMotor.Direction.REVERSE);
+        IntakeExtend.setDirection(DcMotorSimple.Direction.REVERSE);
 
         IntakeExtend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         IntakeSpin.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,29 +38,29 @@ public class Intake extends BaseModule {
         IntakeExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
-        currentColor = getColor(colorSensor.getNormalizedColors());
     }
 
     public void loop() {
-        currentColor = getColor(colorSensor.getNormalizedColors());
+//        currentColorObj = colorSensor.getNormalizedColors();
+//        currentColor = getColor(currentColorObj);
         if (gamepad.A1.IsToggled) {
             IntakeSpinPower = 1;
             if (gamepad.LEFT_BUMPER1.IsHeld)
                 IntakeSpinPower = -1;
-            if (!sampleIsValid(currentColor, true) && isSample(currentColor))
-                IntakeSpinPower = -1;
+//            if (!sampleIsValid(currentColor, true) && isSample(currentColor))
+//                IntakeSpinPower = -1;
         }
         else IntakeSpinPower = 0;
-        IntakeExtendPower = IntakeControlMotor.PIDControl(currentIntakeExt.get(), IntakeExtend.getCurrentPosition());
+        IntakeExtendPower = IntakeControlMotor.pidControllerIntake(currentIntakeExt.get(), IntakeExtend.getCurrentPosition());
         IntakeExtend.setPower(IntakeExtendPower);
         IntakeSpin.setPower(IntakeSpinPower);
         IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
     }
 
     public void showTelemetry() {
-        NormalizedRGBA color = colorSensor.getNormalizedColors();
-        telemetry.addData("color r", color.red);
-        telemetry.addData("color r", color.green);
-        telemetry.addData("color r", color.blue);
+        telemetry.addData("IntakeActualPos?", currentIntakePos.get());
+//        telemetry.addData("color r", currentColorObj.red);
+//        telemetry.addData("color g", currentColorObj.green);
+//        telemetry.addData("color b", currentColorObj.blue);
     }
 }

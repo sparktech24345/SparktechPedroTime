@@ -6,21 +6,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import Experimental.HelperClasses.ComplexGamepad;
+import Experimental.HelperClasses.ExtendedLinearOpMode;
+import Experimental.HelperClasses.GlobalStorage;
 import Experimental.HelperClasses.OpMode;
 import Experimental.HelperClasses.RobotController;
 
 @TeleOp(name = "Main TeleOP", group = "Experimental")
-public class MainTeleOP extends LinearOpMode {
+public class MainTeleOP extends ExtendedLinearOpMode {
 
     private RobotController robot;
     @Override
     public void runOpMode() {
         // init
-        robot = new RobotController(
-                new ComplexGamepad(gamepad1, gamepad2),
-                new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()),
-                hardwareMap
-        );
+        robot = new RobotController();
         robot.init(OpMode.TeleOP);
 
         while (!isStarted() && !isStopRequested()) {

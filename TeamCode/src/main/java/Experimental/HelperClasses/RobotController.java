@@ -3,12 +3,17 @@ package Experimental.HelperClasses;
 import static Experimental.HelperClasses.GlobalStorage.*;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import Experimental.HelperClasses.Actions.StateAction;
 import Experimental.Modules.DriveTrain;
 import Experimental.Modules.Intake;
 import Experimental.Modules.Outtake;
 import Experimental.StatesAndPositions.ColorSet;
+import Experimental.StatesAndPositions.IntakeExtension;
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
 
 public class RobotController {
     private ComplexGamepad gamepad;
@@ -17,53 +22,64 @@ public class RobotController {
     private DriveTrain driveTrain = new DriveTrain();
     private Intake intake = new Intake();
     private Outtake outtake = new Outtake();
-    private StateQueuer states = new StateQueuer();
+    private ComplexFollower follower;
+    private StateQueuer queuer = new StateQueuer();
 
-    public RobotController(ComplexGamepad gamepad, MultipleTelemetry telemetry, HardwareMap hardwareMap) {
-        this.gamepad = gamepad;
-        this.telemetry = telemetry;
-        this.hardwareMap = hardwareMap;
+    public RobotController() {
+        this.gamepad = gamepadInstance;
+        this.telemetry = telemetryInstance;
+        this.hardwareMap = hardwareMapInstance;
+        this.follower = new ComplexFollower(new Follower(hardwareMap, F_Constants, L_Constants));
     }
 
     public void init(OpMode mode) {
-        driveTrain.PassElements(gamepad, telemetry, hardwareMap);
-        intake.PassElements(gamepad, telemetry, hardwareMap);
-        outtake.PassElements(gamepad, telemetry, hardwareMap);
-        states.setState(RobotState.StartState);
-        states.loadState();
+        currentOpMode = mode;
         driveTrain.init();
         intake.init();
         outtake.init();
+        queuer.addAction(new StateAction(true, RobotState.StartState));
     }
 
     public void init_loop() {
-        gamepad.CheckGamepads();
-        if (gamepad.LEFT_BUMPER2.IsHeld && gamepad.START2.IsHeld)
+        runUpdates();
+        if (gamepad.LEFT_BUMPER1.IsHeld && gamepad.START1.IsHeld)
             currentTeam = ColorSet.Blue;
-        if (gamepad.RIGHT_BUMPER2.IsHeld && gamepad.START2.IsHeld)
+        if (gamepad.RIGHT_BUMPER1.IsHeld && gamepad.START1.IsHeld)
             currentTeam = ColorSet.Red;
+    }
+
+    private void runUpdates() {
+        follower.update();
+        queuer.update();
+        gamepad.CheckGamepads();
         showTelemetry();
     }
 
     public void loop() {
-        gamepad.CheckGamepads();
+        runUpdates();
         HandleControls();
         driveTrain.loop();
         intake.loop();
         outtake.loop();
-        showTelemetry();
     }
 
     private void HandleControls() {
-        if (gamepad.X1.Execute)
-            states.setState(RobotState.StandbyState);
-        if (gamepad.DRIGHT1.Execute)
-            states.setState(RobotState.SampleTransferReadyState);
-        states.loadState();
+        if (gamepad.X1.Execute) {
+            queuer.addAction(new StateAction(true, RobotState.StartState));
+        }
+        if (gamepad.DRIGHT1.Execute) {
+            queuer.addAction(new StateAction(true, RobotState.StartState));
+        }
+        if (gamepad.DDOWN1.Execute)
+            currentIntakeExt = IntakeExtension.Extended2;
+        if (gamepad.DUP1.Execute)
+            currentIntakeExt = IntakeExtension.Retracted;
     }
 
     private void showTelemetry() {
         intake.showTelemetry();
+        outtake.showTelemetry();
+        follower.telemetry(telemetry);
         telemetry.addData("State", currentRobotState);
         telemetry.addData("intakeExt", currentIntakeExt);
         telemetry.addData("intakePos", currentIntakePos);
@@ -71,7 +87,14 @@ public class RobotController {
         telemetry.addData("outtakeArm", currentOuttakeArmPos);
         telemetry.addData("outtakeClaw", currentOuttakeClawPos);
         telemetry.addData("OpMode", currentOpMode);
-        telemetry.addData("Team", currentTeam);
+        if (currentTeam == ColorSet.Black)
+            telemetry.addData("Team", "Not set");
+        else
+            telemetry.addData("Team", currentTeam);
+        telemetry.addLine();
+        telemetry.addData("left stick X", gamepad.gamepad1.left_stick_x);
+        telemetry.addData("left stick Y", gamepad.gamepad1.left_stick_y);
+        telemetry.addData("right stick X", -gamepad.gamepad1.right_stick_x);
         telemetry.update();
     }
 }

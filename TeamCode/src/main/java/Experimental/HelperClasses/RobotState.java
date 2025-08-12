@@ -16,7 +16,7 @@ public enum RobotState {
     ),
     StartState(
             IntakeExtension.Retracted,
-            IntakePosition.TransferPos,
+            IntakePosition.SpitOutPos,
             OuttakeExtension.TransferPos,
             OuttakeArmPosition.StandbyPos,
             OuttakeClawPosition.RetractedPos
@@ -113,14 +113,6 @@ public enum RobotState {
             OuttakeClawPosition.RetractedPos
     ),
     HangDoneState(
-            IntakeExtension.Retracted,
-            IntakePosition.TransferPos,
-            OuttakeExtension.SpecimenHangPos,
-            OuttakeArmPosition.StandbyPos,
-            OuttakeClawPosition.RetractedPos
-    ),
-
-    StandbyState(
             IntakeExtension.Retracted,
             IntakePosition.TransferPos,
             OuttakeExtension.SpecimenHangPos,

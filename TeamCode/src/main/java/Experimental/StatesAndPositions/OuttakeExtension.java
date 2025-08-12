@@ -8,7 +8,7 @@ public enum OuttakeExtension {
     AutoSpecimenHangPos(950),
     WallPickupPos(710),
     StandbyPos(1000),
-    TransferPos(201),
+    TransferPos(0),
     ParkedPos(655);
     private double value = 0;
     OuttakeExtension(double value) { this.value = value; }
