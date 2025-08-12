@@ -19,6 +19,7 @@ public class Outtake extends BaseModule {
     private double outtakeExtendOffset = 0;
 
     public void init() {
+        initializeInstances();
         outtakeExtendRight  = hardwareMap.get(DcMotor.class, outtakeExtendRightName);
         outtakeExtendLeft   = hardwareMap.get(DcMotor.class, outtakeExtendLeftName);
         outtakeArmRotation  = hardwareMap.get(Servo.class, outtakeArmName);

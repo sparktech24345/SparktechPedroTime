@@ -23,6 +23,7 @@ public class Intake extends BaseModule {
     private double IntakeExtendPower = 0;
 
     public void init() {
+        initializeInstances();
         IntakeSpin = hardwareMap.get(DcMotor.class, intakeSpinName);
         IntakeExtend = hardwareMap.get(DcMotor.class, intakeExtendName);
         IntakeRotation = hardwareMap.get(Servo.class, intakePosName);

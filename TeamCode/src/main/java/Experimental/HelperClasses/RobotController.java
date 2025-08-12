@@ -26,10 +26,14 @@ public class RobotController {
     private StateQueuer queuer = new StateQueuer();
 
     public RobotController() {
+        followerInstance = new ComplexFollower(new Follower(hardwareMap, F_Constants, L_Constants));
         this.gamepad = gamepadInstance;
         this.telemetry = telemetryInstance;
         this.hardwareMap = hardwareMapInstance;
-        this.follower = new ComplexFollower(new Follower(hardwareMap, F_Constants, L_Constants));
+        this.follower = followerInstance;
+        driveTrainInstance = driveTrain;
+        intakeInstance = intake;
+        outtakeInstance = outtake;
     }
 
     public void init(OpMode mode) {
@@ -68,7 +72,7 @@ public class RobotController {
             queuer.addAction(new StateAction(true, RobotState.StartState));
         }
         if (gamepad.DRIGHT1.Execute) {
-            queuer.addAction(new StateAction(true, RobotState.StartState));
+            queuer.addAction(new StateAction(true, RobotState.HighBasketScoreReadyState));
         }
         if (gamepad.DDOWN1.Execute)
             currentIntakeExt = IntakeExtension.Extended2;

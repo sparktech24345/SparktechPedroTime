@@ -29,6 +29,7 @@ public class DriveTrain extends BaseModule {
     private boolean directionFlip = false;
 
     public void init() {
+        initializeInstances();
         if (currentOpMode == OpMode.TeleOP) {
             RFDrive = hardwareMap.get(DcMotor.class, frontRightName);
             LFDrive = hardwareMap.get(DcMotor.class, frontLeftName);
