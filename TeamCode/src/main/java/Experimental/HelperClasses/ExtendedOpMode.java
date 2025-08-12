@@ -10,10 +10,10 @@ public abstract class ExtendedOpMode extends OpMode {
     private ComplexGamepad gamepad = null;
     private MultipleTelemetry tel = null;
     public ExtendedOpMode() {
-        gamepad = new ComplexGamepad(gamepad1, gamepad2);
-        tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
     }
     public void setInstances() {
+        gamepad = new ComplexGamepad(gamepad1, gamepad2);
+        tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         GlobalStorage.gamepadInstance = gamepad;
         GlobalStorage.hardwareMapInstance = hardwareMap;
         GlobalStorage.telemetryInstance = tel;

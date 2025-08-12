@@ -18,6 +18,7 @@ public class MoveAction extends Action {
     @Override
     public void execute() {
         followerInstance.follow(moveTargetPos);
+        followerInstance.Continue();
         started = true;
         if (!reachTarget) done = true;
     }

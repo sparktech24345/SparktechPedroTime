@@ -4,7 +4,9 @@ import static Experimental.HelperClasses.GlobalStorage.*;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import Experimental.HelperClasses.Actions.DelayAction;
 import Experimental.HelperClasses.Actions.MoveAction;
@@ -28,6 +30,10 @@ public class RobotController {
     private ComplexFollower follower;
     private StateQueuer queuer = new StateQueuer();
     private boolean runAuto = false;
+
+    private double tickMS = 0;
+    private ElapsedTime tickTimer = new ElapsedTime();
+
     public RobotController() {
         this.gamepad = gamepadInstance;
         this.telemetry = telemetryInstance;
@@ -40,21 +46,17 @@ public class RobotController {
     }
 
     private void setAutoSequence() {
-        queuer.addAction(new StateAction(false, RobotState.SpecimenHangReadyState));
-        queuer.addAction(new MoveAction(false, AutoOfSpecStatesAndPos.scoringBarPreloadSpecPose, true));
-        queuer.addAction(new StateAction(true, RobotState.SpecimenHangDoneState));
-        queuer.addAction(new MoveAction(false, AutoOfSpecStatesAndPos.firstSpecimenPickUpPose, true));
-        queuer.addAction(new DelayAction(false, 400));
-        queuer.addAction(new MoveAction(true, AutoOfSpecStatesAndPos.firstSamplePickUpPos, true));
-        queuer.addAction(new StateAction(false, RobotState.SamplePickupReadyState));
+        queuer.addAction(new StateAction(true, RobotState.StartState));
+        queuer.addAction(new MoveAction(true, new Pose(-10, 0), true));
+        queuer.addAction(new MoveAction(true, new Pose(10, 0), true));
+        queuer.addAction(new StateAction(true, RobotState.SpecimenHangReadyState));
     }
 
     public void init(OpMode mode) {
+        currentOpMode = mode;
         if (currentOpMode == OpMode.Autonomous && !runAuto) {
             runAuto = true;
-            setAutoSequence();
         }
-        currentOpMode = mode;
         driveTrain.init();
         intake.init();
         outtake.init();
@@ -63,26 +65,29 @@ public class RobotController {
 
     public void init_loop() {
         gamepad.CheckGamepads();
-        showTelemetry();
         if (gamepad.LEFT_BUMPER1.IsHeld && gamepad.START1.IsHeld)
             currentTeam = ColorSet.Blue;
         if (gamepad.RIGHT_BUMPER1.IsHeld && gamepad.START1.IsHeld)
             currentTeam = ColorSet.Red;
+        showTelemetry();
     }
 
     private void runUpdates() {
-        follower.update();
         queuer.update();
+        if (queuer.isEmpty()) setAutoSequence();
+        follower.update();
         gamepad.CheckGamepads();
         showTelemetry();
     }
 
     public void loop() {
+        tickTimer.reset();
         runUpdates();
         if (currentOpMode == OpMode.TeleOP) HandleControls();
         driveTrain.loop();
         intake.loop();
         outtake.loop();
+        tickMS = tickTimer.milliseconds();
     }
 
     private void HandleControls() {
@@ -118,6 +123,7 @@ public class RobotController {
         telemetry.addData("left stick X", gamepad.gamepad1.left_stick_x);
         telemetry.addData("left stick Y", gamepad.gamepad1.left_stick_y);
         telemetry.addData("right stick X", -gamepad.gamepad1.right_stick_x);
+        telemetry.addData("tick ms", tickMS);
         telemetry.update();
     }
 }

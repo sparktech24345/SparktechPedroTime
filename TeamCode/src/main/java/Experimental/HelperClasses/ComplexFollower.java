@@ -21,7 +21,7 @@ import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
 public class ComplexFollower {
-    private boolean shouldContinue = false;
+    private boolean shouldContinue = true;
     public boolean isDone = true;
     public Follower follower;
     public double currentX;
@@ -34,6 +34,7 @@ public class ComplexFollower {
 
     ComplexFollower(Follower follower) {
         this.follower = follower;
+        this.follower.update();
         currentPos = follower.getPose();
         currentX = currentPos.getX();
         currentY = currentPos.getY();
@@ -57,6 +58,7 @@ public class ComplexFollower {
 
     public void update() {
         if (currentOpMode == OpMode.Autonomous) {
+            follower.update();
             if (follower.isBusy()) {
                 isDone = false;
                 currentPos = follower.getPose();
@@ -70,6 +72,7 @@ public class ComplexFollower {
                 pathToFollow = new Path(new BezierLine(currentPos, currentTargetPos));
                 follower.followPath(pathToFollow);
                 shouldContinue = false;
+                follower.update();
                 return;
             }
             isDone = true;

@@ -16,6 +16,8 @@ public class StateQueuer {
         actionQueue.add(action);
     }
 
+    public boolean isEmpty() { return actionQueue.isEmpty(); }
+
     public void update() {
         prevDone = true;
         for (Action action : actionQueue) {
