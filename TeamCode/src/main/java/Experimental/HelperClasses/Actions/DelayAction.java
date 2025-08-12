@@ -7,7 +7,7 @@ public class DelayAction extends Action {
     private ElapsedTime timer;
     private double waitTimeMS = 0;
 
-    DelayAction(boolean waitForPrevious, double milliseconds) {
+    public DelayAction(boolean waitForPrevious, double milliseconds) {
         this.waitForPrevious = waitForPrevious;
         this.waitTimeMS = milliseconds;
     }

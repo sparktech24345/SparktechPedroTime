@@ -14,10 +14,11 @@ import Experimental.HelperClasses.RobotController;
 @TeleOp(name = "Main TeleOP", group = "Experimental")
 public class MainTeleOP extends ExtendedLinearOpMode {
 
-    private RobotController robot;
+    private RobotController robot = null;
     @Override
     public void runOpMode() {
         // init
+        setInstances();
         robot = new RobotController();
         robot.init(OpMode.TeleOP);
 

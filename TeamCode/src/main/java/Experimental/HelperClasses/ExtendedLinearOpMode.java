@@ -7,13 +7,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public abstract class ExtendedLinearOpMode extends LinearOpMode {
     private ComplexGamepad gamepad = null;
     private MultipleTelemetry tel = null;
-    public ExtendedLinearOpMode() {
-        gamepad = new ComplexGamepad(gamepad1, gamepad2);
-        tel = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-    }
+    public ExtendedLinearOpMode() {}
     public void setInstances() {
-        GlobalStorage.gamepadInstance = gamepad;
+        GlobalStorage.gamepadInstance = new ComplexGamepad(gamepad1, gamepad2);
         GlobalStorage.hardwareMapInstance = hardwareMap;
-        GlobalStorage.telemetryInstance = tel;
+        GlobalStorage.telemetryInstance = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        this.gamepad = GlobalStorage.gamepadInstance;
+        this.tel = GlobalStorage.telemetryInstance;
     }
 }

@@ -66,10 +66,10 @@ public class DriveTrain extends BaseModule {
         double horizontal =  gamepad.gamepad1.left_stick_x;
         double pivot =  gamepad.gamepad1.right_stick_x;
 
-        double FrontRightPow = vertical + horizontal + pivot;
+        double FrontRightPow = vertical + horizontal - pivot;
         double BackRightPow = vertical - horizontal - pivot;
         double FrontLeftPow = vertical - horizontal + pivot;
-        double BackLeftPow = vertical + horizontal - pivot;
+        double BackLeftPow = vertical + horizontal + pivot;
 
         RFDrive.setPower(FrontRightPow);
         LFDrive.setPower(FrontLeftPow);
