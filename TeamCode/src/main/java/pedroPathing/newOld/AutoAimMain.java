@@ -114,7 +114,7 @@ import pedroPathing.tests.Config;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "AutoAimMain", group = "Linear OpMode")
+@TeleOp(name = "AutoAimMainlll", group = "Linear OpMode")
 @Disabled
 public class AutoAimMain extends LinearOpMode {
 

@@ -8,7 +8,7 @@ import pedroPathing.ClassWithStates;
 
 @Config
 @Autonomous(name = "BlueBasketExtendAutoLinear", group = "Examples")
-public class BlueBasketExtendAutoLinear extends AutoForBasketMainFileLinearV2 {
+public class BlueBasketExtendAutoLinear extends AutoForBasketMainNewTuneForPinpoint {
     public BlueBasketExtendAutoLinear() {
         super(ClassWithStates.colorList.blue);
     }

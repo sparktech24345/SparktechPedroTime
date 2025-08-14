@@ -1,39 +1,7 @@
 package pedroPathing.Autos.Linear;
 
-import static pedroPathing.ClassWithStates.ColorCompare;
-import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
-import static pedroPathing.ClassWithStates.autoOuttakeWallPickUpNew;
-import static pedroPathing.ClassWithStates.colorSensorOutty;
-import static pedroPathing.ClassWithStates.currentStateOfSampleInIntake;
-import static pedroPathing.ClassWithStates.currentTeam;
-import static pedroPathing.ClassWithStates.initStates;
-import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
-import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
-import static pedroPathing.ClassWithStates.intakeCabinFullInBotOutputting;
-import static pedroPathing.ClassWithStates.intakeCabinTransferPosition;
-import static pedroPathing.ClassWithStates.intakeCabinTransferPositionWithPower;
-import static pedroPathing.ClassWithStates.intakeExtended1out4;
-import static pedroPathing.ClassWithStates.intakeExtended4out4;
-import static pedroPathing.ClassWithStates.intakeRetracted;
-import static pedroPathing.ClassWithStates.outtakeBasket;
-import static pedroPathing.ClassWithStates.outtakeSpecimenHang;
-import static pedroPathing.OrganizedPositionStorage.autoTimer;
-import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
-import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
-import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
-import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
-import static pedroPathing.OrganizedPositionStorage.intakeTargetPosAdder;
-import static pedroPathing.OrganizedPositionStorage.isRobotInAuto;
-import static pedroPathing.OrganizedPositionStorage.isYellowSampleNotGood;
-import static pedroPathing.OrganizedPositionStorage.needsToExtraExtend;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtendedPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtraExtendedPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoRetractedPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeIsInNeedToExtraExtendClawTimer;
-import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
-import static pedroPathing.OrganizedPositionStorage.resetStuff;
+import static pedroPathing.ClassWithStates.*;
+import static pedroPathing.OrganizedPositionStorage.*;
 
 import android.graphics.Color;
 
@@ -50,7 +18,6 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Drawing;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -61,17 +28,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.PIDStorageAndUse.ControlMotor;
-import pedroPathing.constants.FConstants5And1;
 import pedroPathing.constants.FConstantsForPinpoint;
-import pedroPathing.constants.LConstants;
 import pedroPathing.constants.LConstantsForPinpoint;
 
 @Config
-@Autonomous(name = "5 Spec + 1 Sample Linear Auto ALLIANCE INDEPENDENT", group = "Examples")
-@Disabled
-public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
+@Autonomous(name = "5 Spec + 1 Sample the new way", group = "Examples")
+public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
     private Follower follower;
-    private Timer pathTimer, actionTimer, opmodeTimer;
+    private Timer pathTimer, actionTimer, opmodeTimer, intakeGoDownTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
     final float[] hsvValues = new float[3];
     private DcMotor intakeMotor;
@@ -89,7 +53,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); //start
     //scoring bar positions
     private final float scoringBarX = -31f;
-    private final float scoringBarY = -4.84f;
+    private final float scoringBarY = -5f;
     private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
     private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
     private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
@@ -97,8 +61,8 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
     private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
-    private final float wallPickUpX = 2f;
-    private final float wallPickUpY = 31f;
+    private final float wallPickUpX = 2.5f;
+    private final float wallPickUpY = 30f;
 
     //specimen pick up positions
     private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX+1, wallPickUpY, 0); //start
@@ -108,24 +72,29 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
     // ----------------------------------------------- SAMPLE POSES ----------------------------------------------- \\
 
-    private final Pose firstSamplePickUpPos = new Pose(-8.230515127106914, 53.49810262364665, 0.3864225149154663); //start
-    private final Pose secondSamplePickUpPos = new Pose(-9, 52,Math.toRadians(2)); //start
-    private final Pose thirdSamplePickUpPos = new Pose(-10, 49, Math.toRadians(332)); //start
+    private final Pose firstSamplePickUpPos = new Pose(-21.88, 27, Math.toRadians(318));
+    private final Pose firstSampleDepositPos = new Pose(-18.160, 34.494, Math.toRadians(239.527));
+    private final Pose secondSamplePickUpPos = new Pose(-22.699, 34.704, Math.toRadians(306.975));
+    private final Pose secondSampleDepositPos = new Pose(-18.992, 40.796, Math.toRadians(231.827));
+    private final Pose thirdSamplePickUpPos = new Pose(-20.31, 46, Math.toRadians(317));
+    private final Pose thirdSampleDepositPos = new Pose(-17.971, 44.790, Math.toRadians(230.693));
+    private final Pose intermediatePos = new Pose(-18, 30, Math.toRadians(0));
 
     // --------- + 1 ------------- \\
-    private final Pose basketPickUp = new Pose(-7, 11, 4.672053639088766);
+    private final Pose basketPickUp = new Pose(-6, 13, 4.672053639088766);
     private final Pose basketScore = new Pose(-10, -60, 5.327179614697592);
 
     //PARK
     private final Pose parkingPose=new Pose(-6.625476146307517, 8.210622832531065, 4.672053639088766); //parking
     double intakeMotorPower=0;
     double outakeMotorPower=0;
+    boolean shouldIntakeGoDown = false;
 
 
     ControlMotor intakeControlMotor;
     ControlMotor outakeControlMotor;
     private Path startPath,pickUpFirst,pickUpSecond,pickUpThird,pickUpFourth,pickUpFifth,scoreFirst,scoreSecond,scoreThird,scoreFourth,scoreFifth,parking,scoreInBasket;
-    private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample,goToPickUpForBasket;
+    private PathChain goToPickUpFirstSample,goToPickUpSecondSample,goToPickUpThirdSample,goToPickUpForBasket,depositFirstSample,depositSecondSample,depositThirdSample,goToIntermidiate;
 
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
@@ -151,42 +120,50 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
         startPath = new Path(new BezierLine(new Point(startPose), new Point(scoringBarPosePreloadSpecimen)));
         startPath.setLinearHeadingInterpolation(startPose.getHeading(), scoringBarPosePreloadSpecimen.getHeading());
 
-        /*goToPickUpFirstSample=follower.pathBuilder()
+        goToPickUpFirstSample=follower.pathBuilder()
                 .addPath(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(firstSamplePickUpPos)))
                 .setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), firstSamplePickUpPos.getHeading())
                 .build();
 
-        goToPickUpSecondSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(firstSamplePickUpPos), new Point(secondSamplePickUpPos)))
-                .setLinearHeadingInterpolation(firstSamplePickUpPos.getHeading(), secondSamplePickUpPos.getHeading())
-                .build();
-
-        goToPickUpThirdSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(secondSamplePickUpPos), new Point(thirdSamplePickUpPos)))
-                .setLinearHeadingInterpolation(secondSamplePickUpPos.getHeading(), thirdSamplePickUpPos.getHeading())
-                .build();
-*/  // 3 2 1 logic
-        goToPickUpFirstSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scoringBarPosePreloadSpecimen), new Point(thirdSamplePickUpPos)))
-                .setLinearHeadingInterpolation(scoringBarPosePreloadSpecimen.getHeading(), thirdSamplePickUpPos.getHeading())
+        depositFirstSample=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(firstSamplePickUpPos), new Point(firstSampleDepositPos)))
+                .setLinearHeadingInterpolation(firstSamplePickUpPos.getHeading(), firstSampleDepositPos.getHeading())
                 .build();
 
         goToPickUpSecondSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(thirdSamplePickUpPos), new Point(secondSamplePickUpPos)))
-                .setLinearHeadingInterpolation(thirdSamplePickUpPos.getHeading(), secondSamplePickUpPos.getHeading())
+                .addPath(new BezierLine(new Point(firstSampleDepositPos), new Point(secondSamplePickUpPos)))
+                .setLinearHeadingInterpolation(firstSampleDepositPos.getHeading(), secondSamplePickUpPos.getHeading())
+                .build();
+
+        depositSecondSample=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(secondSamplePickUpPos), new Point(secondSampleDepositPos)))
+                .setLinearHeadingInterpolation(secondSamplePickUpPos.getHeading(), secondSampleDepositPos.getHeading())
                 .build();
 
         goToPickUpThirdSample=follower.pathBuilder()
-                .addPath(new BezierLine(new Point(secondSamplePickUpPos), new Point(firstSamplePickUpPos)))
-                .setLinearHeadingInterpolation(secondSamplePickUpPos.getHeading(), firstSamplePickUpPos.getHeading())
+                .addPath(new BezierLine(new Point(secondSampleDepositPos), new Point(thirdSamplePickUpPos)))
+                .setLinearHeadingInterpolation(secondSampleDepositPos.getHeading(), thirdSamplePickUpPos.getHeading())
                 .build();
 
-        //first spec //changed logic to for 3 2 1 logic
-        pickUpFirst = new Path(new BezierLine(new Point(firstSamplePickUpPos), new Point(firstSpecimenPickUpPose)));
-        pickUpFirst.setLinearHeadingInterpolation(firstSamplePickUpPos.getHeading(), firstSpecimenPickUpPose.getHeading());
+        depositThirdSample=follower.pathBuilder()
+                .addPath(new BezierLine(new Point(thirdSamplePickUpPos), new Point(thirdSampleDepositPos)))
+                .setLinearHeadingInterpolation(thirdSamplePickUpPos.getHeading(), thirdSampleDepositPos.getHeading())
+                .build();
+
+        goToIntermidiate =follower.pathBuilder()
+                .addPath(new BezierLine(new Point(thirdSampleDepositPos), new Point(intermediatePos)))
+                .setLinearHeadingInterpolation(thirdSampleDepositPos.getHeading(), intermediatePos.getHeading())
+                .build();
+
+
+        //first spec
+
+        pickUpFirst = new Path(new BezierLine(new Point(intermediatePos), new Point(firstSpecimenPickUpPose)));
+        pickUpFirst.setLinearHeadingInterpolation(intermediatePos.getHeading(), firstSpecimenPickUpPose.getHeading());
 
         scoreFirst = new Path(new BezierLine(new Point(firstSpecimenPickUpPose), new Point(scoringBarPoseFirstSpecimen)));
         scoreFirst.setLinearHeadingInterpolation(firstSpecimenPickUpPose.getHeading(), scoringBarPoseFirstSpecimen.getHeading());
+
         //second spec
 
         pickUpSecond = new Path(new BezierLine(new Point(scoringBarPoseFirstSpecimen), new Point(secondSpecimenPickUpPose)));
@@ -194,7 +171,6 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
 
         scoreSecond = new Path(new BezierLine(new Point(secondSpecimenPickUpPose), new Point(scoringBarPoseSecondSpecimen)));
         scoreSecond.setLinearHeadingInterpolation(secondSpecimenPickUpPose.getHeading(), scoringBarPoseSecondSpecimen.getHeading());
-
 
         //third spec
 
@@ -245,6 +221,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
         switch (pathState) {
             case 0:
                 if(!follower.isBusy()) {
+                    //init
                     outtakeSpecimenHang();
                     autoTimer = System.currentTimeMillis();
                     follower.followPath(startPath,true);
@@ -252,104 +229,153 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                 }
                 break;
 
+                //score preload
             case 2:
                 if(!follower.isBusy()) {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    waitWhile(150);
+                    waitWhile(100);
                     autoTimer = System.currentTimeMillis();
+                    intakeGoDownTimer = new Timer();
+                    intakeGoDownTimer.resetTimer();
+                    shouldIntakeGoDown = true;
                     follower.followPath(goToPickUpFirstSample,true);
                     setPathState(3);
                 }
                 break;
 
+                //pick up first sample
             case 3:
                 if(!follower.isBusy()) {
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    waitWhile(350);
+                    intakeExtended3out4();
+                    waitWhile(200);
                     intakeExtended4out4();
                     autoTimer = System.currentTimeMillis();
                     while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested())  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
-                    intakeRetracted();
-                    intakeCabinFullInBot();
-                    waitWhile(300);
 
-
-
-                    follower.followPath(goToPickUpSecondSample,true);
+                    //after collection
+                    intakeExtended1out4();
+                    intakeCabinALittleBitUpStandStill();
+                    follower.followPath(depositFirstSample,true);
                     setPathState(4);
                 }
                 break;
 
+                //deposit first sample
             case 4:
                 if(!follower.isBusy()) {
-
-                    intakeCabinFullInBotOutputting();
+                    autoTimer = System.currentTimeMillis();
+                    intakeExtended4out4();
+                    waitWhile(50);
+                    intakeCabinALittleBitUpOutputting();
+                    autoTimer = System.currentTimeMillis();
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
 
-                    waitWhile(300);
-                    //output first picked upaka 3rd sample counting from subermsible
+                    //wait for proper sample exit
+                    waitWhile(150);
 
-
-
-                    //pick up 2nd sample
-                    autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    waitWhile(300);
-                    intakeExtended4out4();
+                    intakeExtended1out4();
 
-                    autoTimer = System.currentTimeMillis();
-                    while(!isStopRequested() && !(currentStateOfSampleInIntake == colorSensorOutty.correctSample)  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
-                    intakeRetracted();
-                    intakeCabinFullInBot();
-                    waitWhile(300);
-                    /*
-                    intakeCabinFullInBotOutputting();
-                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample) robotDoStuff();
-                    */
-
-
-                    follower.followPath(goToPickUpThirdSample,true);
-                    setPathState(105);
+                    follower.followPath(goToPickUpSecondSample,true);
+                    setPathState(5);
                 }
                 break;
 
-            //last sample and first spec prep
-            case 105:
+                //pickup second sample
+            case 5:
                 if(!follower.isBusy()) {
-                    //trow out second sample
-                    intakeCabinFullInBotOutputting();
-                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
-
-                    waitWhile(300);
-
-
-                    //pick up and trow third sample  aka 1st from submersible
                     autoTimer = System.currentTimeMillis();
                     intakeCabinDownCollecting();
-                    waitWhile(300);
+                    intakeExtended3out4();
+                    waitWhile(200);
                     intakeExtended4out4();
-
                     autoTimer = System.currentTimeMillis();
                     while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested())  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
-                    intakeRetracted();
-                    intakeCabinFullInBot();
-                    waitWhile(350);
-                    intakeCabinFullInBotOutputting();
+
+                    //after collection
+                    intakeExtended1out4();
+                    intakeCabinALittleBitUpStandStill();
+                    follower.followPath(depositSecondSample,true);
+                    setPathState(6);
+                }
+                break;
+
+            //deposit second sample
+            case 6:
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
+                    intakeExtended4out4();
+                    waitWhile(50);
+                    intakeCabinALittleBitUpOutputting();
+                    autoTimer = System.currentTimeMillis();
+                    while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
+
+                    //wait for proper sample exit
+                    waitWhile(150);
+
+                    intakeCabinDownCollecting();
+                    intakeExtended1out4();
+
+                    follower.followPath(goToPickUpThirdSample,true);
+                    setPathState(7);
+                }
+                break;
+
+                //pick up third sample
+            case 7:
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
+                    intakeCabinDownCollecting();
+                    intakeExtended3out4();
+                    waitWhile(200);
+                    intakeExtended4out4();
+                    autoTimer = System.currentTimeMillis();
+                    while(!(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested())  && autoTimer + 2000 > System.currentTimeMillis()) robotDoStuff();
+
+                    //after collection
+                    intakeExtended1out4();
+                    intakeCabinALittleBitUpStandStill();
+                    follower.followPath(depositThirdSample,true);
+                    setPathState(8);
+                }
+                break;
+
+            //third sample deposit and first spec prep
+            case 8:
+                if(!follower.isBusy()) {
+
+                    //deposit 3rd spec
+                    autoTimer = System.currentTimeMillis();
+                    intakeExtended4out4();
+                    waitWhile(50);
+                    intakeCabinALittleBitUpOutputting();
+                    autoTimer = System.currentTimeMillis();
                     while(currentStateOfSampleInIntake == colorSensorOutty.correctSample && !isStopRequested()) robotDoStuff();
 
 
 
                     //prep for pick up
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
-                    waitWhile(300);
+                    waitWhile(150);
                     autoOuttakeWallPickUpNew();
+                    intakeRetracted();
                     intakeCabinFullInBot();
                     autoTimer = System.currentTimeMillis();
 
 
 
+                    follower.followPath(goToIntermidiate,true);
+                    setPathState(9);
+                }
+                break;
 
+
+            //intermediate pos
+            case 9:
+                if(!follower.isBusy()) {
+                    autoTimer = System.currentTimeMillis();
                     follower.followPath(pickUpFirst,true);
                     setPathState(106);
                 }
@@ -435,6 +461,10 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(150);
                     autoTimer = System.currentTimeMillis();
+
+                    intakeGoDownTimer.resetTimer();
+                    shouldIntakeGoDown = true;
+
                     follower.followPath(goToPickUpForBasket,true);
                     setPathState(114);
                 }
@@ -443,12 +473,7 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
             case 114:
                 if(!follower.isBusy()) {
                     intakeCabinDownCollecting();
-                    intakeExtended1out4();
-
-                    //waitWhile(200);
                     autoOuttakeTransfer();
-
-                    //waitWhile(300);
                     intakeExtended4out4();
 
                     autoTimer = System.currentTimeMillis();
@@ -616,6 +641,10 @@ public class AutoOf5SpecAnd1LinearTime extends LinearOpMode {
         }
         if (follower.getVelocity().getMagnitude() == 0 && follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5) {
             follower.breakFollowing();
+        }
+        if(shouldIntakeGoDown && intakeGoDownTimer.getElapsedTime() > 400){
+            shouldIntakeGoDown = false;
+            intakeCabinDownCollecting();
         }
 
 

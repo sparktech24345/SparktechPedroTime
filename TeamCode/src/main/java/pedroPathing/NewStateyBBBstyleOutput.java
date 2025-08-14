@@ -20,7 +20,7 @@ import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 
 @com.acmerobotics.dashboard.config.Config
-@TeleOp(name = "BBBNewStatesOutput", group = "Linear OpMode")
+@TeleOp(name = "Main Teleop", group = "Linear OpMode")
 public class NewStateyBBBstyleOutput extends LinearOpMode {
 
     final float[] hsvValues = new float[3];
@@ -496,7 +496,8 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             PIDincrement=1;
             double intakeExtendMotorPow;
             intakeExtendMotorPow = NewPidsController.pidControllerIntake(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
-            //if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.3;
+            if(intakeExtendMotorPow < 0) intakeExtendMotorPow *= 1.3;
+            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.2;
             double outtakeExtendMotorPow;
             outtakeExtendMotorPow = NewPidsController.pidControllerOuttake(-outtakeExtendMotorTargetPos - outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;

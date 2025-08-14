@@ -4,7 +4,7 @@ import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Localizers;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class FConstantsForPinpoint {
+public class FConstantsForPinpointForBasket {
     static {
         FollowerConstants.localizers = Localizers.PINPOINT;
 
@@ -20,11 +20,11 @@ public class FConstantsForPinpoint {
 
         FollowerConstants.mass = 11.8;
 
-        FollowerConstants.xMovement = 0.4*78;
-        FollowerConstants.yMovement = 0.4*63;
+        FollowerConstants.xMovement = 0.2*78;
+        FollowerConstants.yMovement = 0.2*63;
 
-        FollowerConstants.forwardZeroPowerAcceleration = -50;
-        FollowerConstants.lateralZeroPowerAcceleration = -115;
+        FollowerConstants.forwardZeroPowerAcceleration = -35;
+        FollowerConstants.lateralZeroPowerAcceleration = -65;
 
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0);
         FollowerConstants.useSecondaryTranslationalPID = false;
@@ -41,7 +41,7 @@ public class FConstantsForPinpoint {
         FollowerConstants.zeroPowerAccelerationMultiplier = 5 ;
         FollowerConstants.centripetalScaling = 0.0005;
 
-        FollowerConstants.pathEndTimeoutConstraint = 200;
+        FollowerConstants.pathEndTimeoutConstraint = 250;
         FollowerConstants.pathEndTValueConstraint = 0.995;
         FollowerConstants.pathEndVelocityConstraint = 0.1;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
