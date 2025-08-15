@@ -62,10 +62,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.PIDStorageAndUse.ControlMotor;
-import pedroPathing.constants.FConstantsForBasket;
-import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.FConstantsForPinpointForBasket;
-import pedroPathing.constants.LConstants;
 import pedroPathing.constants.LConstantsForPinpoint;
 
 //@Config
@@ -101,29 +98,29 @@ public class AutoForBasketMainNewTuneForPinpoint extends LinearOpMode {
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); //start
 
     // place in basket
-    public final double basketY = -5.435314028281865;//45097194883;
+    public final double basketY = -6;//45097194883;
     public final double basketX = 44;//71182947835;
 
     double basketHeading = Math.toRadians(53.65523062885758);
     private final Pose behindBasketPreload = new Pose(basketX, basketY, (basketHeading));
     private final Pose behindBasketFirstSample = new Pose(basketX, basketY, (basketHeading));
     private final Pose behindBasketSecondSample = new Pose(basketX, basketY, (basketHeading));
-    private final Pose behindBasketThirdSample = new Pose(basketX, basketY , (basketHeading));
+    private final Pose behindBasketThirdSample = new Pose(basketX, basketY-0.7 , (basketHeading));
 
     // collect first 3 from floor
     private final Pose firstSampleCollect = new Pose(43.85852723609744, -7.929813054602916, Math.toRadians(74.34624028537361));
-    private final Pose secondSampleCollect = new Pose(45.45360655296506, -7.604137630913201, Math.toRadians(91.70738587244128));
-    private final Pose thirdSampleCollect = new Pose(38.766777459092026, -8.76637015755721, Math.toRadians(127.85130579023388));
+    private final Pose secondSampleCollect = new Pose(44.9, -7.604137630913201, Math.toRadians(91.70738587244128));
+    private final Pose thirdSampleCollect = new Pose(38.766777459092026, -8.76637015755721, Math.toRadians(126.5));
 
     // collect from submersible
 
     // first
     private final Pose firstSubmersibleStdCollect = new Pose(8, -53.95808182363435, Math.toRadians(1.343121268676688));
-    private final Pose firstSubmersibleStdBehindBasket = new Pose(basketX, basketY, basketHeading);
+    private final Pose firstSubmersibleStdBehindBasket = new Pose(basketX+2, basketY, basketHeading-Math.toRadians(15));
 
     // second
     private final Pose secondSubmersibleStdCollect = new Pose(8, -59.30385799858514, Math.toRadians(1.996540493692655));
-    private final Pose secondSubmersibleStdBehindBasket = new Pose(basketX, basketY, basketHeading);
+    private final Pose secondSubmersibleStdBehindBasket = new Pose(basketX+2, basketY, basketHeading-Math.toRadians(15));
     // sign off
     private final Pose endingPosition = new Pose(0, 0, Math.toRadians(0));
 
@@ -140,6 +137,9 @@ slides pos on descent -223
      */
 
     private boolean skipBasket = false;
+    private boolean failedFirstSample = false;
+    private boolean failedSecondSample = false;
+    private boolean failedThirdSample = false;
 
 
     ControlMotor intakeControlMotor;
@@ -150,7 +150,7 @@ slides pos on descent -223
     private PathChain firstSampleCollectPath, preloadScorePath, firstSampleScorePath, secondSampleCollectPath, secondSampleScorePath, thirdSampleCollectPath, thirdSampleScorePath
             , firstSubmersibleCollectPath, firstSubmersibleScorePath,
             secondSubmersibleCollectPath, secondSubmersibleScorePath
-            ,secondTrySubPath, signOffPath;
+            ,secondTrySubPath, signOffPath, pickUpSecondSampleAfterMissedFirst, pickUpThirdSampleAfterMissedSecond, pickUpFromSubmersibleAfterMissedThird;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -224,6 +224,26 @@ slides pos on descent -223
                 .setConstantHeadingInterpolation(behindBasketThirdSample.getHeading())
                 .build();
 
+        /// missed stuff
+        pickUpSecondSampleAfterMissedFirst = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(firstSampleCollect), new Point(secondSampleCollect)))
+                .setLinearHeadingInterpolation(firstSampleCollect.getHeading(), secondSampleCollect.getHeading())
+                .build();
+
+        pickUpThirdSampleAfterMissedSecond = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(secondSampleCollect), new Point(thirdSampleCollect)))
+                .setLinearHeadingInterpolation(secondSampleCollect.getHeading(), thirdSampleCollect.getHeading())
+                .build();
+
+        pickUpFromSubmersibleAfterMissedThird = follower.pathBuilder()
+                .addPath(new BezierCurve(new Point(thirdSampleCollect),
+                        intermediaryExtraPoseForCurves,
+                        new Point(firstSubmersibleStdCollect)))
+                .setLinearHeadingInterpolation(thirdSampleCollect.getHeading(), firstSubmersibleStdCollect.getHeading())
+                .build();
+
+
+
         ///  COLLECT FROM SUBMERSIBLE
         ///  FIRST
         firstSubmersibleCollectPath = follower.pathBuilder()
@@ -280,7 +300,7 @@ slides pos on descent -223
      * The followPath() function sets the follower to run the specific path, but does NOT wait for it to finish before moving on. */
     // from 1 - 100 is normal paths
     // from 100+ is scoring paths
-    private final int basketDropTimer = 75;
+    private final int basketDropTimer = 50;
     public void autonomousPathUpdate() {
         switch (pathState) {
             // PRELOAD
@@ -300,6 +320,7 @@ slides pos on descent -223
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
+                    intakeCabinDownCollecting();
 
                     follower.followPath(firstSampleCollectPath, true);
                     setPathState(3);
@@ -307,17 +328,16 @@ slides pos on descent -223
                 break;
             case 3:
                 if (!follower.isBusy()) {
-                    waitWhile(100); //lets not hang
-                    //skipBasket =  executeAutoCollect();
-                    // skipBasket = false;
-                    executeAutoCollect();
+                    executeAutoCollectFast();
 
                     //checking after the method finished in case it barely caught it
                     if (currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample) {
                         setPathState(4);
                     } else if (currentStateOfSampleInIntake == colorSensorOutty.noSample) {
                         setPathState(6);
+                        failedFirstSample = true;
                     } else {
+                        failedFirstSample = true;
                         somethingFailed = true;
                         setPathState(6);
                     }
@@ -338,24 +358,25 @@ slides pos on descent -223
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
+                    intakeCabinDownCollecting();
 
-                    follower.followPath(secondSampleCollectPath, true);
+                    if(!failedFirstSample) follower.followPath(secondSampleCollectPath, true);
+                    else follower.followPath(pickUpSecondSampleAfterMissedFirst, true);
                     setPathState(7);
                 }
                 break;
             case 7:
                 if (!follower.isBusy()) {
-                    waitWhile(100); //lets not hang
-                    //skipBasket =  executeAutoCollect();
-                    // skipBasket = false;
-                    executeAutoCollect();
+                    executeAutoCollectFast();
 
                     //checking after the method finished in case it barely caught it
                     if (currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample) {
                         setPathState(8);
                     } else if (currentStateOfSampleInIntake == colorSensorOutty.noSample) {
+                        failedSecondSample = true;
                         setPathState(10);
                     } else {
+                        failedSecondSample = true;
                         somethingFailed = true;
                         setPathState(10);
                     }
@@ -376,6 +397,8 @@ slides pos on descent -223
                     waitWhile(basketDropTimer);
                     outtakeClawServoPos = outtakeClawServoExtendedPos;
                     waitWhile(basketDropTimer);
+                    intakeCabinDownCollecting();
+
                     setPathState(10);
                 }
                 break;
@@ -385,23 +408,23 @@ slides pos on descent -223
 
             case 10:
                 if (!follower.isBusy()) {
-                    follower.followPath(thirdSampleCollectPath, true);
+                    if(!failedSecondSample) follower.followPath(thirdSampleCollectPath, true);
+                    else follower.followPath(pickUpThirdSampleAfterMissedSecond, true);
                     setPathState(11);
                 }
                 break;
             case 11:
                 if (!follower.isBusy()) {
-                    waitWhile(100); //lets not hang
-                    //skipBasket =  executeAutoCollect();
-                    // skipBasket = false;
-                    executeAutoCollect();
+                    executeAutoCollectFast();
 
                     //checking after the method finished in case it barely caught it
                     if (currentStateOfSampleInIntake == colorSensorOutty.correctSample || currentStateOfSampleInIntake == colorSensorOutty.wrongSample) {
                         setPathState(12);
                     } else if (currentStateOfSampleInIntake == colorSensorOutty.noSample) {
+                        failedThirdSample = true;
                         setPathState(14);
                     } else {
+                        failedThirdSample = true;
                         somethingFailed = true;
                         setPathState(14);
                     }
@@ -433,7 +456,9 @@ slides pos on descent -223
                 if (!follower.isBusy()) {
                     waitWhile(100); //lets not hang
                     autoOuttakeTransfer();
-                    follower.followPath(firstSubmersibleCollectPath);
+
+                    if(!failedThirdSample ) follower.followPath(firstSubmersibleCollectPath);
+                    else follower.followPath(pickUpFromSubmersibleAfterMissedThird);
                     setPathState(15);
                 }
                 break;
@@ -600,11 +625,35 @@ slides pos on descent -223
         outtakeClawServoPos = outtakeClawServoExtendedPos;
     }
 
+
+    public void executeAutoCollectFast(){
+        autoTimer = System.currentTimeMillis();
+
+        intakeCabinDownCollecting();
+        autoOuttakeTransfer();
+        intakeExtended4out4();
+
+        autoTimer = System.currentTimeMillis();
+        while(!(currentStateOfSampleInIntake == colorSensorOutty.wrongSample
+                || currentStateOfSampleInIntake == colorSensorOutty.correctSample)
+                && autoTimer + 2000 > System.currentTimeMillis()
+                && !isStopRequested()) {
+            robotDoStuff();
+        }
+        intakeCabinTransferPositionWithPower();
+        intakeRetracted();
+        outtakeClawServoPos = outtakeClawServoExtendedPos;
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         resetStuff();
         isRobotInAuto = true;
         somethingFailed = false;
+
+        failedFirstSample = false;
+        failedSecondSample = false;
+        failedThirdSample = false;
 
         pathTimer = new Timer();
         opmodeTimer = new Timer();

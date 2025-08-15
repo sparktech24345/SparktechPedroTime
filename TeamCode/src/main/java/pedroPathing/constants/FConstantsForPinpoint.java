@@ -20,11 +20,11 @@ public class FConstantsForPinpoint {
 
         FollowerConstants.mass = 11.8;
 
-        FollowerConstants.xMovement = 0.4*78;
-        FollowerConstants.yMovement = 0.4*63;
+        FollowerConstants.xMovement = 0.5*78;
+        FollowerConstants.yMovement = 0.5*63;
 
         FollowerConstants.forwardZeroPowerAcceleration = -50;
-        FollowerConstants.lateralZeroPowerAcceleration = -115;
+        FollowerConstants.lateralZeroPowerAcceleration = -130;
 
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0);
         FollowerConstants.useSecondaryTranslationalPID = false;
