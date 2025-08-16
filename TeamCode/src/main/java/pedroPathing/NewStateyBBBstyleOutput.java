@@ -498,7 +498,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
             double intakeExtendMotorPow;
             intakeExtendMotorPow = NewPidsController.pidControllerIntake(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
             if(intakeExtendMotorPow < 0) intakeExtendMotorPow *= 1.3;
-            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.2;
+            if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeExtendMotorPow *= 1.4;
             double outtakeExtendMotorPow;
             outtakeExtendMotorPow = NewPidsController.pidControllerOuttake(-outtakeExtendMotorTargetPos - outtakeTargetPosAdder, outakeLeftMotor.getCurrentPosition());
             outtakeExtendMotorPow *= PIDincrement;
