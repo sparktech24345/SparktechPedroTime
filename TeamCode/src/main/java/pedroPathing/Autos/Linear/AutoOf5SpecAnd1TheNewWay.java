@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
@@ -28,6 +29,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import pedroPathing.PIDStorageAndUse.ControlMotor;
+import pedroPathing.PIDStorageAndUse.NewPidsController;
 import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstantsForPinpoint;
 
@@ -365,8 +367,7 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
                     autoTimer = System.currentTimeMillis();
 
 
-
-                    follower.followPath(goToIntermidiate,true);
+                    follower.followPath(goToIntermidiate,false);
                     setPathState(9);
                 }
                 break;
@@ -583,7 +584,7 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
 
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        intakeControlMotor = new ControlMotor();
+
         outakeControlMotor = new ControlMotor();
 
         // Set init position
@@ -654,7 +655,7 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
         currentStateOfSampleInIntake = ColorCompare(colors,currentTeam,isYellowSampleNotGood);
 
         //PID Stuff
-        intakeMotorPower = intakeControlMotor.PIDControl(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
+        intakeMotorPower = NewPidsController.pidControllerIntake(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
         outakeMotorPower = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos, outakeLeftMotor.getCurrentPosition());
 
         //set motor positions

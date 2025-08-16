@@ -167,7 +167,7 @@ public class ClassWithStates {
     public static void intakeCabinALittleBitUpOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
         intakePivotServoPos = intakePivotServoPickupPos-15;
-        intakeSpinMotorPow = 0.8;
+        intakeSpinMotorPow = 0.6;
     }
     public static void intakeCabinTransferPosition(){
         intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
