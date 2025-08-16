@@ -88,6 +88,7 @@ public class OrganizedPositionStorage {
     public static boolean somethingFailed = false;
     public static boolean shouldBeginZeroesRetune = false;
     public static boolean isTimeToReset = false;
+    public static boolean shouldDoAutoSpecInTeleopBeggining = false;
 
 
     //is pressed

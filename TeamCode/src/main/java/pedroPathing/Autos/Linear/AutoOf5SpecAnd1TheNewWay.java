@@ -11,6 +11,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.localization.Pose;
+import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
@@ -37,7 +38,7 @@ import pedroPathing.constants.LConstantsForPinpoint;
 @Autonomous(name = "5 Spec + 1 Sample the new way", group = "Examples")
 public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
     private Follower follower;
-    private Timer pathTimer, actionTimer, opmodeTimer, intakeGoDownTimer;
+    private Timer pathTimer, actionTimer, opmodeTimer, intakeGoDownTimer,intakeShouldExtendTimer;
     private Telemetry tel = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
     final float[] hsvValues = new float[3];
     private DcMotor intakeMotor;
@@ -55,19 +56,19 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
     private final Pose startPose = new Pose(0, 0, Math.toRadians(0)); //start
     //scoring bar positions
     private final float scoringBarX = -31f;
-    private final float scoringBarY = -5f;
-    private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
-    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
-    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
-    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
-    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY, 0); //start
+    private final float scoringBarY = -1f;
+    private final Pose scoringBarPosePreloadSpecimen = new Pose(scoringBarX, scoringBarY+0.8, 0); //start
+    private final Pose scoringBarPoseFirstSpecimen = new Pose(scoringBarX, scoringBarY+1, 0); //start
+    private final Pose scoringBarPoseSecondSpecimen = new Pose(scoringBarX, scoringBarY+1.1, 0); //start
+    private final Pose scoringBarPoseThirdSpecimen = new Pose(scoringBarX, scoringBarY+1.3, 0); //start
+    private final Pose scoringBarPoseFourthSpecimen = new Pose(scoringBarX, scoringBarY+1.5, 0); //start
     //private final Pose scoringBarPoseFifthSpecimen = new Pose(-5.4, 44 + globalSpecimenYOffset, Math.toRadians(90)); //start
 
     private final float wallPickUpX = 2.5f;
     private final float wallPickUpY = 30f;
 
     //specimen pick up positions
-    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX+1, wallPickUpY, 0); //start
+    private final Pose firstSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
     private final Pose secondSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
     private final Pose thirdSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
     private final Pose fourthSpecimenPickUpPose = new Pose(wallPickUpX, wallPickUpY, 0); //start
@@ -76,21 +77,22 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
 
     private final Pose firstSamplePickUpPos = new Pose(-21.88, 27, Math.toRadians(318));
     private final Pose firstSampleDepositPos = new Pose(-18.160, 34.494, Math.toRadians(239.527));
-    private final Pose secondSamplePickUpPos = new Pose(-22.699, 34.704, Math.toRadians(306.975));
-    private final Pose secondSampleDepositPos = new Pose(-18.992, 40.796, Math.toRadians(231.827));
+    private final Pose secondSamplePickUpPos = new Pose(-19.1239, 39.1783, Math.toRadians(322.5674));
+    private final Pose secondSampleDepositPos = new Pose(-17.5389, 40.796, Math.toRadians(224.0242));
     private final Pose thirdSamplePickUpPos = new Pose(-20.31, 46, Math.toRadians(317));
     private final Pose thirdSampleDepositPos = new Pose(-17.971, 44.790, Math.toRadians(230.693));
     private final Pose intermediatePos = new Pose(-18, 30, Math.toRadians(0));
 
     // --------- + 1 ------------- \\
     private final Pose basketPickUp = new Pose(-6, 13, 4.672053639088766);
-    private final Pose basketScore = new Pose(-10, -60, 5.327179614697592);
+    private final Pose basketScore = new Pose(-7, -59, 5.327179614697592);
 
     //PARK
     private final Pose parkingPose=new Pose(-6.625476146307517, 8.210622832531065, 4.672053639088766); //parking
     double intakeMotorPower=0;
     double outakeMotorPower=0;
     boolean shouldIntakeGoDown = false;
+    boolean shouldIntakeExtendForLateColect = false;
 
 
     ControlMotor intakeControlMotor;
@@ -466,6 +468,11 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
                     intakeGoDownTimer.resetTimer();
                     shouldIntakeGoDown = true;
 
+
+                    intakeShouldExtendTimer = new Timer();
+                    intakeShouldExtendTimer.resetTimer();
+                    shouldIntakeExtendForLateColect = true;
+
                     follower.followPath(goToPickUpForBasket,true);
                     setPathState(114);
                 }
@@ -497,6 +504,7 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
             /// TRANSFER
             case 115:
                 if(!follower.isBusy()) {
+                    shouldDoAutoSpecInTeleopBeggining = true;
                     follower.followPath(scoreInBasket);
                     waitWhile(0);
                     autoOuttakeTransfer();
@@ -647,6 +655,10 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
             shouldIntakeGoDown = false;
             intakeCabinDownCollecting();
         }
+        if(shouldIntakeExtendForLateColect && intakeShouldExtendTimer.getElapsedTime() > 700){
+            shouldIntakeExtendForLateColect = false;
+            intakeExtended3out4();
+        }
 
 
         //color stuff
@@ -657,6 +669,9 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
         //PID Stuff
         intakeMotorPower = NewPidsController.pidControllerIntake(intakeExtendMotorTargetPos+intakeTargetPosAdder, intakeMotor.getCurrentPosition());
         outakeMotorPower = outakeControlMotor.PIDControlUppy(-outtakeExtendMotorTargetPos, outakeLeftMotor.getCurrentPosition());
+
+        if(intakeMotorPower < 0) intakeMotorPower *= 1.3;
+        if(currentStateOfSampleInIntake == colorSensorOutty.correctSample) intakeMotorPower *= 1.2;
 
         //set motor positions
         intakeMotor.setPower(intakeMotorPower);

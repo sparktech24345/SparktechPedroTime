@@ -191,7 +191,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
 
             //SPECIMEN
             if(gamepad1.b) isPressedB1 = true;
-            if(!gamepad1.b && isPressedB1){
+            if((!gamepad1.b && isPressedB1) || shouldDoAutoSpecInTeleopBeggining){
                 if(!(outtakeState == outtakeStates.outtakeSpecimenHang)) {
                     outtakeClawServoPos = outtakeClawServoRetractedPos;
                     isAfterOuttakeClosedClawAtWallSpecimen = true;
@@ -203,6 +203,7 @@ public class NewStateyBBBstyleOutput extends LinearOpMode {
                     isAfterOuttakeScoredSpecimen = true;
                 }
                 isPressedB1 = false;
+                shouldDoAutoSpecInTeleopBeggining = false;
             }
             if(isAfterOuttakeClosedClawAtWallSpecimen && outtakeAfterHasClosedClawAtWallSpecimenTimer + 300 < System.currentTimeMillis()){
                 intakeRetracted();

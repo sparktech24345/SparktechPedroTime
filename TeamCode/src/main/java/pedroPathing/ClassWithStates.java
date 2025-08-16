@@ -161,13 +161,13 @@ public class ClassWithStates {
     }
     public static void intakeCabinALittleBitUpStandStill(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
-        intakePivotServoPos = intakePivotServoPickupPos-15;
+        intakePivotServoPos = intakePivotServoPickupPos-5;
         intakeSpinMotorPow = 0;
     }
     public static void intakeCabinALittleBitUpOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinDownStandStill;
-        intakePivotServoPos = intakePivotServoPickupPos-15;
-        intakeSpinMotorPow = 0.6;
+        intakePivotServoPos = intakePivotServoPickupPos-5;
+        intakeSpinMotorPow = 0.9;
     }
     public static void intakeCabinTransferPosition(){
         intakeCabinState = intakeCabinStates.intakeCabinTransferPosition;
