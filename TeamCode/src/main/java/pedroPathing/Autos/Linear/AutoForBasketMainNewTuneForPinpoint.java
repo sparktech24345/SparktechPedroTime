@@ -1,43 +1,7 @@
 package pedroPathing.Autos.Linear;
 
-import static pedroPathing.ClassWithStates.ColorCompare;
-import static pedroPathing.ClassWithStates.autoOuttakeTransfer;
-import static pedroPathing.ClassWithStates.colorList;
-import static pedroPathing.ClassWithStates.colorSensorOutty;
-import static pedroPathing.ClassWithStates.currentStateOfSampleInIntake;
-import static pedroPathing.ClassWithStates.currentTeam;
-import static pedroPathing.ClassWithStates.initStates;
-import static pedroPathing.ClassWithStates.intakeCabinDownCollecting;
-import static pedroPathing.ClassWithStates.intakeCabinFullInBot;
-import static pedroPathing.ClassWithStates.intakeCabinTransferPosition;
-import static pedroPathing.ClassWithStates.intakeCabinTransferPositionWithPower;
-import static pedroPathing.ClassWithStates.intakeExtended1out4;
-import static pedroPathing.ClassWithStates.intakeExtended2out4;
-import static pedroPathing.ClassWithStates.intakeExtended4out4;
-import static pedroPathing.ClassWithStates.intakeRetracted;
-import static pedroPathing.ClassWithStates.outtakeBasket;
-import static pedroPathing.ClassWithStates.outtakePark;
-import static pedroPathing.ClassWithStates.outtakeStandByWithoutExtensions;
-import static pedroPathing.OrganizedPositionStorage.autoTimer;
-import static pedroPathing.OrganizedPositionStorage.hasSmolOutputed;
-import static pedroPathing.OrganizedPositionStorage.hasSmolOutputedTimer;
-import static pedroPathing.OrganizedPositionStorage.intakeExtendMotorTargetPos;
-import static pedroPathing.OrganizedPositionStorage.intakeGravitySubtractor;
-import static pedroPathing.OrganizedPositionStorage.intakePivotServoPos;
-import static pedroPathing.OrganizedPositionStorage.intakeSpinMotorPow;
-import static pedroPathing.OrganizedPositionStorage.intakeTargetPosAdder;
-import static pedroPathing.OrganizedPositionStorage.isInSpecimenState;
-import static pedroPathing.OrganizedPositionStorage.isRobotInAuto;
-import static pedroPathing.OrganizedPositionStorage.isYellowSampleNotGood;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoExtendedPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeClawServoRetractedPos;
-import static pedroPathing.OrganizedPositionStorage.outtakeExtendMotorTargetPos;
-import static pedroPathing.OrganizedPositionStorage.outtakePivotServoPos;
-import static pedroPathing.OrganizedPositionStorage.resetStuff;
-import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakig;
-import static pedroPathing.OrganizedPositionStorage.shouldStopIntakeCabinSpinningAfterTakigTimer;
-import static pedroPathing.OrganizedPositionStorage.somethingFailed;
+import static pedroPathing.ClassWithStates.*;
+import static pedroPathing.OrganizedPositionStorage.*;
 
 import android.graphics.Color;
 
@@ -47,6 +11,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
 import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
+import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
@@ -104,29 +69,30 @@ public class AutoForBasketMainNewTuneForPinpoint extends LinearOpMode {
     double basketHeading = Math.toRadians(53.65523062885758);
     private final Pose behindBasketPreload = new Pose(basketX, basketY, (basketHeading));
     private final Pose behindBasketFirstSample = new Pose(basketX, basketY, (basketHeading));
-    private final Pose behindBasketSecondSample = new Pose(basketX, basketY, (basketHeading));
-    private final Pose behindBasketThirdSample = new Pose(basketX, basketY-0.7 , (basketHeading));
+    private final Pose behindBasketSecondSample = new Pose(basketX-0.2, basketY-0.3, (basketHeading));
+    private final Pose behindBasketThirdSample = new Pose(basketX, basketY-0.6 , (basketHeading));
 
     // collect first 3 from floor
-    private final Pose firstSampleCollect = new Pose(43.85852723609744, -7.929813054602916, Math.toRadians(74.34624028537361));
-    private final Pose secondSampleCollect = new Pose(44.9, -7.604137630913201, Math.toRadians(91.70738587244128));
-    private final Pose thirdSampleCollect = new Pose(38.766777459092026, -8.76637015755721, Math.toRadians(126.5));
+    private final Pose firstSampleCollect = new Pose(43.85852723609744, -7.929813054602916, Math.toRadians(75));
+    private final Pose secondSampleCollect = new Pose(44.65, -7.604137630913201, Math.toRadians(91.70738587244128));
+    private final Pose thirdSampleCollect = new Pose(38.766777459092026, -8.76637015755721, Math.toRadians(130));
 
     // collect from submersible
 
     // first
     private final Pose firstSubmersibleStdCollect = new Pose(8, -53.95808182363435, Math.toRadians(1.343121268676688));
-    private final Pose firstSubmersibleStdBehindBasket = new Pose(basketX+2, basketY, basketHeading-Math.toRadians(15));
+    private final Pose firstSubmersibleStdBehindBasket = new Pose(basketX + 2, basketY, basketHeading-Math.toRadians(15));
 
     // second
     private final Pose secondSubmersibleStdCollect = new Pose(8, -59.30385799858514, Math.toRadians(1.996540493692655));
-    private final Pose secondSubmersibleStdBehindBasket = new Pose(basketX+2, basketY, basketHeading-Math.toRadians(15));
+    private final Pose secondSubmersibleStdBehindBasket = new Pose(basketX+3, basketY, basketHeading-Math.toRadians(15));
     // sign off
     private final Pose endingPosition = new Pose(0, 0, Math.toRadians(0));
 
     private final Pose secondTrySub = new Pose(6.043441652312993 + 1, -49.70520500123031, 6.203226558611047);
 
-    private final Point intermediaryExtraPoseForCurves = new Point( 52 ,-40);
+    private final Point intermediaryExtraPoseForCurves = new Point( 27 ,-30);
+    private final Pose intermediaryExtraPoseForAntiCurves = new Pose( 28 ,-30,Math.toRadians(45));
     /*
     heading: 4.0289046655823935
 intakerotate: 40.0
@@ -152,6 +118,7 @@ slides pos on descent -223
             secondSubmersibleCollectPath, secondSubmersibleScorePath
             ,secondTrySubPath, signOffPath, pickUpSecondSampleAfterMissedFirst, pickUpThirdSampleAfterMissedSecond, pickUpFromSubmersibleAfterMissedThird;
 
+    private Path firstSubmersiblesToIntermediary, firstFromIntermediaryToScore,secondSubmersiblesToIntermediary ,secondFromIntermediaryToScore;
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
     public void buildPaths() {
@@ -557,15 +524,15 @@ slides pos on descent -223
                 if (!follower.isBusy()) {
                     executeAutoTransfer();
                     outtakeStandByWithoutExtensions();
-                    setPathState(22);
+                    setPathState(-1);
                 }
                 break;
             case 22:
                 if (!follower.isBusy()) {
-                    follower.followPath(secondSubmersibleScorePath);
-                    waitWhile(300);
-                    outtakeBasket();
-                    setPathState(23);
+                    //follower.followPath(secondSubmersibleScorePath);
+                    //waitWhile(300);
+                    //outtakeBasket();
+                    //setPathState(23);
                 }
                 break;
             case 23:
@@ -654,6 +621,8 @@ slides pos on descent -223
         failedFirstSample = false;
         failedSecondSample = false;
         failedThirdSample = false;
+
+        shouldDoAutoSpecInTeleopBeggining = true;
 
         pathTimer = new Timer();
         opmodeTimer = new Timer();
@@ -748,10 +717,10 @@ slides pos on descent -223
         if (firstTry){
             if(currentStateOfSampleInIntake==colorSensorOutty.wrongSample){
                 intakeExtended2out4();
-                intakeSpinMotorPow = 1;
+                intakeSpinMotorPow = 0.6;
                 waitWhile(500);
             } else if(currentStateOfSampleInIntake==colorSensorOutty.correctSample){
-                intakeSpinMotorPow = 0.8;
+                intakeSpinMotorPow = 0.5;
                 waitWhile(35);
                 intakeCabinTransferPositionWithPower();
                 intakeRetracted();
@@ -759,7 +728,7 @@ slides pos on descent -223
             }
         } else {
             if(currentStateOfSampleInIntake==colorSensorOutty.wrongSample){
-                intakeSpinMotorPow = 1;
+                intakeSpinMotorPow = 0.6;
                 waitWhile(500);
             }
             intakeSpinMotorPow = 0.8;

@@ -77,7 +77,7 @@ public class AutoOf5SpecAnd1TheNewWay extends LinearOpMode {
 
     private final Pose firstSamplePickUpPos = new Pose(-21.88, 27, Math.toRadians(318));
     private final Pose firstSampleDepositPos = new Pose(-18.160, 34.494, Math.toRadians(239.527));
-    private final Pose secondSamplePickUpPos = new Pose(-19.1239, 39.1783, Math.toRadians(322.5674));
+    private final Pose secondSamplePickUpPos = new Pose(-19.1239, 39.1783, Math.toRadians(324));
     private final Pose secondSampleDepositPos = new Pose(-17.5389, 40.796, Math.toRadians(224.0242+15));
     private final Pose thirdSamplePickUpPos = new Pose(-20.31, 46, Math.toRadians(317));
     private final Pose thirdSampleDepositPos = new Pose(-17.971, 44.790, Math.toRadians(230.693));

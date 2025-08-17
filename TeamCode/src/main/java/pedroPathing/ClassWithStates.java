@@ -189,7 +189,7 @@ public class ClassWithStates {
     public static void intakeCabinFullInBotOutputting(){
         intakeCabinState = intakeCabinStates.intakeCabinFullInBotOutputting;
         intakePivotServoPos = intakePivotServoOutputTruBotPos;
-        intakeSpinMotorPow = 0.7;
+        intakeSpinMotorPow = 0.9;
     }
 
 
