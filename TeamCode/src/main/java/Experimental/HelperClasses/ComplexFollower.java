@@ -65,6 +65,7 @@ public class ComplexFollower {
     public void update() {
         if (currentOpMode == OpMode.Autonomous) {
             follower.update();
+            follower.drawOnDashBoard();
             if (follower.isBusy()) {
                 isDone = false;
                 currentPos = follower.getPose();
@@ -75,6 +76,7 @@ public class ComplexFollower {
             else if (shouldContinue && !poseQueue.isEmpty()) {
                 currentTargetPos = poseQueue.poll();
                 pathToFollow = new Path(new BezierLine(currentPos, currentTargetPos));
+                pathToFollow.setLinearHeadingInterpolation(currentPos.getHeading(),currentTargetPos.getHeading());
                 follower.followPath(pathToFollow);
                 shouldContinue = false;
                 follower.update();
@@ -101,5 +103,7 @@ public class ComplexFollower {
         telemetryInstance.addData("Follower current Y", currentY);
         telemetryInstance.addData("Follower current Heading", currentHeading);
         telemetryInstance.addData("Follower is busy", follower.isBusy());
+        telemetryInstance.addData("Follower continue", shouldContinue);
+        telemetryInstance.addData("Follower Queue is empty?", poseQueue.isEmpty());
     }
 }

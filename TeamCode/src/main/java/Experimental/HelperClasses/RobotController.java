@@ -8,6 +8,7 @@ import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import Experimental.HelperClasses.Actions.ConditionChecker;
 import Experimental.HelperClasses.Actions.DelayAction;
 import Experimental.HelperClasses.Actions.MoveAction;
 import Experimental.HelperClasses.Actions.StateAction;
@@ -46,8 +47,6 @@ public class RobotController {
     }
 
     private void setAutoSequence() {
-        queuer.addAction(new MoveAction(true, new Pose(-10, 0), true));
-        queuer.addAction(new MoveAction(true, new Pose(10, 0), true));
     }
 
     public void init(OpMode mode) {
@@ -72,10 +71,11 @@ public class RobotController {
 
     private void runUpdates() {
         queuer.update();
-        if (queuer.isEmpty() && currentOpMode == OpMode.Autonomous) setAutoSequence();
         follower.update();
         gamepad.CheckGamepads();
         showTelemetry();
+        //queuer.addAction(new MoveAction(true, new Pose(-5, 0), true));
+        //queuer.addAction(new MoveAction(true, new Pose(5, 0), true));
     }
 
     public void loop() {
@@ -91,8 +91,13 @@ public class RobotController {
     private void HandleControls() {
         if (gamepad.X1.Execute) {
             queuer.addAction(new StateAction(true, RobotState.SpecimenHangReadyState));
-            queuer.addAction(new DelayAction(true, 400));
-            queuer.addAction(new StateAction(true, RobotState.StartState));
+            queuer.addAction(new ConditionChecker(new Checkable() {
+                @Override
+                public boolean check() {
+                    return outtakeInstance.actualOuttakeExtension > 600;
+                }
+            }));
+            queuer.addAction(new StateAction(true, RobotState.SampleTransferReadyState));
         }
         if (gamepad.DRIGHT1.Execute) {
             queuer.addAction(new StateAction(true, RobotState.HighBasketScoreReadyState));
@@ -106,6 +111,7 @@ public class RobotController {
         intake.showTelemetry();
         outtake.showTelemetry();
         follower.telemetry();
+        telemetry.addData("Global queue is empty?", queuer.isEmpty());
         telemetry.addData("State", currentRobotState);
         telemetry.addData("intakeExt", currentIntakeExt);
         telemetry.addData("intakePos", currentIntakePos);

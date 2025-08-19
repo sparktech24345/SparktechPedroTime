@@ -19,6 +19,8 @@ public class Intake extends BaseModule {
     private NormalizedColorSensor colorSensor;
     private ColorSet currentColor;
 
+    public double actualIntakeExtension = currentIntakeExt.get();
+
     private double IntakeSpinPower = 0;
     private double IntakeExtendPower = 0;
 
@@ -42,6 +44,7 @@ public class Intake extends BaseModule {
     }
 
     public void loop() {
+        actualIntakeExtension = IntakeExtend.getCurrentPosition();
 //        currentColorObj = colorSensor.getNormalizedColors();
 //        currentColor = getColor(currentColorObj);
         if (gamepad.A1.IsToggled) {
