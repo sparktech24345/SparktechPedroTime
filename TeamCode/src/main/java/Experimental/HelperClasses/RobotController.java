@@ -38,7 +38,7 @@ public class RobotController {
         this.gamepad = gamepadInstance;
         this.telemetry = telemetryInstance;
         this.hardwareMap = hardwareMapInstance;
-        followerInstance = new ComplexFollower(new Follower(hardwareMapInstance, F_Constants, L_Constants));
+        followerInstance = new ComplexFollower(hardwareMapInstance);
         this.follower = followerInstance;
         driveTrainInstance = driveTrain;
         intakeInstance = intake;
@@ -46,10 +46,8 @@ public class RobotController {
     }
 
     private void setAutoSequence() {
-        queuer.addAction(new StateAction(true, RobotState.StartState));
         queuer.addAction(new MoveAction(true, new Pose(-10, 0), true));
         queuer.addAction(new MoveAction(true, new Pose(10, 0), true));
-        queuer.addAction(new StateAction(true, RobotState.SpecimenHangReadyState));
     }
 
     public void init(OpMode mode) {
@@ -74,7 +72,7 @@ public class RobotController {
 
     private void runUpdates() {
         queuer.update();
-        if (queuer.isEmpty()) setAutoSequence();
+        if (queuer.isEmpty() && currentOpMode == OpMode.Autonomous) setAutoSequence();
         follower.update();
         gamepad.CheckGamepads();
         showTelemetry();
@@ -107,7 +105,7 @@ public class RobotController {
     private void showTelemetry() {
         intake.showTelemetry();
         outtake.showTelemetry();
-        follower.telemetry(telemetry);
+        follower.telemetry();
         telemetry.addData("State", currentRobotState);
         telemetry.addData("intakeExt", currentIntakeExt);
         telemetry.addData("intakePos", currentIntakePos);

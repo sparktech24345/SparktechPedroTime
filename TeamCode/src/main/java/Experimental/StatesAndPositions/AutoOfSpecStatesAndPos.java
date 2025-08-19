@@ -25,7 +25,7 @@ public class AutoOfSpecStatesAndPos {
     * * * * * * * * * * * * * * * * * * * * * * * * */
     
     
-    public static final Pose startPose = new Pose(-10, 70, Math.toRadians(90));
+    public static final Pose startPose = new Pose(0, 0, Math.toRadians(90));
 
 
     // =-=-=-=-=-=-=-= SCORING BAR POSES =-=-=-=-=-=-=-= \\
