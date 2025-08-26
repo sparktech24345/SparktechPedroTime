@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import pedroPathing.constants.FConstantsForPinpoint;
+
 /**
  * Auto PID Tuner integrated with Pedro Pathing Follower and goBILDA Pinpoint localizer.
  *
@@ -40,8 +42,8 @@ public class PedroPidTunerWithPinpoint extends LinearOpMode {
     public static double P_START = 0.01;
     public static double P_STEP = 0.01;
     public static double P_MIN_STEP = 0.0005;
-    public static double DRIVE_POWER_CLAMP = 0.55;
-    public static double TURN_POWER_CLAMP = 0.45;
+    public static double DRIVE_POWER_CLAMP = 0.8;
+    public static double TURN_POWER_CLAMP = 0.7;
     public static int REQUIRED_ZERO_CROSSINGS = 6;
     public static double MAX_TEST_SECONDS = 10.0;
     public static double MAX_TOTAL_SECONDS = 120.0;
@@ -81,7 +83,7 @@ public class PedroPidTunerWithPinpoint extends LinearOpMode {
         }
 
         // Create follower using hardware map and the pinpoint localizer
-        follower = new Follower(hardwareMap, pinpoint, FollowerConstants.class, FollowerConstants.class);
+        follower = new Follower(hardwareMap, pinpoint, FConstantsForPinpoint.class, FConstantsForPinpoint.class);
         follower.initialize(pinpoint);
 
         telemetryOut.addLine("Ready. A=DriveZN, B=HeadingZN, X=Save+Apply, Y=Emergency Stop");
