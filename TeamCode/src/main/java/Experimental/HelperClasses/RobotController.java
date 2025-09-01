@@ -4,6 +4,7 @@ import static Experimental.HelperClasses.GlobalStorage.*;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import Experimental.HelperClasses.Actions.DelayAction;
@@ -23,13 +24,16 @@ public class RobotController {
     private Outtake outtake = new Outtake();
     private StateQueuer queuer = new StateQueuer();
     private double tickMS = 0;
+    private NormalizedColorSensor colorSensor;
     private ElapsedTime tickTimer = new ElapsedTime();
+    private ColorSet currentColor = ColorSet.Undefined;
 
     public RobotController() {
         this.gamepad = gamepadInstance;
         this.telemetry = telemetryInstance;
         this.hardwareMap = hardwareMapInstance;
-        followerInstance = new ComplexFollower(hardwareMapInstance);
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, GlobalStorage.colorSensorName);
+        // followerInstance = new ComplexFollower(hardwareMapInstance);
         driveTrainInstance = driveTrain;
         intakeInstance = intake;
         outtakeInstance = outtake;
@@ -57,11 +61,10 @@ public class RobotController {
     }
 
     private void runUpdates() {
+        currentColor = ColorSet.getColor(colorSensor.getNormalizedColors());
         queuer.update();
         gamepad.update();
         showTelemetry();
-        //queuer.addAction(new MoveAction(true, new Pose(-5, 0), true));
-        //queuer.addAction(new MoveAction(true, new Pose(5, 0), true));
     }
 
     public void loop() {
@@ -97,23 +100,34 @@ public class RobotController {
         if (gamepad.get("DPAD_LEFT1").ExecuteOnPress) {
             currentIntakeExt = IntakeExtension.Extended4;
         }
+        if (gamepad.get("A1").ExecuteOnPress && !gamepad.get("A1").IsToggledAfterPress) {
+            queuer.addAction(new StateAction(false, RobotState.SamplePickupReadyState));
+        }
+        if (gamepad.get("A1").IsToggledOnPress) {
+            if (gamepad.get("RIGHT_BUMPER1").IsHeld) {
+                intakeInstance.setIntakeSpin(-1);
+            }
+            if (ColorSet.validateSample(currentColor, true)) {
+                intakeInstance.setIntakeSpin(0);
+                gamepad.get("A1").UnToggle();
+                queuer.addAction(new StateAction(true, RobotState.SampleTransferReadyState));
+                queuer.addAction(new DelayAction(true, 600));
+                queuer.addAction(new StateAction(true, RobotState.SampleTransferDoneState));
+            } else {
+                intakeInstance.setIntakeSpin(-1);
+            }
+        }
+        else intakeInstance.setIntakeSpin(0);
     }
     private void showTelemetry() {
         intake.telemetry();
         outtake.telemetry();
-        followerInstance.telemetry();
+//        followerInstance.telemetry();
         telemetry.addData("Global queue is empty?", queuer.isEmpty());
         telemetry.addData("State", currentRobotState);
-        telemetry.addData("intakeExt", currentIntakeExt);
-        telemetry.addData("intakePos", currentIntakePos);
-        telemetry.addData("outtakeExt", currentOuttakeExt);
-        telemetry.addData("outtakeArm", currentOuttakeArmPos);
-        telemetry.addData("outtakeClaw", currentOuttakeClawPos);
         telemetry.addData("OpMode", currentOpMode);
-        if (currentTeam == ColorSet.Black)
-            telemetry.addData("Team", "Not set");
-        else
-            telemetry.addData("Team", currentTeam);
+        telemetry.addData("Team", currentTeam);
+        telemetry.addData("Color sensor", currentColor);
         telemetry.addLine();
         telemetry.addData("left stick X", gamepad.get("LEFT_STICK_X1").raw());
         telemetry.addData("left stick Y", gamepad.get("LEFT_STICK_Y1").raw());

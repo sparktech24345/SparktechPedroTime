@@ -37,15 +37,15 @@ public enum RobotState {
     ),
     SamplePickupReadyState(
             IntakeExtension.IGNORE,
-            IntakePosition.TransferPos,
-            OuttakeExtension.TransferPos,
-            OuttakeArmPosition.TransferPos,
+            IntakePosition.PickupSamplePos,
+            OuttakeExtension.ParkedPos,
+            OuttakeArmPosition.StandbyPos,
             OuttakeClawPosition.RetractedPos
     ),
     SamplePickupDoneState(
             IntakeExtension.IGNORE,
-            IntakePosition.PickupSamplePos,
-            OuttakeExtension.TransferPos,
+            IntakePosition.TransferPos,
+            OuttakeExtension.ParkedPos,
             OuttakeArmPosition.TransferPos,
             OuttakeClawPosition.RetractedPos
     ),

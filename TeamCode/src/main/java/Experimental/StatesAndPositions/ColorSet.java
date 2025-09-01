@@ -8,47 +8,24 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import org.firstinspires.ftc.teamcode.R;
 
 public enum ColorSet {
+    Undefined,
     Red,
-    Green,
     Blue,
-    Yellow,
-    Purple,
-    Cyan,
-    White,
-    Black;
+    Yellow;
 
-    public static boolean isSample(ColorSet color) {
-        switch (color) {
-            case Red:
-            case Blue:
-            case Yellow:
-                return true;
-        }
-        return false;
+    public static boolean validateSample(ColorSet current, boolean yellowValid) {
+        if (yellowValid && current == Yellow) return true;
+        return current == currentTeam;
     }
 
-    public static boolean sampleIsValid(ColorSet color, boolean isYellowValid) {
-        if (isYellowValid && color == Yellow)
-            return true;
-        return currentTeam == color;
-    }
     public static ColorSet getColor(NormalizedRGBA colors) {
         return getColor(colors.red, colors.green, colors.blue);
     }
     public static ColorSet getColor(double r, double g, double b) {
-        return getColor(r, g, b, 0.7);
-    }
-    public static ColorSet getColor(double r, double g, double b, double threshold) {
-        boolean _r = r >= threshold;
-        boolean _g = g >= threshold;
-        boolean _b = b >= threshold;
-        if (_r && _g && _b) return White;
-        if (_r && _g)       return Yellow;
-        if (_r && _b)       return Purple;
-        if (_g && _b)       return Cyan;
-        if (_r)             return Red;
-        if (_g)             return Green;
-        if (_b)             return Blue;
-                            return Black;
+        if (r < 0.006 && b < 0.004) return Undefined;
+        if (r > g && r > b) return Red;
+        if (b > g && b > r) return Blue;
+        if (g > r && g > b) return Yellow;
+        return Undefined;
     }
 }

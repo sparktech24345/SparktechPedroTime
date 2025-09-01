@@ -61,9 +61,9 @@ public class DriveTrain extends BaseModule {
 
     private void teleop_loop() {
 
-        double vertical = -gamepad.gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-        double horizontal =  gamepad.gamepad1.left_stick_x;
-        double pivot =  gamepad.gamepad1.right_stick_x;
+        double vertical = -gamepad.get("LEFT_STICK_Y1").raw();  // Note: pushing stick forward gives negative value
+        double horizontal =  gamepad.get("LEFT_STICK_X1").raw();
+        double pivot =  gamepad.get("RIGHT_STICK_X1").raw();
 
         double FrontRightPow = vertical + horizontal - pivot;
         double BackRightPow = vertical - horizontal - pivot;

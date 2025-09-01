@@ -23,6 +23,15 @@ public class Button {
     public boolean ExecuteOnPress = false;
     public boolean ExecuteAfterPress = false;
 
+    public void Toggle() {
+        IsToggledOnPress = true;
+        IsToggledAfterPress = true;
+    }
+    public void UnToggle() {
+        IsToggledOnPress = false;
+        IsToggledAfterPress = false;
+    }
+
     public Button(BooleanSupplier execCond) {
         this.condB = execCond;
         this.condD = null;

@@ -84,7 +84,7 @@ public class GlobalStorage {
     public static String colorSensorName        = "sensorColor";
 
     // OTHER STUFF
-    public static ColorSet currentTeam = ColorSet.Black;
+    public static ColorSet currentTeam = ColorSet.Undefined;
     public static OpMode currentOpMode = OpMode.TeleOP;
     public static boolean shouldContinue = false;
     public static boolean followerShouldContinue = false;
@@ -93,7 +93,8 @@ public class GlobalStorage {
     // STATES
 
     public static void loadRobotState() {
-        currentIntakeExt = currentRobotState.intakeExtension;
+        if (currentRobotState.intakeExtension != IntakeExtension.IGNORE)
+            currentIntakeExt = currentRobotState.intakeExtension;
         currentIntakePos = currentRobotState.intakePosition;
         currentOuttakeExt = currentRobotState.outtakeExtension;
         currentOuttakeArmPos = currentRobotState.outtakeArmPosition;
