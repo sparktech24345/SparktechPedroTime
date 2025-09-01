@@ -7,7 +7,7 @@ import Experimental.StatesAndPositions.OuttakeClawPosition;
 import Experimental.StatesAndPositions.OuttakeExtension;
 
 public enum RobotState {
-    UndefinedState(
+    StandbyState(
             IntakeExtension.Retracted,
             IntakePosition.TransferPos,
             OuttakeExtension.TransferPos,
