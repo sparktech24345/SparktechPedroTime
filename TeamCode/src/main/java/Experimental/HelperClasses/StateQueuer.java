@@ -12,6 +12,10 @@ public class StateQueuer {
     private final Queue<Action> actionQueue = new ArrayDeque();
     boolean prevDone = true;
 
+    public int getLen() {
+        return actionQueue.size();
+    }
+
     public void addAction(Action action) {
         actionQueue.add(action);
     }

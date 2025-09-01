@@ -39,7 +39,7 @@ public class OrganizedPositionStorage {
     //outtake claw
     public static double outtakeClawServoExtendedPos = 128;
     public static double outtakeClawServoExtraExtendedPos = 208;
-    public static double outtakeClawServoRetractedPos = 15;
+    public static double outtakeClawServoRetractedPos = 35;
 
 
     // outtake pivot
@@ -47,8 +47,8 @@ public class OrganizedPositionStorage {
     public static double outtakePivotServoHighRungHangPos = 170;
     public static double outtakePivotServoBasketPos = 43;
     public static double outtakePivotServoTransferPos = 201;
-    public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos ;
-    public static double outtakePivotServoParkedPos = 164.84; //0.53*328 - 9
+    public static double outtakePivotServoStandByPos = outtakePivotServoHighRungHangPos;
+    public static double outtakePivotServoParkedPos = 0.53*328 - 9;
 
 
     // outtake sliders
@@ -69,9 +69,9 @@ public class OrganizedPositionStorage {
     //intake
 
     //intake pivot
-    public static double intakePivotServoPickupPos = 181;   // old 206
-    public static double intakePivotServoOutputTruBotPos = 0;
-    public static double intakePivotServoTransferPos = 130;
+    public static double intakePivotServoPickupPos = 211;   // old 206
+    public static double intakePivotServoOutputTruBotPos = 15;
+    public static double intakePivotServoTransferPos = 153;
     public static double tempIntakeTargetPastPosDifrence = 135;
     public static double tempIntakeAPosition = 0;
 
@@ -86,6 +86,9 @@ public class OrganizedPositionStorage {
     public static boolean isInLowerBasketState = false;
     public static boolean isColorSensorNotInUse = false;
     public static boolean somethingFailed = false;
+    public static boolean shouldBeginZeroesRetune = false;
+    public static boolean isTimeToReset = false;
+    public static boolean shouldDoAutoSpecInTeleopBeggining = false;
 
 
     //is pressed
@@ -100,6 +103,7 @@ public class OrganizedPositionStorage {
     public static boolean isPressedY2 = false;
     public static boolean isPressedDL1 = false;
     public static boolean isPressedD2Up = false;
+    public static boolean isPressedD2Down = false;
 
 
     //intake stuff
@@ -147,6 +151,7 @@ public class OrganizedPositionStorage {
 
     //auto stuff
     public static long autoTimer;
+    public static long zeroesRetuneTimer;
 
 
     //intake stuff
@@ -188,6 +193,8 @@ public class OrganizedPositionStorage {
         isInLowerBasketState = false;
         somethingFailed = false;
         isColorSensorNotInUse = false;
+        shouldBeginZeroesRetune = false;
+        isTimeToReset = false;
 
         // MISC
         PIDincrement = 0;
@@ -222,6 +229,7 @@ public class OrganizedPositionStorage {
         isPressedY2 = false;
         isPressedDL1 = false;
         isPressedD2Up = false;
+        isPressedD2Down = false;
 
         // intake stuff
         isAfterIntakeBeenDownColecting = false;

@@ -79,29 +79,29 @@ public class RobotController {
 
     private void HandleControls() {
         if (gamepad.get("X1").ExecuteOnPress && !gamepad.get("X1").IsToggledAfterPress) {
-            queuer.addAction(new StateAction(true, RobotState.HighBasketScoreReadyState));
+            queuer.addAction(new StateAction(true, RobotState.HighBasket));
         }
         if (gamepad.get("X1").ExecuteOnPress && gamepad.get("X1").IsToggledAfterPress) {
-            queuer.addAction(new StateAction(true, RobotState.HighBasketScoreDoneState));
+            queuer.addAction(new StateAction(true, RobotState.OpenClaw));
         }
         if (gamepad.get("X1").ExecuteAfterPress && !gamepad.get("X1").IsToggledOnPress) {
             queuer.addAction(new DelayAction(true, 300));
             queuer.addAction(new StateAction(true, RobotState.StandbyState));
         }
         if (gamepad.get("DPAD_UP1").ExecuteOnPress) {
-            currentIntakeExt = IntakeExtension.Extended1;
+            queuer.addAction(new StateAction(true, RobotState.IntakeExtension1));
         }
         if (gamepad.get("DPAD_RIGHT1").ExecuteOnPress) {
-            currentIntakeExt = IntakeExtension.Extended2;
+            queuer.addAction(new StateAction(true, RobotState.IntakeExtension2));
         }
         if (gamepad.get("DPAD_DOWN1").ExecuteOnPress) {
-            currentIntakeExt = IntakeExtension.Extended3;
+            queuer.addAction(new StateAction(true, RobotState.IntakeExtension3));
         }
         if (gamepad.get("DPAD_LEFT1").ExecuteOnPress) {
-            currentIntakeExt = IntakeExtension.Extended4;
+            queuer.addAction(new StateAction(true, RobotState.IntakeExtension4));
         }
         if (gamepad.get("A1").ExecuteOnPress && !gamepad.get("A1").IsToggledAfterPress) {
-            queuer.addAction(new StateAction(false, RobotState.SamplePickupReadyState));
+            queuer.addAction(new StateAction(false, RobotState.SamplePickup));
         }
         if (gamepad.get("A1").IsToggledOnPress) {
             if (gamepad.get("RIGHT_BUMPER1").IsHeld) {
@@ -110,9 +110,12 @@ public class RobotController {
             if (ColorSet.validateSample(currentColor, true)) {
                 intakeInstance.setIntakeSpin(0);
                 gamepad.get("A1").UnToggle();
-                queuer.addAction(new StateAction(true, RobotState.SampleTransferReadyState));
+                queuer.addAction(new StateAction(true, RobotState.TransferState));
+                queuer.addAction(new StateAction(true, RobotState.OpenClaw));
                 queuer.addAction(new DelayAction(true, 600));
-                queuer.addAction(new StateAction(true, RobotState.SampleTransferDoneState));
+                queuer.addAction(new StateAction(true, RobotState.CloseClaw));
+                queuer.addAction(new DelayAction(true, 200));
+                queuer.addAction(new StateAction(true, RobotState.SpecimenHang));
             } else {
                 intakeInstance.setIntakeSpin(-1);
             }
@@ -123,7 +126,7 @@ public class RobotController {
         intake.telemetry();
         outtake.telemetry();
 //        followerInstance.telemetry();
-        telemetry.addData("Global queue is empty?", queuer.isEmpty());
+        telemetry.addData("queue length", queuer.getLen());
         telemetry.addData("State", currentRobotState);
         telemetry.addData("OpMode", currentOpMode);
         telemetry.addData("Team", currentTeam);

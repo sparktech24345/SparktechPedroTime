@@ -13,7 +13,6 @@ public class Outtake extends BaseModule {
 
     private Servo outtakeArmRotation;
     private Servo outtakeClawPos;
-    private NewPidsController outtakePIDControl = new NewPidsController();
     public double actualOuttakeExtension = currentOuttakeExt.get();
     private double extensionPow = 0;
 
@@ -33,7 +32,7 @@ public class Outtake extends BaseModule {
 
     public void loop() {
         actualOuttakeExtension = outtakeExtendLeft.getCurrentPosition();
-        extensionPow = outtakePIDControl.pidControllerOuttake((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
+        extensionPow = NewPidsController.pidControllerOuttake((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
         outtakeExtendRight.setPower(extensionPow);
         outtakeExtendLeft.setPower(extensionPow);
         outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);

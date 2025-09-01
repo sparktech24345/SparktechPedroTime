@@ -93,16 +93,24 @@ public class GlobalStorage {
     // STATES
 
     public static void loadRobotState() {
-        if (currentRobotState.intakeExtension != IntakeExtension.IGNORE)
+        if (currentRobotState.intakeExtension != IntakeExtension.IGNORE) {
             currentIntakeExt = currentRobotState.intakeExtension;
-        currentIntakePos = currentRobotState.intakePosition;
-        currentOuttakeExt = currentRobotState.outtakeExtension;
-        currentOuttakeArmPos = currentRobotState.outtakeArmPosition;
-        currentOuttakeClawPos = currentRobotState.outtakeClawPosition;
+        }
+        if (currentRobotState.intakePosition != IntakePosition.IGNORE) {
+            currentIntakePos = currentRobotState.intakePosition;
+        }
+        if (currentRobotState.outtakeExtension != OuttakeExtension.IGNORE) {
+            currentOuttakeExt = currentRobotState.outtakeExtension;
+        }
+        if (currentRobotState.outtakeArmPosition != OuttakeArmPosition.IGNORE) {
+            currentOuttakeArmPos = currentRobotState.outtakeArmPosition;
+        }
+        if (currentRobotState.outtakeClawPosition != OuttakeClawPosition.IGNORE) {
+            currentOuttakeClawPos = currentRobotState.outtakeClawPosition;
+        }
     }
 
     public static RobotState currentRobotState = RobotState.StartState;
-
     public static IntakePosition currentIntakePos = currentRobotState.intakePosition;
     public static IntakeExtension currentIntakeExt = currentRobotState.intakeExtension;
     public static OuttakeExtension currentOuttakeExt = currentRobotState.outtakeExtension;

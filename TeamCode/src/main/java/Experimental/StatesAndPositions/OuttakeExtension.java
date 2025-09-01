@@ -1,6 +1,7 @@
 package Experimental.StatesAndPositions;
 
 public enum OuttakeExtension {
+    IGNORE(0),
     UndefinedPos(0),
     MaxMotorPos(2100),
     MaxLowBasketPos(800),

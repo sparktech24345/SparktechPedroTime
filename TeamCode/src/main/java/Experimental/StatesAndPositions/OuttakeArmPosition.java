@@ -1,6 +1,7 @@
 package Experimental.StatesAndPositions;
 
 public enum OuttakeArmPosition {
+    IGNORE(0),
     UndefinedPos(0),
     WallPickupPos(285),
     HighRungPos(170),
