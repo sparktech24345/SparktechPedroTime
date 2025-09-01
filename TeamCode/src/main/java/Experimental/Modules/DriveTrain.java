@@ -25,7 +25,6 @@ public class DriveTrain extends BaseModule {
     private DcMotor LFDrive;
     private DcMotor RBDrive;
     private DcMotor LBDrive;
-//    private Follower follower;
     private boolean directionFlip = false;
 
     public void init() {

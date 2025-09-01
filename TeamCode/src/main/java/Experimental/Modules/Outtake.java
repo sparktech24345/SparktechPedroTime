@@ -40,7 +40,7 @@ public class Outtake extends BaseModule {
         outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
     }
 
-    public void showTelemetry() {
+    public void telemetry() {
         telemetry.addData("OuttakeArmPos?", currentOuttakeArmPos.get());
         telemetry.addData("OuttakeClawPos?", currentOuttakeClawPos.get());
         telemetry.addData("Extension power", extensionPow);

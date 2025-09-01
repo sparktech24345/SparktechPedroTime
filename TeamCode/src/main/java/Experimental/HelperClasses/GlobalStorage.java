@@ -17,8 +17,11 @@ import pedroPathing.constants.LConstants;
 
 public class GlobalStorage {
 
-    public static double eval(boolean bool) {
-        return (bool ? 1 : 0);
+    public static double eval(boolean val) {
+        return (val ? 1 : 0);
+    }
+    public static boolean eval(double val) {
+        return val != 0;
     }
 
 //    public static void resetTimers() {
@@ -36,11 +39,10 @@ public class GlobalStorage {
     public static ComplexGamepad gamepadInstance = null;
     public static HardwareMap hardwareMapInstance = null;
     public static MultipleTelemetry telemetryInstance = null;
-    public static RobotController controllerInstance = null;
     public static DriveTrain driveTrainInstance = null;
     public static Intake intakeInstance = null;
     public static Outtake outtakeInstance = null;
-
+    public static StateQueuer queuerInstance = null;
 
 
     // CONSTANTS

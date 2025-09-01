@@ -11,6 +11,7 @@ import pedroPathing.PIDStorageAndUse.NewPidsController;
 
 public class Intake extends BaseModule {
 
+    private boolean IntakeSpinToggle = false;
     private NormalizedRGBA currentColorObj;
     private DcMotor IntakeSpin;
     private DcMotor IntakeExtend;
@@ -29,7 +30,7 @@ public class Intake extends BaseModule {
         IntakeSpin = hardwareMap.get(DcMotor.class, intakeSpinName);
         IntakeExtend = hardwareMap.get(DcMotor.class, intakeExtendName);
         IntakeRotation = hardwareMap.get(Servo.class, intakePosName);
-//        colorSensor = hardwareMap.get(NormalizedColorSensor.class, GlobalStorage.colorSensorName);
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, GlobalStorage.colorSensorName);
         IntakeControlMotor = new NewPidsController();
 
         IntakeSpin.setDirection(DcMotor.Direction.REVERSE);
@@ -45,14 +46,16 @@ public class Intake extends BaseModule {
 
     public void loop() {
         actualIntakeExtension = IntakeExtend.getCurrentPosition();
-//        currentColorObj = colorSensor.getNormalizedColors();
-//        currentColor = getColor(currentColorObj);
-        if (gamepad.A1.IsToggled) {
+        currentColorObj = colorSensor.getNormalizedColors();
+        currentColor = getColor(currentColorObj);
+        if (gamepad.get("A1").ExecuteOnPress)
+            IntakeSpinToggle = !IntakeSpinToggle;
+        if (IntakeSpinToggle) {
             IntakeSpinPower = 1;
-            if (gamepad.LEFT_BUMPER1.IsHeld)
+            if (gamepad.get("LEFT_BUMPER1").IsHeld)
                 IntakeSpinPower = -1;
-//            if (!sampleIsValid(currentColor, true) && isSample(currentColor))
-//                IntakeSpinPower = -1;
+            else if (!sampleIsValid(currentColor, true) && isSample(currentColor))
+                IntakeSpinPower = -1;
         }
         else IntakeSpinPower = 0;
         IntakeExtendPower = IntakeControlMotor.pidControllerIntake(currentIntakeExt.get(), IntakeExtend.getCurrentPosition());
@@ -61,10 +64,6 @@ public class Intake extends BaseModule {
         IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
     }
 
-    public void showTelemetry() {
-        telemetry.addData("IntakeActualPos?", currentIntakePos.get());
-//        telemetry.addData("color r", currentColorObj.red);
-//        telemetry.addData("color g", currentColorObj.green);
-//        telemetry.addData("color b", currentColorObj.blue);
+    public void telemetry() {
     }
 }

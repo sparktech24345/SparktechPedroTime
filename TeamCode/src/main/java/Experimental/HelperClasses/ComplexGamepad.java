@@ -1,104 +1,89 @@
 package Experimental.HelperClasses;
 
-import android.os.Bundle;
-
-import com.acmerobotics.dashboard.FtcDashboard;
+import static Experimental.HelperClasses.GlobalStorage.*;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import java.util.HashMap;
 
 public class ComplexGamepad {
 
-    public Gamepad gamepad1;
-    public Gamepad gamepad2;
+    private Gamepad gamepad1;
+    private Gamepad gamepad2;
 
-    public ComplexGamepad() {}
+    private HashMap<String, Button> controlMap = null;
+
+    private ComplexGamepad() {}
     public ComplexGamepad(Gamepad gpad1, Gamepad gpad2) {
-        gamepad1 = gpad1;
-        gamepad2 = gpad2;
+        SetGamepads(gpad1, gpad2);
     }
 
     public void SetGamepads(Gamepad gpad1, Gamepad gpad2) {
         gamepad1 = gpad1;
         gamepad2 = gpad2;
+        controlMap = new HashMap<String, Button>(36) {{
+            put("A1", new Button(() -> gamepad1.a));
+            put("A2", new Button(() -> gamepad2.a));
+
+            put("B1", new Button(() -> gamepad1.b));
+            put("B2", new Button(() -> gamepad2.b));
+
+            put("X1", new Button(() -> gamepad1.x));
+            put("X2", new Button(() -> gamepad2.x));
+
+            put("Y1", new Button(() -> gamepad1.y));
+            put("Y2", new Button(() -> gamepad2.y));
+
+            put("DPAD_UP1", new Button(() -> gamepad1.dpad_up));
+            put("DPAD_UP2", new Button(() -> gamepad2.dpad_up));
+
+            put("DPAD_DOWN1", new Button(() -> gamepad1.dpad_down));
+            put("DPAD_DOWN2", new Button(() -> gamepad2.dpad_down));
+
+            put("DPAD_RIGHT1", new Button(() -> gamepad1.dpad_right));
+            put("DPAD_RIGHT2", new Button(() -> gamepad2.dpad_right));
+
+            put("DPAD_LEFT1", new Button(() -> gamepad1.dpad_left));
+            put("DPAD_LEFT2", new Button(() -> gamepad2.dpad_left));
+
+            put("START1", new Button(() -> gamepad1.start));
+            put("START2", new Button(() -> gamepad2.start));
+
+            put("BACK1", new Button(() -> gamepad1.back));
+            put("BACK2", new Button(() -> gamepad2.back));
+
+            put("LEFT_STICK_X1", new Button(() -> gamepad1.left_stick_x));
+            put("LEFT_STICK_X2", new Button(() -> gamepad2.left_stick_x));
+
+            put("LEFT_STICK_Y1", new Button(() -> gamepad1.left_stick_y));
+            put("LEFT_STICK_Y2", new Button(() -> gamepad2.left_stick_y));
+
+            put("RIGHT_STICK_X1", new Button(() -> gamepad1.right_stick_x));
+            put("RIGHT_STICK_X2", new Button(() -> gamepad2.right_stick_x));
+
+            put("RIGHT_STICK_Y1", new Button(() -> gamepad1.right_stick_y));
+            put("RIGHT_STICK_Y2", new Button(() -> gamepad2.right_stick_y));
+
+            put("LEFT_TRIGGER1", new Button(() -> gamepad1.left_trigger));
+            put("LEFT_TRIGGER2", new Button(() -> gamepad2.left_trigger));
+
+            put("RIGHT_TRIGGER1", new Button(() -> gamepad1.right_trigger));
+            put("RIGHT_TRIGGER2", new Button(() -> gamepad2.right_trigger));
+
+            put("LEFT_BUMPER1", new Button(() -> gamepad1.left_bumper));
+            put("LEFT_BUMPER2", new Button(() -> gamepad2.left_bumper));
+
+            put("RIGHT_BUMPER1", new Button(() -> gamepad1.right_bumper));
+            put("RIGHT_BUMPER2", new Button(() -> gamepad2.right_bumper));
+        }};
     }
 
-    // MUST BE INCLUDED IN MAIN LOOP FOR THE Execute, IsHeld and IsToggled BOOLEANS TO WORK
-    public void CheckGamepads() {
-        A1.RunCheck(gamepad1.a);
-        A2.RunCheck(gamepad2.a);
-
-        B1.RunCheck(gamepad1.b);
-        B2.RunCheck(gamepad2.b);
-
-        X1.RunCheck(gamepad1.x);
-        X2.RunCheck(gamepad2.x);
-
-        Y1.RunCheck(gamepad1.y);
-        Y2.RunCheck(gamepad2.y);
-
-        DUP1.RunCheck(gamepad1.dpad_up);
-        DUP2.RunCheck(gamepad2.dpad_up);
-
-        DDOWN1.RunCheck(gamepad1.dpad_down);
-        DDOWN2.RunCheck(gamepad2.dpad_down);
-
-        DLEFT1.RunCheck(gamepad1.dpad_left);
-        DLEFT2.RunCheck(gamepad2.dpad_left);
-
-        DRIGHT1.RunCheck(gamepad1.dpad_right);
-        DRIGHT2.RunCheck(gamepad2.dpad_right);
-
-        RIGHT_BUMPER1.RunCheck(gamepad1.right_bumper);
-        RIGHT_BUMPER2.RunCheck(gamepad2.right_bumper);
-
-        LEFT_BUMPER1.RunCheck(gamepad1.left_bumper);
-        LEFT_BUMPER2.RunCheck(gamepad2.left_bumper);
-
-        RIGHT_TRIGGER1.RunCheck(gamepad1.right_trigger);
-        RIGHT_TRIGGER2.RunCheck(gamepad2.right_trigger);
-
-        LEFT_TRIGGER1.RunCheck(gamepad1.left_trigger);
-        LEFT_TRIGGER2.RunCheck(gamepad2.left_trigger);
-
-        START1.RunCheck(gamepad1.start);
-        START2.RunCheck(gamepad2.start);
+    public Button get(String str) {
+        return controlMap.get(str);
     }
 
-    public Button A1 = new Button();
-    public Button A2 = new Button();
-
-    public Button B1 = new Button();
-    public Button B2 = new Button();
-
-    public Button X1 = new Button();
-    public Button X2 = new Button();
-
-    public Button Y1 = new Button();
-    public Button Y2 = new Button();
-
-    public Button DUP1 = new Button();
-    public Button DUP2 = new Button();
-
-    public Button DDOWN1 = new Button();
-    public Button DDOWN2 = new Button();
-
-    public Button DLEFT1 = new Button();
-    public Button DLEFT2 = new Button();
-
-    public Button DRIGHT1 = new Button();
-    public Button DRIGHT2 = new Button();
-
-    public Button RIGHT_BUMPER1 = new Button();
-    public Button RIGHT_BUMPER2 = new Button();
-
-    public Button LEFT_BUMPER1 = new Button();
-    public Button LEFT_BUMPER2 = new Button();
-
-    public Button RIGHT_TRIGGER1 = new Button();
-    public Button RIGHT_TRIGGER2 = new Button();
-
-    public Button LEFT_TRIGGER1 = new Button();
-    public Button LEFT_TRIGGER2 = new Button();
-
-    public Button START1 = new Button();
-    public Button START2 = new Button();
+    // MUST BE INCLUDED IN MAIN LOOP FOR THE BOOLEANS TO WORK
+    public void update() {
+        for (Button button : controlMap.values()) {
+            button.update();
+        }
+    }
 }
