@@ -26,14 +26,30 @@ public class DriveTrain extends BaseModule {
     private DcMotor RBDrive;
     private DcMotor LBDrive;
     private boolean directionFlip = false;
+    private String frontLeft = frontLeftName;
+    private String frontRight = frontRightName;
+    private String backLeft = backLeftName;
+    private String backRight = backRightName;
+
+    public DriveTrain() {
+        init();
+    }
+
+    public DriveTrain(String LeftFront, String RightFront, String LeftBack, String RightBack) {
+        frontLeft = LeftFront;
+        frontRight = RightFront;
+        backLeft = LeftBack;
+        backRight = RightBack;
+        init();
+    }
 
     public void init() {
         initializeInstances();
         if (currentOpMode == OpMode.TeleOP) {
-            RFDrive = hardwareMap.get(DcMotor.class, frontRightName);
-            LFDrive = hardwareMap.get(DcMotor.class, frontLeftName);
-            RBDrive = hardwareMap.get(DcMotor.class, backRightName);
-            LBDrive = hardwareMap.get(DcMotor.class, backLeftName);
+            RFDrive = hardwareMap.get(DcMotor.class, frontRight);
+            LFDrive = hardwareMap.get(DcMotor.class, frontLeft);
+            RBDrive = hardwareMap.get(DcMotor.class, backRight);
+            LBDrive = hardwareMap.get(DcMotor.class, backLeft);
 
             RFDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             LFDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -43,23 +59,11 @@ public class DriveTrain extends BaseModule {
             LFDrive.setDirection(DcMotorSimple.Direction.REVERSE);
             LBDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         }
-        else {
-//            follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
-//            follower.setStartingPose(startPose);
-//            follower.update();
-        }
     }
 
     public void start() {}
 
     public void loop() {
-        if (currentOpMode == OpMode.TeleOP) {
-            teleop_loop();
-        }
-        else auto_loop();
-    }
-
-    private void teleop_loop() {
 
         double vertical = -gamepad.get("LEFT_STICK_Y1").raw();  // Note: pushing stick forward gives negative value
         double horizontal =  gamepad.get("LEFT_STICK_X1").raw();
@@ -74,10 +78,6 @@ public class DriveTrain extends BaseModule {
         LFDrive.setPower(FrontLeftPow);
         RBDrive.setPower(BackRightPow);
         LBDrive.setPower(BackLeftPow);
-    }
-
-    private void auto_loop() {
-
     }
 
     public void stop() {}

@@ -1,25 +1,27 @@
 package Experimental.HelperClasses.Actions;
 
-import Experimental.HelperClasses.RobotState;
+import static Experimental.HelperClasses.GlobalStorage.robotControllerInstance;
 
-import static Experimental.HelperClasses.GlobalStorage.*;
+import android.util.Pair;
+
+import java.util.function.BooleanSupplier;
 
 public class StateAction extends Action {
 
-    private RobotState state;
-    public StateAction(boolean waitForPrevious, RobotState state) {
+    public StateAction(boolean waitForPrevious, String ComponentName, String PositionName) {
         this.waitForPrevious = waitForPrevious;
-        this.state = state;
+        this.Execution = () -> {
+            robotControllerInstance.getComponent(ComponentName).loadState(PositionName);
+        };
     }
 
-    @Override
-    public void execute() {
-        started = true;
-        currentRobotState = state;
-        loadRobotState();
-        done = true;
+    public StateAction setExecutionCondition(BooleanSupplier exec) {
+        this.ExecutionCondition = exec;
+        return this;
     }
 
-    @Override
-    public void update() {}
+    public StateAction setDoneCondition(BooleanSupplier done) {
+        this.DoneCondition = done;
+        return this;
+    }
 }

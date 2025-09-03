@@ -10,16 +10,7 @@ public class DelayAction extends Action {
     public DelayAction(boolean waitForPrevious, double milliseconds) {
         this.waitForPrevious = waitForPrevious;
         this.waitTimeMS = milliseconds;
-    }
-
-    @Override
-    public void execute() {
         timer = new ElapsedTime();
-        started = true;
-    }
-
-    @Override
-    public void update() {
-        done = timer.milliseconds() >= waitTimeMS;
+        this.DoneCondition = () -> timer.milliseconds() >= waitTimeMS;
     }
 }

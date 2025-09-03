@@ -17,7 +17,6 @@ public class MainAuto extends ExtendedOpMode {
 
     @Override
     public void init() {
-        setInstances();
         robot = new RobotController();
         robot.init(OpMode.Autonomous);
     }

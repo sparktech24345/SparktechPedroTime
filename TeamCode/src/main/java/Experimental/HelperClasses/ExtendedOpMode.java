@@ -10,6 +10,8 @@ public abstract class ExtendedOpMode extends OpMode {
     private ComplexGamepad gamepad = null;
     private MultipleTelemetry tel = null;
     public ExtendedOpMode() {
+        super();
+        setInstances();
     }
     public void setInstances() {
         gamepad = new ComplexGamepad(gamepad1, gamepad2);

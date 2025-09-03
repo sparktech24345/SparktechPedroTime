@@ -25,11 +25,11 @@ import static Experimental.StatesAndPositions.AutoOfSpecStatesAndPos.*;
 
 public class ComplexFollower {
     private boolean shouldContinue = true;
-    public boolean isDone = true;
-    public Follower follower;
-    public double currentX;
-    public double currentY;
-    public double currentHeading;
+    private boolean isDone = true;
+    private double currentX;
+    private double currentY;
+    private double currentHeading;
+    private Follower follower;
     private Pose currentTargetPos;
     private Pose currentPos;
     private Path pathToFollow;
@@ -61,6 +61,10 @@ public class ComplexFollower {
     public void Continue() {
         shouldContinue = true;
     }
+
+    public Follower getInstance() { return follower; }
+
+    public boolean done() { return isDone; }
 
     public void update() {
         if (currentOpMode == OpMode.Autonomous) {

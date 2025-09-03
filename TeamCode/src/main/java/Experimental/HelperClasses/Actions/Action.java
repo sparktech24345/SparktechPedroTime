@@ -1,11 +1,16 @@
 package Experimental.HelperClasses.Actions;
 
+import java.util.function.BooleanSupplier;
+
 public abstract class Action {
-    public boolean waitForPrevious;
+    protected boolean waitForPrevious;
+    protected boolean start = false;
+    protected boolean done = false;
 
-    public boolean started = false;
+    protected BooleanSupplier ExecutionCondition = () -> true;
+    protected BooleanSupplier DoneCondition = () -> true;
 
-    public boolean done = false;
+    protected Runnable Execution = () -> {};
 
     public Action() {
         this.waitForPrevious = true;
@@ -14,7 +19,23 @@ public abstract class Action {
         this.waitForPrevious = waitForPrevious;
     }
 
-    public abstract void execute();
+    public boolean waits() {
+        return waitForPrevious;
+    }
 
-    public abstract void update();
+    public boolean finished() {
+        return done;
+    }
+
+    public boolean started() { return start; }
+
+    public void update(boolean isPreviousDone) {
+        if (!start) {
+           start = ExecutionCondition.getAsBoolean() && (!waitForPrevious || isPreviousDone);
+        }
+        else {
+            Execution.run();
+            done = DoneCondition.getAsBoolean();
+        }
+    }
 }

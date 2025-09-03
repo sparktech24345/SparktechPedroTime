@@ -17,6 +17,10 @@ import pedroPathing.constants.LConstants;
 
 public class GlobalStorage {
 
+    public static double clamp(double val, double limit) {
+        return Math.max(-limit, Math.min(limit, val));
+    }
+
     public static double eval(boolean val) {
         return (val ? 1 : 0);
     }
@@ -40,9 +44,8 @@ public class GlobalStorage {
     public static HardwareMap hardwareMapInstance = null;
     public static MultipleTelemetry telemetryInstance = null;
     public static DriveTrain driveTrainInstance = null;
-    public static Intake intakeInstance = null;
-    public static Outtake outtakeInstance = null;
     public static StateQueuer queuerInstance = null;
+    public static RobotController robotControllerInstance = null;
 
 
     // CONSTANTS
@@ -88,32 +91,4 @@ public class GlobalStorage {
     public static OpMode currentOpMode = OpMode.TeleOP;
     public static boolean shouldContinue = false;
     public static boolean followerShouldContinue = false;
-
-
-    // STATES
-
-    public static void loadRobotState() {
-        if (currentRobotState.intakeExtension != IntakeExtension.IGNORE) {
-            currentIntakeExt = currentRobotState.intakeExtension;
-        }
-        if (currentRobotState.intakePosition != IntakePosition.IGNORE) {
-            currentIntakePos = currentRobotState.intakePosition;
-        }
-        if (currentRobotState.outtakeExtension != OuttakeExtension.IGNORE) {
-            currentOuttakeExt = currentRobotState.outtakeExtension;
-        }
-        if (currentRobotState.outtakeArmPosition != OuttakeArmPosition.IGNORE) {
-            currentOuttakeArmPos = currentRobotState.outtakeArmPosition;
-        }
-        if (currentRobotState.outtakeClawPosition != OuttakeClawPosition.IGNORE) {
-            currentOuttakeClawPos = currentRobotState.outtakeClawPosition;
-        }
-    }
-
-    public static RobotState currentRobotState = RobotState.StartState;
-    public static IntakePosition currentIntakePos = currentRobotState.intakePosition;
-    public static IntakeExtension currentIntakeExt = currentRobotState.intakeExtension;
-    public static OuttakeExtension currentOuttakeExt = currentRobotState.outtakeExtension;
-    public static OuttakeArmPosition currentOuttakeArmPos = currentRobotState.outtakeArmPosition;
-    public static OuttakeClawPosition currentOuttakeClawPos = currentRobotState.outtakeClawPosition;
 }

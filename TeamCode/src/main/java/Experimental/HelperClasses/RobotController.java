@@ -7,8 +7,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.R;
+
+import java.util.HashMap;
+
+import Experimental.HelperClasses.Actions.Action;
 import Experimental.HelperClasses.Actions.DelayAction;
 import Experimental.HelperClasses.Actions.StateAction;
+import Experimental.HelperClasses.Components.Component;
 import Experimental.Modules.DriveTrain;
 import Experimental.Modules.Intake;
 import Experimental.Modules.Outtake;
@@ -19,14 +25,15 @@ public class RobotController {
     private ComplexGamepad gamepad;
     private MultipleTelemetry telemetry;
     private HardwareMap hardwareMap;
-    private DriveTrain driveTrain = new DriveTrain();
-    private Intake intake = new Intake();
-    private Outtake outtake = new Outtake();
     private StateQueuer queuer = new StateQueuer();
     private double tickMS = 0;
     private NormalizedColorSensor colorSensor;
     private ElapsedTime tickTimer = new ElapsedTime();
     private ColorSet currentColor = ColorSet.Undefined;
+    private HashMap<String, RobotState> states = new HashMap<>();
+    private HashMap<String, Component> components = new HashMap<>();
+    private boolean useDefaultMovement = false;
+    private DriveTrain movement = null;
 
     public RobotController() {
         this.gamepad = gamepadInstance;
@@ -34,21 +41,52 @@ public class RobotController {
         this.hardwareMap = hardwareMapInstance;
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, GlobalStorage.colorSensorName);
         // followerInstance = new ComplexFollower(hardwareMapInstance);
-        driveTrainInstance = driveTrain;
-        intakeInstance = intake;
-        outtakeInstance = outtake;
         queuerInstance = queuer;
+        robotControllerInstance = this;
     }
 
-    private void setAutoSequence() {
+    public RobotController makeComponent(String name, Component component) {
+        components.put(name, component);
+        return this;
+    }
+
+    public RobotController setState(String robotState) {
+        RobotState state = states.get(robotState);
+        HashMap<String, String> poses = state.getPositions();
+        Component comp = null;
+        for (String s : poses.keySet()) {
+            comp = components.get(s);
+            comp.loadState(poses.get(s));
+        }
+        return this;
+    }
+
+    public RobotController addState(String stateName, RobotState state) {
+        states.put(stateName, state);
+        return this;
+    }
+
+    public RobotController addToQueue(Action action) {
+        queuer.addAction(action);
+        return this;
+    }
+
+    public <T extends Component> T getComponent(String componentName) {
+        return (T) components.get(componentName);
+    }
+
+    public RobotController UseDefaultMovement(String LeftFront, String RightFront, String LeftBack, String RightBack) {
+        movement = new DriveTrain(frontLeftName, frontRightName, backLeftName, backLeftName);
+        return this;
+    }
+
+    public RobotController UseDefaultMovement() {
+        movement = new DriveTrain();
+        return this;
     }
 
     public void init(OpMode mode) {
         currentOpMode = mode;
-        driveTrain.init();
-        intake.init();
-        outtake.init();
-        queuer.addAction(new StateAction(true, RobotState.StartState));
     }
 
     public void init_loop() {
@@ -62,6 +100,10 @@ public class RobotController {
 
     private void runUpdates() {
         currentColor = ColorSet.getColor(colorSensor.getNormalizedColors());
+        for (Component c : components.values()) {
+            c.update();
+        }
+        if (movement != null) movement.loop();
         queuer.update();
         gamepad.update();
         showTelemetry();
@@ -71,63 +113,61 @@ public class RobotController {
         tickTimer.reset();
         runUpdates();
         if (currentOpMode == OpMode.TeleOP) HandleControls();
-        driveTrain.loop();
-        intake.loop();
-        outtake.loop();
         tickMS = tickTimer.milliseconds();
     }
 
     private void HandleControls() {
         if (gamepad.get("X1").ExecuteOnPress && !gamepad.get("X1").IsToggledAfterPress) {
-            queuer.addAction(new StateAction(true, RobotState.HighBasket));
+            queuer.addAction(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_HIGH_BASKET"));
+            queuer.addAction(new StateAction(true, "OUTTAKE_ARM", "HIGH_RUNG"));
         }
         if (gamepad.get("X1").ExecuteOnPress && gamepad.get("X1").IsToggledAfterPress) {
-            queuer.addAction(new StateAction(true, RobotState.OpenClaw));
+            queuer.addAction(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_LOW_BASKET"));
+            queuer.addAction(new StateAction(true, "OUTTAKE_ARM", "BASKET_SCORE"));
         }
         if (gamepad.get("X1").ExecuteAfterPress && !gamepad.get("X1").IsToggledOnPress) {
             queuer.addAction(new DelayAction(true, 300));
-            queuer.addAction(new StateAction(true, RobotState.StandbyState));
+            queuer.addAction(new StateAction(true, "OUTTAKE_ARM", "HIGH_RUNG"));
+            queuer.addAction(new StateAction(true, "OUTTAKE_EXTENSION", "ABSOLUTE_ZERO"));
         }
         if (gamepad.get("DPAD_UP1").ExecuteOnPress) {
-            queuer.addAction(new StateAction(true, RobotState.IntakeExtension1));
+            queuer.addAction(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED1"));
         }
         if (gamepad.get("DPAD_RIGHT1").ExecuteOnPress) {
-            queuer.addAction(new StateAction(true, RobotState.IntakeExtension2));
+            queuer.addAction(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED2"));
         }
         if (gamepad.get("DPAD_DOWN1").ExecuteOnPress) {
-            queuer.addAction(new StateAction(true, RobotState.IntakeExtension3));
+            queuer.addAction(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED3"));
         }
         if (gamepad.get("DPAD_LEFT1").ExecuteOnPress) {
-            queuer.addAction(new StateAction(true, RobotState.IntakeExtension4));
+            queuer.addAction(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED4"));
         }
         if (gamepad.get("A1").ExecuteOnPress && !gamepad.get("A1").IsToggledAfterPress) {
-            queuer.addAction(new StateAction(false, RobotState.SamplePickup));
+//            queuer.addAction(new StateAction(false, RobotState.SamplePickup));
         }
         if (gamepad.get("A1").IsToggledOnPress) {
             if (gamepad.get("RIGHT_BUMPER1").IsHeld) {
-                intakeInstance.setIntakeSpin(-1);
+//                intakeInstance.setIntakeSpin(-1);
             }
             if (ColorSet.validateSample(currentColor, true)) {
-                intakeInstance.setIntakeSpin(0);
+//                intakeInstance.setIntakeSpin(0);
                 gamepad.get("A1").UnToggle();
-                queuer.addAction(new StateAction(true, RobotState.TransferState));
-                queuer.addAction(new StateAction(true, RobotState.OpenClaw));
+//                queuer.addAction(new StateAction(true, RobotState.TransferState));
+//                queuer.addAction(new StateAction(true, RobotState.OpenClaw));
                 queuer.addAction(new DelayAction(true, 600));
-                queuer.addAction(new StateAction(true, RobotState.CloseClaw));
+//                queuer.addAction(new StateAction(true, RobotState.CloseClaw));
                 queuer.addAction(new DelayAction(true, 200));
-                queuer.addAction(new StateAction(true, RobotState.SpecimenHang));
+//                queuer.addAction(new StateAction(true, RobotState.SpecimenHang));
             } else {
-                intakeInstance.setIntakeSpin(-1);
+//                intakeInstance.setIntakeSpin(-1);
             }
         }
-        else intakeInstance.setIntakeSpin(0);
+//        else intakeInstance.setIntakeSpin(0);
     }
+
     private void showTelemetry() {
-        intake.telemetry();
-        outtake.telemetry();
 //        followerInstance.telemetry();
         telemetry.addData("queue length", queuer.getLen());
-        telemetry.addData("State", currentRobotState);
         telemetry.addData("OpMode", currentOpMode);
         telemetry.addData("Team", currentTeam);
         telemetry.addData("Color sensor", currentColor);

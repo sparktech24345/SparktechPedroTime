@@ -13,7 +13,7 @@ public class Outtake extends BaseModule {
 
     private Servo outtakeArmRotation;
     private Servo outtakeClawPos;
-    public double actualOuttakeExtension = currentOuttakeExt.get();
+    public double actualOuttakeExtension = 0;
     private double extensionPow = 0;
 
     private double outtakeExtendOffset = 0;
@@ -26,22 +26,22 @@ public class Outtake extends BaseModule {
         outtakeClawPos      = hardwareMap.get(Servo.class, outtakeClawName);
 
         outtakeExtendRight.setDirection(DcMotor.Direction.REVERSE);
-        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);
-        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
+//        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);
+//        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
     }
 
     public void loop() {
         actualOuttakeExtension = outtakeExtendLeft.getCurrentPosition();
-        extensionPow = NewPidsController.pidControllerOuttake((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
+//        extensionPow = NewPidsController.pidControllerOuttake((currentOuttakeExt.get() + outtakeExtendOffset), outtakeExtendLeft.getCurrentPosition());
         outtakeExtendRight.setPower(extensionPow);
         outtakeExtendLeft.setPower(extensionPow);
-        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);
-        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
+//        outtakeArmRotation.setPosition(currentOuttakeArmPos.get() / 328);
+//        outtakeClawPos.setPosition(currentOuttakeClawPos.get() / 360);
     }
 
     public void telemetry() {
-        telemetry.addData("OuttakeArmPos?", currentOuttakeArmPos.get());
-        telemetry.addData("OuttakeClawPos?", currentOuttakeClawPos.get());
+//        telemetry.addData("OuttakeArmPos?", currentOuttakeArmPos.get());
+//        telemetry.addData("OuttakeClawPos?", currentOuttakeClawPos.get());
         telemetry.addData("Extension power", extensionPow);
     }
 }

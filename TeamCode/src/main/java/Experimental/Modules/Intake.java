@@ -26,7 +26,7 @@ public class Intake extends BaseModule {
         return IntakeSpinPower;
     }
 
-    public double actualIntakeExtension = currentIntakeExt.get();
+    public double actualIntakeExtension = 0;
 
     public void init() {
         initializeInstances();
@@ -42,15 +42,15 @@ public class Intake extends BaseModule {
 
         IntakeExtend.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
+//        IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
     }
 
     public void loop() {
         actualIntakeExtension = IntakeExtend.getCurrentPosition();
-        double IntakeExtendPower = NewPidsController.pidControllerIntake(currentIntakeExt.get(), IntakeExtend.getCurrentPosition());
-        IntakeExtend.setPower(IntakeExtendPower);
+//        double IntakeExtendPower = NewPidsController.pidControllerIntake(currentIntakeExt.get(), IntakeExtend.getCurrentPosition());
+//        IntakeExtend.setPower(IntakeExtendPower);
         IntakeSpin.setPower(IntakeSpinPower);
-        IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
+//        IntakeRotation.setPosition((currentIntakePos.get() - currentIntakeExt.gravity()) / 228);
     }
 
     public void telemetry() {

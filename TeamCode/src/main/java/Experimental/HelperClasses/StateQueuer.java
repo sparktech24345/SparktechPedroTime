@@ -1,7 +1,5 @@
 package Experimental.HelperClasses;
 
-import static Experimental.HelperClasses.GlobalStorage.*;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -25,15 +23,12 @@ public class StateQueuer {
     public void update() {
         prevDone = true;
         for (Action action : actionQueue) {
-            if (action.started && !action.done)
-                action.update();
-            if (!action.started && (prevDone || !action.waitForPrevious)) {
-                action.execute();
-            }
-            if (action.waitForPrevious && !prevDone) {
-                break;
-            }
-            prevDone = action.done;
+            action.update(prevDone);
+            prevDone = action.finished();
+        }
+        while (!actionQueue.isEmpty()) {
+            if (actionQueue.peek().finished()) actionQueue.poll();
+            else break;
         }
     }
 }
