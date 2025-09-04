@@ -10,30 +10,29 @@ import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.Queue;
 
 import static Experimental.HelperClasses.GlobalStorage.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
-
 import static Experimental.StatesAndPositions.AutoOfSpecStatesAndPos.*;
 
 public class ComplexFollower {
+
     private boolean shouldContinue = true;
     private boolean isDone = true;
+
     private double currentX;
     private double currentY;
     private double currentHeading;
-    private Follower follower;
+
     private Pose currentTargetPos;
     private Pose currentPos;
     private Path pathToFollow;
-    private Queue<Pose> poseQueue = new ArrayDeque<>();
+
+    private final Follower follower;
+    private final Queue<Pose> poseQueue = new ArrayDeque<>();
 
     ComplexFollower(Follower follower) {
         Constants.setConstants(F_Constants, L_Constants);
@@ -67,7 +66,7 @@ public class ComplexFollower {
     public boolean done() { return isDone; }
 
     public void update() {
-        if (currentOpMode == OpMode.Autonomous) {
+        if (currentOpModes == OpModes.Autonomous) {
             follower.update();
             follower.drawOnDashBoard();
             if (follower.isBusy()) {
@@ -98,16 +97,10 @@ public class ComplexFollower {
         if (follower.isBusy()) follower.breakFollowing();
     }
 
-    public void checkNotMoving() {
-//        if (follower.isBusy() &&)
-    }
-
     public void telemetry() {
-        telemetryInstance.addData("Follower current X", currentX);
-        telemetryInstance.addData("Follower current Y", currentY);
-        telemetryInstance.addData("Follower current Heading", currentHeading);
+        telemetryInstance.addData("Follower X", currentX);
+        telemetryInstance.addData("Follower Y", currentY);
+        telemetryInstance.addData("Follower Heading", currentHeading);
         telemetryInstance.addData("Follower is busy", follower.isBusy());
-        telemetryInstance.addData("Follower continue", shouldContinue);
-        telemetryInstance.addData("Follower Queue is empty?", poseQueue.isEmpty());
     }
 }

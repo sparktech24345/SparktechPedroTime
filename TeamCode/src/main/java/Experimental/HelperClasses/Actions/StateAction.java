@@ -15,6 +15,13 @@ public class StateAction extends Action {
         };
     }
 
+    public StateAction(boolean waitForPrevious, String RobotStateName) {
+        this.waitForPrevious = waitForPrevious;
+        this.Execution = () -> {
+            robotControllerInstance.loadRobotState(RobotStateName);
+        };
+    }
+
     public StateAction setExecutionCondition(BooleanSupplier exec) {
         this.ExecutionCondition = exec;
         return this;

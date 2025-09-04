@@ -23,6 +23,18 @@ public class MoveAction extends Action {
         };
     }
 
+    public MoveAction(boolean waitForPrevious, String posName, boolean waitToReachTarget) {
+        this.waitForPrevious = waitForPrevious;
+        this.moveTargetPos = robotControllerInstance.getAutoPose(posName);
+        this.reachTarget = waitToReachTarget;
+
+        if (waitToReachTarget) this.DoneCondition = () -> followerInstance.getInstance().isBusy();
+        this.Execution = () -> {
+            followerInstance.follow(moveTargetPos);
+            followerInstance.Continue();
+        };
+    }
+
     public MoveAction setExecutionCondition(BooleanSupplier exec) {
         this.ExecutionCondition = exec;
         return this;

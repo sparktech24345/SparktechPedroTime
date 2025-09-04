@@ -1,6 +1,6 @@
 package Experimental.HelperClasses;
 
-public enum OpMode {
+public enum OpModes {
     Autonomous,
     TeleOP
 }

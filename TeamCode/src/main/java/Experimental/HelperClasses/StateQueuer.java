@@ -1,9 +1,12 @@
 package Experimental.HelperClasses;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Queue;
 
 import Experimental.HelperClasses.Actions.Action;
+import Experimental.HelperClasses.Actions.StateAction;
 
 public class StateQueuer {
 
@@ -14,8 +17,17 @@ public class StateQueuer {
         return actionQueue.size();
     }
 
-    public void addAction(Action action) {
+    public StateQueuer addAction(Action action) {
         actionQueue.add(action);
+        return this;
+    }
+
+    /**
+     *
+     */
+    public StateQueuer addAction(Action... actions) {
+        Collections.addAll(actionQueue, actions);
+        return this;
     }
 
     public boolean isEmpty() { return actionQueue.isEmpty(); }
@@ -27,7 +39,7 @@ public class StateQueuer {
             prevDone = action.finished();
         }
         while (!actionQueue.isEmpty()) {
-            if (actionQueue.peek().finished()) actionQueue.poll();
+            if (Objects.requireNonNull(actionQueue.peek()).finished()) actionQueue.poll();
             else break;
         }
     }

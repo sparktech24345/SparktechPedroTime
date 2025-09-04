@@ -3,6 +3,7 @@ package Experimental.HelperClasses.Components;
 import static Experimental.HelperClasses.GlobalStorage.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.HashMap;
 
@@ -48,6 +49,22 @@ public class MotorComponent extends Component {
             mainMotor = motor;
         }
         motorMap.put(customMapName, motor);
+        return this;
+    }
+
+    public double getPos() {
+        return mainMotor.getCurrentPosition();
+    }
+
+    public MotorComponent setBehaviour(DcMotor.ZeroPowerBehavior zeroPower) {
+        for (DcMotor motor : motorMap.values()) {
+            motor.setZeroPowerBehavior(zeroPower);
+        }
+        return this;
+    }
+
+    public MotorComponent setDirection(String motorName, DcMotorSimple.Direction dir) {
+        motorMap.get(motorName).setDirection(dir);
         return this;
     }
 

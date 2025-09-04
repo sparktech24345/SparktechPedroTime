@@ -3,15 +3,7 @@ package Experimental.HelperClasses;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import Experimental.Modules.DriveTrain;
-import Experimental.Modules.Intake;
-import Experimental.Modules.Outtake;
 import Experimental.StatesAndPositions.ColorSet;
-import Experimental.StatesAndPositions.IntakeExtension;
-import Experimental.StatesAndPositions.IntakePosition;
-import Experimental.StatesAndPositions.OuttakeArmPosition;
-import Experimental.StatesAndPositions.OuttakeClawPosition;
-import Experimental.StatesAndPositions.OuttakeExtension;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
@@ -88,7 +80,7 @@ public class GlobalStorage {
 
     // OTHER STUFF
     public static ColorSet currentTeam = ColorSet.Undefined;
-    public static OpMode currentOpMode = OpMode.TeleOP;
+    public static OpModes currentOpModes = OpModes.TeleOP;
     public static boolean shouldContinue = false;
     public static boolean followerShouldContinue = false;
 }

@@ -1,11 +1,9 @@
-package Experimental.Modules;
+package Experimental.HelperClasses;
 
 import static Experimental.HelperClasses.GlobalStorage.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-
-import Experimental.HelperClasses.OpMode;
 
 /*
 * 
@@ -19,7 +17,7 @@ import Experimental.HelperClasses.OpMode;
 * 
 * */
 @com.acmerobotics.dashboard.config.Config
-public class DriveTrain extends BaseModule {
+public class DriveTrain {
 
     private DcMotor RFDrive;
     private DcMotor LFDrive;
@@ -44,12 +42,11 @@ public class DriveTrain extends BaseModule {
     }
 
     public void init() {
-        initializeInstances();
-        if (currentOpMode == OpMode.TeleOP) {
-            RFDrive = hardwareMap.get(DcMotor.class, frontRight);
-            LFDrive = hardwareMap.get(DcMotor.class, frontLeft);
-            RBDrive = hardwareMap.get(DcMotor.class, backRight);
-            LBDrive = hardwareMap.get(DcMotor.class, backLeft);
+        if (currentOpModes == OpModes.TeleOP) {
+            RFDrive = hardwareMapInstance.get(DcMotor.class, frontRight);
+            LFDrive = hardwareMapInstance.get(DcMotor.class, frontLeft);
+            RBDrive = hardwareMapInstance.get(DcMotor.class, backRight);
+            LBDrive = hardwareMapInstance.get(DcMotor.class, backLeft);
 
             RFDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             LFDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -65,9 +62,9 @@ public class DriveTrain extends BaseModule {
 
     public void loop() {
 
-        double vertical = -gamepad.get("LEFT_STICK_Y1").raw();  // Note: pushing stick forward gives negative value
-        double horizontal =  gamepad.get("LEFT_STICK_X1").raw();
-        double pivot =  gamepad.get("RIGHT_STICK_X1").raw();
+        double vertical = -gamepadInstance.get("LEFT_STICK_Y1").raw();  // Note: pushing stick forward gives negative value
+        double horizontal =  gamepadInstance.get("LEFT_STICK_X1").raw();
+        double pivot =  gamepadInstance.get("RIGHT_STICK_X1").raw();
 
         double FrontRightPow = vertical + horizontal - pivot;
         double BackRightPow = vertical - horizontal - pivot;
@@ -81,4 +78,7 @@ public class DriveTrain extends BaseModule {
     }
 
     public void stop() {}
+
+    public void telemetry() {
+    }
 }

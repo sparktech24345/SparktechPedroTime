@@ -12,9 +12,16 @@ public abstract class Component {
     protected double target = 0;
     protected double resolution = 1;
     protected double range = -1;
+    protected boolean moveOnInit = false;
 
     public <T extends Component> T addState(String s, double v) {
         states.put(s, v);
+        return (T) this;
+    }
+
+    public <T extends Component> T addState(String s, double v, boolean setAsDefault) {
+        states.put(s, v);
+        target = v;
         return (T) this;
     }
 
@@ -28,8 +35,19 @@ public abstract class Component {
         return (T) this;
     }
 
+    public abstract double getPos();
+
     public <T extends Component> T setResolution(double res) {
         resolution = res;
+        return (T) this;
+    }
+
+    public boolean moveDuringInit() {
+        return moveOnInit;
+    }
+
+    public <T extends Component> T moveDuringInit(boolean move) {
+        moveOnInit = move;
         return (T) this;
     }
 

@@ -29,6 +29,10 @@ public class ServoComponent extends Component {
         return this;
     }
 
+    public double getPos() {
+        return mainServo.getPosition();
+    }
+
     public Servo get(String name) {
         return motorMap.get(name);
     }
