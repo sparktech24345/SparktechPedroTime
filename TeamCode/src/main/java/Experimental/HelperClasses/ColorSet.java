@@ -1,11 +1,8 @@
-package Experimental.StatesAndPositions;
+package Experimental.HelperClasses;
 
 import static Experimental.HelperClasses.GlobalStorage.*;
 
-import com.google.blocks.ftcrobotcontroller.runtime.Block;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
-
-import org.firstinspires.ftc.teamcode.R;
 
 public enum ColorSet {
     Undefined,

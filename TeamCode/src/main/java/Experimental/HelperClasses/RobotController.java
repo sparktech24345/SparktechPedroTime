@@ -4,7 +4,6 @@ import static Experimental.HelperClasses.GlobalStorage.*;
 
 import android.util.Pair;
 
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.localization.Pose;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,7 +18,6 @@ import java.util.function.BooleanSupplier;
 
 import Experimental.HelperClasses.Actions.Action;
 import Experimental.HelperClasses.Components.Component;
-import Experimental.StatesAndPositions.ColorSet;
 
 public abstract class RobotController implements RobotControllerInterface {
     private double tickMS = 0;

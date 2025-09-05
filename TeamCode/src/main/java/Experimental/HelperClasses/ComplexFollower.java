@@ -16,8 +16,6 @@ import static Experimental.HelperClasses.GlobalStorage.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import static Experimental.StatesAndPositions.AutoOfSpecStatesAndPos.*;
-
 public class ComplexFollower {
 
     private boolean shouldContinue = true;
@@ -38,7 +36,7 @@ public class ComplexFollower {
         Constants.setConstants(F_Constants, L_Constants);
         this.follower = follower;
         this.follower.update();
-        currentPos = startPose;
+        currentPos = follower.getPose();
         currentX = currentPos.getX();
         currentY = currentPos.getY();
         currentHeading = currentPos.getHeading();
@@ -47,7 +45,7 @@ public class ComplexFollower {
         Constants.setConstants(F_Constants, L_Constants);
         this.follower = new Follower(hardwareMap, F_Constants, L_Constants);
         follower.update();
-        currentPos = startPose;
+        currentPos = follower.getPose();
         currentX = currentPos.getX();
         currentY = currentPos.getY();
         currentHeading = currentPos.getHeading();

@@ -1,4 +1,4 @@
-package Experimental;
+package Experimental.OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -15,7 +15,7 @@ import Experimental.HelperClasses.Components.ServoComponent;
 import Experimental.HelperClasses.OpModes;
 import Experimental.HelperClasses.RobotController;
 import Experimental.HelperClasses.RobotState;
-import Experimental.StatesAndPositions.ColorSet;
+import Experimental.HelperClasses.ColorSet;
 
 import static Experimental.HelperClasses.GlobalStorage.*;
 
