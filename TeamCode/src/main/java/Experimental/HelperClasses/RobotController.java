@@ -51,7 +51,7 @@ public class RobotController {
         return this;
     }
 
-    public RobotController addState(String stateName, RobotState state) {
+    public RobotController addRobotState(String stateName, RobotState state) {
         states.put(stateName, state);
         return this;
     }

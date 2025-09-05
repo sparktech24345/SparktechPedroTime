@@ -12,7 +12,6 @@ import Experimental.HelperClasses.Actions.StateAction;
 import Experimental.HelperClasses.ComplexGamepad;
 import Experimental.HelperClasses.Components.MotorComponent;
 import Experimental.HelperClasses.Components.ServoComponent;
-import Experimental.HelperClasses.GlobalStorage;
 import Experimental.HelperClasses.OpModes;
 import Experimental.HelperClasses.RobotController;
 import Experimental.HelperClasses.RobotState;
@@ -142,20 +141,20 @@ public class MainTeleOP extends LinearOpMode {
                 .addState("ABSOLUTE_ZERO", 0);
 
         robot
-                .addState("TRANSFER_POS", new RobotState(
-                        "INTAKE_EXTENSION", "RETRACTED",
-                        "INTAKE_PIVOT", "TRANSFER_POS",
-                        "OUTTAKE_EXTENSION", "TRANSFER_POS",
-                        "OUTTAKE_ARM", "TRANSFER_POS"
+                .addRobotState("TRANSFER_POS", new RobotState(
+                        make_pair("INTAKE_EXTENSION", "RETRACTED"),
+                        make_pair("INTAKE_PIVOT", "TRANSFER_POS"),
+                        make_pair("OUTTAKE_EXTENSION", "TRANSFER_POS"),
+                        make_pair("OUTTAKE_ARM", "TRANSFER_POS")
                 ))
-                .addState("SPECIMEN_HANG", new RobotState(
-                        "OUTTAKE_EXTENSION", "SPECIMEN_HANG",
-                        "OUTTAKE_ARM", "HIGH_RUNG"
+                .addRobotState("SPECIMEN_HANG", new RobotState(
+                        make_pair("OUTTAKE_EXTENSION", "SPECIMEN_HANG"),
+                        make_pair("OUTTAKE_ARM", "HIGH_RUNG")
                 ))
-                .addState("STANDBY", new RobotState(
-                        "INTAKE_EXTENSION", "RETRACTED",
-                        "OUTTAKE_EXTENSION", "STANDBY",
-                        "OUTTAKE_ARM", "STANDBY_POS"
+                .addRobotState("STANDBY", new RobotState(
+                        make_pair("INTAKE_EXTENSION", "RETRACTED"),
+                        make_pair("OUTTAKE_EXTENSION", "STANDBY"),
+                        make_pair("OUTTAKE_ARM", "STANDBY_POS")
                 ));
     }
     
@@ -182,7 +181,7 @@ public class MainTeleOP extends LinearOpMode {
             robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED3"));
         }
         else if (robot.getControllerKey("DPAD_LEFT1").ExecuteOnPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED4"));
+            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED456"));
         }
         if (robot.getControllerKey("A1").ExecuteOnPress && !robot.getControllerKey("A1").IsToggledAfterPress) {
             robot.addToQueue(new StateAction(true, "INTAKE_PIVOT", "SAMPLE_PICKUP"));
@@ -194,20 +193,29 @@ public class MainTeleOP extends LinearOpMode {
             else if (ColorSet.validateSample(ColorSet.Undefined, true)) {
                 robot.getControllerKey("A1").UnToggle();
                 robot.addToQueue(
-                        new StateAction(true, "TRANSFER_POS"),
-                        new StateAction(true, "OUTTAKE_CLAW", "OPEN"),
+                        new StateAction(true, "TRANSFER_POS"), 
+                        new StateAction(true, "OUTTAKE_CLAW", "OPEN"), 
                         new DelayAction(true, 200),
-                        new StateAction(true, "INTAKE_SPIN", "OFF"),
+                        new StateAction(true, "INTAKE_SPIN", "OFF"), 
                         new DelayAction(true, 200),
-                        new StateAction(true, "OUTTAKE_CLAW", "CLOSED"),
+                        new StateAction(true, "OUTTAKE_CLAW", "CLOSED"), 
                         new DelayAction(true, 150),
-                        new StateAction(true, "SPECIMEN_HANG")
+                        new StateAction(true, "SPECIMEN_HANG") 
                 );
             } else {
                 robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "COLLECT"));
             }
         }
-        else robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF"));
+        else robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF")); 
+    };
+
+    private Runnable tele = () -> {
+        telemetryInstance.addData("INTAKE_EXTENSION", robot.getComponent("INTAKE_EXTENSION").getPos());
+        telemetryInstance.addData("INTAKE_PIVOT", robot.getComponent("INTAKE_PIVOT").getPos());
+        telemetryInstance.addData("INTAKE_SPIN", robot.getComponent("INTAKE_SPIN").getPos());
+        telemetryInstance.addData("OUTTAKE_EXTENSION", robot.getComponent("OUTTAKE_EXTENSION").getPos());
+        telemetryInstance.addData("OUTTAKE_ARM", robot.getComponent("OUTTAKE_ARM").getPos());
+        telemetryInstance.addData("OUTTAKE_CLAW", robot.getComponent("OUTTAKE_CLAW").getPos());
     };
 
     private void initAll() {

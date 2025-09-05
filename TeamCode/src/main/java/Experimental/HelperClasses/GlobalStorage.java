@@ -1,5 +1,7 @@
 package Experimental.HelperClasses;
 
+import android.util.Pair;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,15 +21,7 @@ public class GlobalStorage {
     public static boolean eval(double val) {
         return val != 0;
     }
-
-//    public static void resetTimers() {
-//        intakeExtTimer.reset();
-//        intakePosTimer.reset();
-//        outtakeExtTimer.reset();
-//        outtakeArmPosTimer.reset();
-//        outtakeClawPosTimer.reset();
-//    }
-
+    public static <Tx, Ty> Pair<Tx, Ty> make_pair(Tx arg1, Ty arg2) { return new Pair<>(arg1, arg2); }
 
     // INSTANCES
 
@@ -35,7 +29,6 @@ public class GlobalStorage {
     public static ComplexGamepad gamepadInstance = null;
     public static HardwareMap hardwareMapInstance = null;
     public static MultipleTelemetry telemetryInstance = null;
-    public static DriveTrain driveTrainInstance = null;
     public static StateQueuer queuerInstance = null;
     public static RobotController robotControllerInstance = null;
 
@@ -45,23 +38,6 @@ public class GlobalStorage {
     public static Class<?> F_Constants = FConstants.class;
     public static Class<?> L_Constants = LConstants.class;
 
-
-    // HARDWARE TIMERS
-
-//    public static ElapsedTime intakeExtTimer = new ElapsedTime();
-//    public static ElapsedTime intakePosTimer = new ElapsedTime();
-//    public static ElapsedTime outtakeExtTimer = new ElapsedTime();
-//    public static ElapsedTime outtakeArmPosTimer = new ElapsedTime();
-//    public static ElapsedTime outtakeClawPosTimer = new ElapsedTime();
-
-
-    // TIME TO MOVE TO POS IN MILLISECONDS
-
-    public static double intakeExtMoveTime = 300;
-    public static double intakePosMoveTime = 200;
-    public static double outtakeExtMoveTime = 200;
-    public static double outtakeArmPosMoveTime = 250;
-    public static double outtakeClawPosMoveTime = 250;
 
     // HARDWARE NAMES
 
@@ -78,9 +54,7 @@ public class GlobalStorage {
     public static String backLeftName           = "backleft";
     public static String colorSensorName        = "sensorColor";
 
-    // OTHER STUFF
+    // OTHER S(TUFF)
     public static ColorSet currentTeam = ColorSet.Undefined;
     public static OpModes currentOpModes = OpModes.TeleOP;
-    public static boolean shouldContinue = false;
-    public static boolean followerShouldContinue = false;
 }

@@ -39,6 +39,7 @@ public class MotorComponent extends Component {
         if (motorMap.isEmpty()) {
             mainMotor = motor;
         }
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorMap.put(hardwareMapName, motor);
         return this;
     }
@@ -48,6 +49,7 @@ public class MotorComponent extends Component {
         if (motorMap.isEmpty()) {
             mainMotor = motor;
         }
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorMap.put(customMapName, motor);
         return this;
     }
