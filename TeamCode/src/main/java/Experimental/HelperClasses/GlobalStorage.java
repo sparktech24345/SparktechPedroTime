@@ -5,6 +5,8 @@ import android.util.Pair;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import Experimental.StatesAndPositions.ColorSet;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
@@ -28,7 +30,7 @@ public class GlobalStorage {
     public static ComplexFollower followerInstance = null;
     public static ComplexGamepad gamepadInstance = null;
     public static HardwareMap hardwareMapInstance = null;
-    public static MultipleTelemetry telemetryInstance = null;
+    public static Telemetry telemetryInstance = null;
     public static StateQueuer queuerInstance = null;
     public static RobotController robotControllerInstance = null;
 
