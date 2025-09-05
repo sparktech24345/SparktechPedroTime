@@ -9,14 +9,14 @@ import java.util.function.BooleanSupplier;
 public class StateAction extends Action {
 
     public StateAction(boolean waitForPrevious, String ComponentName, String PositionName) {
-        this.waitForPrevious = waitForPrevious;
+        super(waitForPrevious);
         this.Execution = () -> {
             robotControllerInstance.getComponent(ComponentName).loadState(PositionName);
         };
     }
 
     public StateAction(boolean waitForPrevious, String RobotStateName) {
-        this.waitForPrevious = waitForPrevious;
+        super(waitForPrevious);
         this.Execution = () -> {
             robotControllerInstance.loadRobotState(RobotStateName);
         };

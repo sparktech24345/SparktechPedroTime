@@ -26,14 +26,106 @@ public class MainTeleOP extends LinearOpMode {
     @Override
     public void runOpMode() {
         // init
-        initAll();
-        robot = new RobotController();
+        robot = new RobotController(hardwareMap, new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()), gamepad1, gamepad2) {
+            @Override
+            public void main_loop() {
+                controls();
+                telemetry();
+            }
+
+            private void controls() {
+                if (robot.getControllerKey("X1").ExecuteOnPress && !robot.getControllerKey("X1").IsToggledAfterPress) {
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_HIGH_BASKET"));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_ARM", "BASKET_SCORE"));
+                }
+                else if (robot.getControllerKey("X1").ExecuteOnPress && robot.getControllerKey("X1").IsToggledAfterPress) {
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "EXTRA_OPEN"));
+                }
+                else if (robot.getControllerKey("X1").ExecuteAfterPress && !robot.getControllerKey("X1").IsToggledOnPress) {
+                    robot.addToQueue(new DelayAction(true, 250));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_ARM", "STANDBY_POS"));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "STANDBY"));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "CLOSED"));
+                }
+                if (robot.getControllerKey("DPAD_UP1").ExecuteOnPress) {
+                    robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED1"));
+                }
+                else if (robot.getControllerKey("DPAD_RIGHT1").ExecuteOnPress) {
+                    robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED2"));
+                }
+                else if (robot.getControllerKey("DPAD_DOWN1").ExecuteOnPress) {
+                    robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED3"));
+                }
+                else if (robot.getControllerKey("DPAD_LEFT1").ExecuteOnPress) {
+                    robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED4"));
+                }
+                if (robot.getControllerKey("A1").ExecuteOnPress && !robot.getControllerKey("A1").IsToggledAfterPress) {
+                    robot.addToQueue(new StateAction(true, "INTAKE_PIVOT", "SAMPLE_PICKUP"));
+                }
+                if (robot.getControllerKey("A1").IsToggledOnPress) {
+                    if (robot.getControllerKey("RIGHT_BUMPER1").IsHeld) {
+                        if (robot.getComponent("INTAKE_SPIN").getPos() != -0.5) robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "SPIT_OUT"));
+                    }
+                    else if (robot.getControllerKey("B1").ExecuteOnPress) {
+                        robot.getControllerKey("A1").UnToggle();
+                        robot.addToQueue(new StateAction(true, "TRANSFER_POS"));
+                        robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "OPEN"));
+                        robot.addToQueue(new DelayAction(true, 800));
+                        robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF"));
+                        robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "CLOSED"));
+                        robot.addToQueue(new DelayAction(true, 800));
+                        robot.addToQueue(new StateAction(true, "SPECIMEN_HANG"));
+                    } else {
+                        if (robot.getComponent("INTAKE_SPIN").getPos() != 1) robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "COLLECT"));
+                    }
+                }
+                else {
+                    if (robot.getComponent("INTAKE_SPIN").getPos() != 0) robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF"));
+                }
+
+                if (robot.getControllerKey("LEFT_TRIGGER1").IsHeld && robot.getControllerKey("RIGHT_TRIGGER1").IsHeld) {
+                    robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "RETRACTED"));
+                    robot.addToQueue(new StateAction(false, "INTAKE_PIVOT", "SPIT_OUT"));
+                    robot.addToQueue(new StateAction(false, "INTAKE_SPIN", "OFF"));
+                    robot.addToQueue(new StateAction(false, "OUTTAKE_EXTENSION", "ABSOLUTE_ZERO"));
+                    robot.addToQueue(new StateAction(false, "OUTTAKE_ARM", "STANDBY_POS"));
+                    robot.addToQueue(new StateAction(false, "OUTTAKE_CLAW", "CLOSED"));
+                }
+
+                if (robot.getControllerKey("Y1").ExecuteOnPress) {
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "TRANSFER_POS"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "PARKED"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "WALL_PICKUP"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_LOW_BASKET"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "AUTO_SPECIMEN_HANG"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "STANDBY"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "SPECIMEN_HANG"));
+                    robot.addToQueue(new DelayAction(true, 1000));
+                    robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_HIGH_BASKET"));
+                }
+            }
+
+            private void telemetry() {
+                telemetryInstance.addData("INTAKE_EXTENSION", robot.getComponent("INTAKE_EXTENSION").getPos());
+                telemetryInstance.addData("INTAKE_PIVOT", robot.getComponent("INTAKE_PIVOT").getPos());
+                telemetryInstance.addData("INTAKE_SPIN", robot.getComponent("INTAKE_SPIN").getPos());
+                telemetryInstance.addData("OUTTAKE_EXTENSION", robot.getComponent("OUTTAKE_EXTENSION").getPos());
+                telemetryInstance.addData("OUTTAKE_ARM", robot.getComponent("OUTTAKE_ARM").getPos());
+                telemetryInstance.addData("OUTTAKE_CLAW", robot.getComponent("OUTTAKE_CLAW").getPos());
+                telemetryInstance.addData("TICK MS", robot.getExecMS());
+                telemetryInstance.addData("QUEUER LENGTH", queuerInstance.getLen());
+            }
+        };
         MakeComponents();
         MakeStates();
         robot.init(OpModes.TeleOP);
         robot.UseDefaultMovement();
-        robot.setControls(controls);
-        robot.setTelemetry(tele);
 
         while (!isStarted() && !isStopRequested()) {
             //init loop
@@ -71,6 +163,7 @@ public class MainTeleOP extends LinearOpMode {
                     .addMotor(intakeSpinName)
                     .useWithPIDController(false)
                     .setRange(1)
+                    .setDirection(intakeSpinName, DcMotorSimple.Direction.REVERSE)
             )
             .makeComponent("OUTTAKE_EXTENSION", new MotorComponent()
                     .addMotor(outtakeExtendLeftName)
@@ -116,14 +209,14 @@ public class MainTeleOP extends LinearOpMode {
                 .addState("ABSOLUTE_ZERO", 0);
 
         robot.getComponent("OUTTAKE_EXTENSION")
-                .addState("MAX_HIGH_BASKET", 2100)
-                .addState("MAX_LOW_BASKET", 800)
-                .addState("SPECIMEN_HANG", 1100)
-                .addState("AUTO_SPECIMEN_HANG", 950)
-                .addState("WALL_PICKUP", 710)
-                .addState("STANDBY", 1000)
                 .addState("TRANSFER_POS", 0, true)
                 .addState("PARKED", 655)
+                .addState("WALL_PICKUP", 710)
+                .addState("MAX_LOW_BASKET", 800)
+                .addState("AUTO_SPECIMEN_HANG", 950)
+                .addState("STANDBY", 1000)
+                .addState("SPECIMEN_HANG", 1100)
+                .addState("MAX_HIGH_BASKET", 2100)
                 .addState("ABSOLUTE_ZERO", 0);
 
         robot.getComponent("OUTTAKE_ARM")
@@ -160,72 +253,6 @@ public class MainTeleOP extends LinearOpMode {
 
         robot.addAutoPosition("pos1", 10, 20, 90);
     }
-    
-    private final Runnable controls = () -> {
-        if (robot.getControllerKey("X1").ExecuteOnPress && !robot.getControllerKey("X1").IsToggledAfterPress) {
-            robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_HIGH_BASKET"));
-            robot.addToQueue(new StateAction(true, "OUTTAKE_ARM", "BASKET_SCORE"));
-        }
-        else if (robot.getControllerKey("X1").ExecuteOnPress && robot.getControllerKey("X1").IsToggledAfterPress) {
-            robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "EXTRA_OPEN"));
-        }
-        else if (robot.getControllerKey("X1").ExecuteAfterPress && !robot.getControllerKey("X1").IsToggledOnPress) {
-            robot.addToQueue(new DelayAction(true, 250));
-            robot.addToQueue(new StateAction(true, "OUTTAKE_ARM", "STANDBY_POS"));
-            robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "STANDBY"));
-            robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "CLOSED"));
-        }
-        if (robot.getControllerKey("DPAD_UP1").ExecuteOnPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED1"));
-        }
-        else if (robot.getControllerKey("DPAD_RIGHT1").ExecuteOnPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED2"));
-        }
-        else if (robot.getControllerKey("DPAD_DOWN1").ExecuteOnPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED3"));
-        }
-        else if (robot.getControllerKey("DPAD_LEFT1").ExecuteOnPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED4"));
-        }
-        if (robot.getControllerKey("A1").ExecuteOnPress && !robot.getControllerKey("A1").IsToggledAfterPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_PIVOT", "SAMPLE_PICKUP"));
-        }
-        if (robot.getControllerKey("A1").IsToggledOnPress) {
-            if (robot.getControllerKey("RIGHT_BUMPER1").IsHeld) {
-                robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "SPIT_OUT"));
-            }
-            else if (robot.getControllerKey("B1").ExecuteOnPress) {
-                robot.getControllerKey("A1").UnToggle();
-                robot.addToQueue(
-                        new StateAction(true, "TRANSFER_POS"), 
-                        new StateAction(true, "OUTTAKE_CLAW", "OPEN"), 
-                        new DelayAction(true, 200),
-                        new StateAction(true, "INTAKE_SPIN", "OFF"), 
-                        new DelayAction(true, 400),
-                        new StateAction(true, "OUTTAKE_CLAW", "CLOSED"), 
-                        new DelayAction(true, 200),
-                        new StateAction(true, "SPECIMEN_HANG") 
-                );
-            } else {
-                robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "COLLECT"));
-            }
-        }
-        else {
-            robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF"));
-        }
-    };
-
-
-    private final Runnable tele = () -> {
-        telemetryInstance.addData("INTAKE_EXTENSION", robot.getComponent("INTAKE_EXTENSION").getPos());
-        telemetryInstance.addData("INTAKE_PIVOT", robot.getComponent("INTAKE_PIVOT").getPos());
-        telemetryInstance.addData("INTAKE_SPIN", robot.getComponent("INTAKE_SPIN").getPos());
-        telemetryInstance.addData("OUTTAKE_EXTENSION", robot.getComponent("OUTTAKE_EXTENSION").getPos());
-        telemetryInstance.addData("OUTTAKE_ARM", robot.getComponent("OUTTAKE_ARM").getPos());
-        telemetryInstance.addData("OUTTAKE_CLAW", robot.getComponent("OUTTAKE_CLAW").getPos());
-        telemetryInstance.addData("TICK MS", robot.getExecMS());
-        telemetryInstance.addData("QUEUER LENGTH", queuerInstance.getLen());
-    };
 
     private void initAll() {
         ComplexGamepad gamepad = new ComplexGamepad(gamepad1, gamepad2);

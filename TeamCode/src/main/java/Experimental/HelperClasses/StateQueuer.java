@@ -1,17 +1,18 @@
 package Experimental.HelperClasses;
 
+import static Experimental.HelperClasses.GlobalStorage.*;
+
 import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Queue;
 
 import Experimental.HelperClasses.Actions.Action;
-import Experimental.HelperClasses.Actions.StateAction;
 
 public class StateQueuer {
 
     private final Queue<Action> actionQueue = new ArrayDeque();
-    boolean prevDone = true;
+    private boolean prevDone;
 
     public int getLen() {
         return actionQueue.size();
@@ -22,20 +23,13 @@ public class StateQueuer {
         return this;
     }
 
-    /**
-     *
-     */
-    public StateQueuer addAction(Action... actions) {
-        Collections.addAll(actionQueue, actions);
-        return this;
-    }
-
     public boolean isEmpty() { return actionQueue.isEmpty(); }
 
     public void update() {
         prevDone = true;
         for (Action action : actionQueue) {
             action.update(prevDone);
+            if (action.waits() && !prevDone) break;
             prevDone = action.finished();
         }
         while (!actionQueue.isEmpty()) {
@@ -44,3 +38,25 @@ public class StateQueuer {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//          if (actionQueue.peek().finished()) actionQueue.poll();

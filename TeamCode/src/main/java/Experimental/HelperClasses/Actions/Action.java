@@ -25,7 +25,7 @@ public abstract class Action {
     }
 
     public boolean finished() {
-        return done;
+        return DoneCondition.getAsBoolean();
     }
 
     public boolean started() {
@@ -35,8 +35,9 @@ public abstract class Action {
     public void update(boolean isPreviousDone) {
         if (!start) {
             start = ExecutionCondition.getAsBoolean() && (!waitForPrevious || isPreviousDone);
-        } else {
-            if (!done) Execution.run();
+        }
+        if (!done && start) {
+            Execution.run();
             done = DoneCondition.getAsBoolean();
         }
     }

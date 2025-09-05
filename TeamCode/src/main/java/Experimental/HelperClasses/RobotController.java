@@ -4,8 +4,13 @@ import static Experimental.HelperClasses.GlobalStorage.*;
 
 import android.util.Pair;
 
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.localization.Pose;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +21,7 @@ import Experimental.HelperClasses.Actions.Action;
 import Experimental.HelperClasses.Components.Component;
 import Experimental.StatesAndPositions.ColorSet;
 
-public class RobotController {
+public abstract class RobotController implements RobotControllerInterface {
     private double tickMS = 0;
     private ElapsedTime tickTimer = new ElapsedTime();
     private ColorSet currentColor = ColorSet.Undefined;
@@ -29,10 +34,28 @@ public class RobotController {
     private ArrayList<Pair<BooleanSupplier, Runnable>> callbacks = new ArrayList<>();
     private HashMap<String, Pose> autoPositions = new HashMap<>();
 
-    public RobotController() {
+    private void init_all() {
         followerInstance = new ComplexFollower(hardwareMapInstance);
         queuerInstance = new StateQueuer();
         robotControllerInstance = this;
+    }
+
+    public RobotController() {
+        init_all();
+    }
+
+    public RobotController(HardwareMap hmap, Telemetry telemetry, ComplexGamepad gamepad) {
+        hardwareMapInstance = hmap;
+        telemetryInstance = telemetry;
+        gamepadInstance = gamepad;
+        init_all();
+    }
+
+    public RobotController(HardwareMap hmap, Telemetry telemetry, Gamepad gpad1, Gamepad gpad2) {
+        hardwareMapInstance = hmap;
+        telemetryInstance = telemetry;
+        gamepadInstance = new ComplexGamepad(gpad1, gpad2);
+        init_all();
     }
 
     public RobotController makeComponent(String name, Component component) {
@@ -58,11 +81,6 @@ public class RobotController {
 
     public RobotController addToQueue(Action action) {
         queuerInstance.addAction(action);
-        return this;
-    }
-
-    public RobotController addToQueue(Action... actions) {
-        queuerInstance.addAction(actions);
         return this;
     }
 
@@ -156,6 +174,7 @@ public class RobotController {
     public RobotController loop() {
         tickTimer.reset();
         runUpdates();
+        main_loop();
         if (currentOpModes == OpModes.TeleOP) {
             controlBehaviour.run();
             for (Pair<BooleanSupplier, Runnable> pair : callbacks) {
