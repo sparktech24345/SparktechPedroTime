@@ -33,6 +33,7 @@ public class MainTeleOP extends LinearOpMode {
         robot.init(OpModes.TeleOP);
         robot.UseDefaultMovement();
         robot.setControls(controls);
+        robot.setTelemetry(tele);
 
         while (!isStarted() && !isStopRequested()) {
             //init loop
@@ -156,9 +157,11 @@ public class MainTeleOP extends LinearOpMode {
                         make_pair("OUTTAKE_EXTENSION", "STANDBY"),
                         make_pair("OUTTAKE_ARM", "STANDBY_POS")
                 ));
+
+        robot.addAutoPosition("pos1", 10, 20, 90);
     }
     
-    private Runnable controls = () -> {
+    private final Runnable controls = () -> {
         if (robot.getControllerKey("X1").ExecuteOnPress && !robot.getControllerKey("X1").IsToggledAfterPress) {
             robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "MAX_HIGH_BASKET"));
             robot.addToQueue(new StateAction(true, "OUTTAKE_ARM", "BASKET_SCORE"));
@@ -170,6 +173,7 @@ public class MainTeleOP extends LinearOpMode {
             robot.addToQueue(new DelayAction(true, 250));
             robot.addToQueue(new StateAction(true, "OUTTAKE_ARM", "STANDBY_POS"));
             robot.addToQueue(new StateAction(true, "OUTTAKE_EXTENSION", "STANDBY"));
+            robot.addToQueue(new StateAction(true, "OUTTAKE_CLAW", "CLOSED"));
         }
         if (robot.getControllerKey("DPAD_UP1").ExecuteOnPress) {
             robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED1"));
@@ -181,7 +185,7 @@ public class MainTeleOP extends LinearOpMode {
             robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED3"));
         }
         else if (robot.getControllerKey("DPAD_LEFT1").ExecuteOnPress) {
-            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED456"));
+            robot.addToQueue(new StateAction(true, "INTAKE_EXTENSION", "EXTENDED4"));
         }
         if (robot.getControllerKey("A1").ExecuteOnPress && !robot.getControllerKey("A1").IsToggledAfterPress) {
             robot.addToQueue(new StateAction(true, "INTAKE_PIVOT", "SAMPLE_PICKUP"));
@@ -190,32 +194,37 @@ public class MainTeleOP extends LinearOpMode {
             if (robot.getControllerKey("RIGHT_BUMPER1").IsHeld) {
                 robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "SPIT_OUT"));
             }
-            else if (ColorSet.validateSample(ColorSet.Undefined, true)) {
+            else if (robot.getControllerKey("B1").ExecuteOnPress) {
                 robot.getControllerKey("A1").UnToggle();
                 robot.addToQueue(
                         new StateAction(true, "TRANSFER_POS"), 
                         new StateAction(true, "OUTTAKE_CLAW", "OPEN"), 
                         new DelayAction(true, 200),
                         new StateAction(true, "INTAKE_SPIN", "OFF"), 
-                        new DelayAction(true, 200),
+                        new DelayAction(true, 400),
                         new StateAction(true, "OUTTAKE_CLAW", "CLOSED"), 
-                        new DelayAction(true, 150),
+                        new DelayAction(true, 200),
                         new StateAction(true, "SPECIMEN_HANG") 
                 );
             } else {
                 robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "COLLECT"));
             }
         }
-        else robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF")); 
+        else {
+            robot.addToQueue(new StateAction(true, "INTAKE_SPIN", "OFF"));
+        }
     };
 
-    private Runnable tele = () -> {
+
+    private final Runnable tele = () -> {
         telemetryInstance.addData("INTAKE_EXTENSION", robot.getComponent("INTAKE_EXTENSION").getPos());
         telemetryInstance.addData("INTAKE_PIVOT", robot.getComponent("INTAKE_PIVOT").getPos());
         telemetryInstance.addData("INTAKE_SPIN", robot.getComponent("INTAKE_SPIN").getPos());
         telemetryInstance.addData("OUTTAKE_EXTENSION", robot.getComponent("OUTTAKE_EXTENSION").getPos());
         telemetryInstance.addData("OUTTAKE_ARM", robot.getComponent("OUTTAKE_ARM").getPos());
         telemetryInstance.addData("OUTTAKE_CLAW", robot.getComponent("OUTTAKE_CLAW").getPos());
+        telemetryInstance.addData("TICK MS", robot.getExecMS());
+        telemetryInstance.addData("QUEUER LENGTH", queuerInstance.getLen());
     };
 
     private void initAll() {

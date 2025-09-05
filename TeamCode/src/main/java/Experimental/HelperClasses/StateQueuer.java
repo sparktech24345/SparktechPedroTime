@@ -39,7 +39,7 @@ public class StateQueuer {
             prevDone = action.finished();
         }
         while (!actionQueue.isEmpty()) {
-            if (Objects.requireNonNull(actionQueue.peek()).finished()) actionQueue.poll();
+            if (actionQueue.peek().finished()) actionQueue.poll();
             else break;
         }
     }

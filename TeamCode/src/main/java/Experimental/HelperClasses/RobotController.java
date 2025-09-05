@@ -173,5 +173,7 @@ public class RobotController {
     private void showTelemetry() {
         if (followerInstance != null) followerInstance.telemetry();
         if (movement != null) movement.telemetry();
+        telemetry.run();
+        telemetryInstance.update();
     }
 }

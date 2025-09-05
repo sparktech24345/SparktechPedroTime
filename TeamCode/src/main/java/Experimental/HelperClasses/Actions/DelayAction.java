@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.function.BooleanSupplier;
 
 public class DelayAction extends Action {
-    private ElapsedTime timer;
+    private final ElapsedTime timer;
     private double waitTimeMS = 0;
 
     public DelayAction(boolean waitForPrevious, double milliseconds) {

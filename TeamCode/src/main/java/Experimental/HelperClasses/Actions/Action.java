@@ -36,7 +36,7 @@ public abstract class Action {
         if (!start) {
             start = ExecutionCondition.getAsBoolean() && (!waitForPrevious || isPreviousDone);
         } else {
-            Execution.run();
+            if (!done) Execution.run();
             done = DoneCondition.getAsBoolean();
         }
     }
