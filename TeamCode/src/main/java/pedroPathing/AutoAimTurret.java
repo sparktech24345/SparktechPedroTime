@@ -23,33 +23,44 @@ import java.lang.Math;
 
 import pedroPathing.constants.FConstantsForPinpoint;
 import pedroPathing.constants.LConstantsForPinpoint;
+import pedroPathing.constants.LConstantsForPinpointWIthREversedForward;
 
 @Config
 @TeleOp(name = "AutoAimTurret", group = "LinearOpMode")
 public class AutoAimTurret extends LinearOpMode{
+    public static double deltaX=0;
+    public static double deltaY=0;
     public double calculateHeadingAdjustment(Pose robotPose, double targetX, double targetY) {
+        double x = robotPose.getX();
+        double y = - robotPose.getY();
+
+
         // Vector from robot to target
-        double dx = targetX - robotPose.getX();
-        double dy = targetY - robotPose.getY();
+        double dx = targetX - x;
+        double dy = targetY - y;
 
         // Angle from robot position to target point
         double targetAngle = Math.atan2(dy, dx);
+        double targetDegrees = Math.toDegrees(targetAngle); //is from 0to eather 180 or -180, same as robot heading Maxed
 
-        // Difference between target direction and robot heading
-        double angleDiff = Math.toDegrees(normalizeAngle(targetAngle - robotPose.getHeading()));
+        //robot heading stuff  //its negative as its inversed from what youd want ( right +, left -)
+        double robotAngleNormal = Math.toDegrees(robotPose.getHeading()) -90;
+        //no negatives
+        if(robotAngleNormal <0) robotAngleNormal = 360 + robotAngleNormal;
 
-        return angleDiff;
+        //maxing out the angle on a 180 interval with + and - for easy servo math
+        double robotAnglesMaxed;
+        if(robotAngleNormal > 180) robotAnglesMaxed = robotAngleNormal - 360; //needs to be negative, and start from the same 0
+        else robotAnglesMaxed = robotAngleNormal;
+
+        // so basicly you will have from 0 to 180 then imidiatly -180 to 0 ( same 0 )
+        // so the robot 50 degrees to right is +50 and 50 degrees to the left is -50
+
+        multipleTelemetry.addData("corrected head",robotAnglesMaxed);
+        multipleTelemetry.addData("calculated angle ",targetDegrees);
+
+        return targetDegrees   + robotAnglesMaxed;
     }
-
-    /**
-     * Normalizes the angle to the range [-PI, PI]
-     */
-    public double normalizeAngle(double angle) {
-        while (angle > Math.PI) angle -= 2 * Math.PI;
-        while (angle < -Math.PI) angle += 2 * Math.PI;
-        return angle;
-    }
-
     public double addaptForServoTurret(double degrees, double maxDegreesLeft, double maxDegreesRight){
         //the 0 of the servo is at its maximum left point, thus i must normalize it by using negatives for left,
         //while in reality middle is actually maxleft and max right would be its complete maximum position thus both maxes combined
@@ -74,7 +85,6 @@ public class AutoAimTurret extends LinearOpMode{
     public double clampAngleForServo(double degrees,double maxServoDegree, MultipleTelemetry multipletelemetry){
         if(degrees < 0) multipletelemetry.addData("too much to the left by", degrees);
         if(degrees > maxServoDegree) multipletelemetry.addData("too much to the right by", maxServoDegree-degrees);
-        multipletelemetry.update();
         return Math.max(0, Math.min(maxServoDegree, degrees));
     }
 
@@ -90,15 +100,15 @@ public class AutoAimTurret extends LinearOpMode{
 
     /* variabile pt codul meu */
 
-    private Pose follower_pose = new Pose(0, 0, 0);
+    private final Pose follower_pose = new Pose(0, 0, Math.toRadians(90));
     private Pose actual_pose;
 
     @Override
     public void runOpMode() throws InterruptedException {
         Servo turretServo = hardwareMap.get(Servo.class, "turretServo");
-        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
-        follower = new Follower(hardwareMap,FConstantsForPinpoint.class, LConstantsForPinpoint.class);
-
+        Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpointWIthREversedForward.class);
+        follower = new Follower(hardwareMap, FConstantsForPinpoint.class, LConstantsForPinpointWIthREversedForward.class);
+        follower.setStartingPose(follower_pose);
         multipleTelemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         waitForStart();
@@ -110,14 +120,18 @@ public class AutoAimTurret extends LinearOpMode{
 
             multipleTelemetry.addData(" Turret wanna be pos",degreesToMove);
             multipleTelemetry.addData("servo actual pose",turretServo.getPosition());
-            multipleTelemetry.addData("servo actual pose * 360",turretServo.getPosition()*360);
-            multipleTelemetry.update();
+            multipleTelemetry.addData("servo actual pose * 300",turretServo.getPosition()*300);
+            multipleTelemetry.addData("x",follower.getPose().getX());
+            multipleTelemetry.addData("y",follower.getPose().getY());
+            multipleTelemetry.addData("head",Math.toDegrees(follower.getPose().getHeading()));
+            multipleTelemetry.addData("targeting", Math.toDegrees(Math.atan2(deltaY, deltaX)));
             follower.drawOnDashBoard();
 
-            degreesToMove = calculateHeadingAdjustment(follower.getPose(),0,5);
+            degreesToMove = calculateHeadingAdjustment(follower.getPose(),8,0);
             degreesForServo = addaptForServoTurret(degreesToMove,150,150);
             safeDegreesForServo = clampAngleForServo(degreesForServo,300,multipleTelemetry);
 
+            multipleTelemetry.update();
             turretServo.setPosition(safeDegreesForServo/300);
         }
     }

@@ -32,6 +32,7 @@ public class AutoAim extends LinearOpMode {
         turretServo = hardwareMap.get(Servo.class, "turretServo");
         Constants.setConstants(FConstantsForPinpoint.class, LConstantsForPinpoint.class);
         follower = new Follower(hardwareMap,FConstantsForPinpoint.class, LConstantsForPinpoint.class);
+        follower.setStartingPose(new Pose(0, 0, 0));
         multipleTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         turretServo.setPosition(0.5);
@@ -42,7 +43,7 @@ public class AutoAim extends LinearOpMode {
         while (opModeIsActive()) {
             follower.update();
             follower_pose = follower.getPose();
-            follower_pose.setY(-follower_pose.getY());
+            // follower_pose.setY(-follower_pose.getY());
 
             double dx = targetX - follower_pose.getX();
             double dy = targetY - follower_pose.getY();
@@ -50,7 +51,7 @@ public class AutoAim extends LinearOpMode {
             double robot_angle = Math.toDegrees(follower_pose.getHeading());
             if (robot_angle > 180) robot_angle -= 360;
 
-            double raw_angle = Math.toDegrees(Math.atan2(dy, dx)) - 90 - robot_angle;
+            double raw_angle = Math.toDegrees(Math.atan2(dy, dx)) - robot_angle;
             raw_angle = (raw_angle + 540) % 360 - 180;
 
             double clamp_angle = Math.max(-150, Math.min(150, raw_angle));
